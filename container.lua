@@ -21,6 +21,13 @@ function Container:addButton(settings)
 	return self
 end
 
+function Container:addContainer(settings)
+	local container = Container.new(settings)
+	table.insert(self.children, container)
+	self:updateChildren()
+	return self
+end
+
 function Container:updateChildren()
 	local offset = 0
 	local maxWidth, maxHeight = 0, 0

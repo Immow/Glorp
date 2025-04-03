@@ -25,8 +25,7 @@ function Container:addContainer(settings)
 	local container = Container.new(settings)
 	table.insert(self.children, container)
 	self:updateChildren()
-	container:updateChildren()
-	return container
+	return self
 end
 
 function Container:updateChildren()

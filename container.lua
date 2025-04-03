@@ -105,17 +105,30 @@ function Container:updateChildren()
 			end
 			offsetX = offsetX + child.w + self.spacing
 		else
-			child.x = startX + (self.w - child.w) / 2
+			-- child.x = startX + (self.w - child.w) / 2
+			-- child.y = offsetY
+			-- offsetY = offsetY + child.h + self.spacing
 			child.y = offsetY
+			if self.alignment.horizontal == "bottom" then
+				child.x = self.x + self.w - child.w
+			elseif self.alignment.horizontal == "center" then
+				child.x = self.x + (self.w - child.w) / 2
+			else
+				child.x = startX
+			end
 			offsetY = offsetY + child.h + self.spacing
 		end
 	end
 end
 
-function Container:mousepressed(x, y, button, isTouch)
+function Container:mousepressed(mx, my, button, isTouch)
+	if mx < self.x or mx > self.x + self.w or my < self.y or my > self.y + self.h then
+		return
+	end
+
 	for _, child in ipairs(self.children) do
 		if child.mousepressed then
-			child:mousepressed(x, y, button, isTouch)
+			child:mousepressed(mx, my, button, isTouch)
 		end
 	end
 end

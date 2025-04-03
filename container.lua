@@ -3,15 +3,18 @@ local Container = {}
 Container.__index = Container
 
 function Container.new(settings)
-	local instance    = setmetatable({}, Container)
-	instance.x        = settings.x or 0
-	instance.y        = settings.y or 0
-	instance.w        = settings.w or 0
-	instance.h        = settings.h or 0
-	instance.layout   = settings.layout or "horizontal"
-	instance.spacing  = settings.spacing or 10
-	instance.label    = "container"
-	instance.children = {}
+	local instance           = setmetatable({}, Container)
+	instance.x               = settings.x or 0
+	instance.y               = settings.y or 0
+	instance.w               = settings.w or 0
+	instance.h               = settings.h or 0
+	instance.layout          = settings.layout or "horizontal"
+	instance.spacing         = settings.spacing or 10
+	instance.label           = "container"
+	instance.border          = settings.border or true
+	instance.borderColor     = settings.borderColor or { 0, 0, 0, 1 }
+	instance.backgroundColor = settings.backgroundColor or { 0, 0, 0, 1 }
+	instance.children        = {}
 	return instance
 end
 
@@ -88,12 +91,21 @@ function Container:getPosition()
 end
 
 function Container:draw()
-	love.graphics.setColor(1, 0, 0, 1)
-	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	if self.backgroundColor then
+		love.graphics.setColor(self.backgroundColor)
+		love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+	end
+
+	if self.border or self.borderColor then
+		love.graphics.setColor(self.borderColor)
+		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	end
+
 	love.graphics.setColor(1, 1, 1, 1)
 	for _, child in ipairs(self.children) do
 		child:draw()
 	end
+	love.graphics.setColor(1, 1, 1, 1)
 end
 
 return Container

@@ -10,6 +10,7 @@ function Container.new(settings)
 	instance.h        = settings.h or 0
 	instance.layout   = settings.layout or "horizontal"
 	instance.spacing  = settings.spacing or 10
+	instance.label    = "container"
 	instance.children = {}
 	return instance
 end
@@ -25,6 +26,25 @@ function Container:addContainer(settings)
 	local container = Container.new(settings)
 	table.insert(self.children, container)
 	self:updateChildren()
+	return self
+end
+
+function Container:attach(targets, side)
+	if targets.label then
+		targets = { targets }
+	end
+
+	for i = 1, #targets do
+		if side == "bottom" then
+			self.x = targets[1].x
+			self.y = targets[1].y + targets[1].h
+			self.w = self.w + targets[i].w
+		elseif side == "right" then
+			self.x = targets[1].x + targets[1].w
+			self.y = targets[1].y
+			self.h = self.h + targets[i].h
+		end
+	end
 	return self
 end
 
@@ -47,11 +67,11 @@ function Container:updateChildren()
 	end
 
 	if self.layout == "horizontal" then
-		self.w = math.max(offset - self.spacing, 0)
-		self.h = maxHeight
+		self.w = math.max(offset - self.spacing, self.w)
+		self.h = math.max(maxHeight, self.h)
 	else
-		self.w = maxWidth
-		self.h = math.max(offset - self.spacing, 0)
+		self.w = math.max(maxWidth, self.w)
+		self.h = math.max(offset - self.spacing, self.h)
 	end
 end
 

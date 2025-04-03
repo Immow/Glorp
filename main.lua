@@ -9,10 +9,6 @@ function love.load()
 		:addContainer({ layout = "horizontal" })
 		:addButton({ w = 80, h = 50, label = "test3" })
 		:addButton({ w = 50, h = 50, label = "test4" })
-	window
-		:addContainer({ layout = "horizontal" })
-		:addButton({ w = 80, h = 50, label = "test5" })
-		:addButton({ w = 50, h = 50, label = "test6" })
 
 	print(Tprint(window))
 end

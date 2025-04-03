@@ -13,7 +13,22 @@ function Button.new(settings)
 		vertical = settings.alignment and settings.alignment.vertical or "center"
 	}
 	instance.font      = settings.font or love.graphics:getFont()
+	instance.fn        = settings.fn or function() print(instance.label) end
 	return instance
+end
+
+function Button:isMouseOnButton(mx, my)
+	local xRegion = self.x <= mx and self.x + self.w >= mx
+	local yRegion = self.y <= my and self.y + self.h >= my
+	return xRegion and yRegion
+end
+
+function Button:mousepressed(mx, my, mouseButton)
+	if mouseButton ~= 1 then return end
+	local hovered = self:isMouseOnButton(mx, my)
+	if hovered then
+		self.fn()
+	end
 end
 
 function Button:getDimensions()

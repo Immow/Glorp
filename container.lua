@@ -112,6 +112,14 @@ function Container:updateChildren()
 	end
 end
 
+function Container:mousepressed(x, y, button, isTouch)
+	for _, child in ipairs(self.children) do
+		if child.mousepressed then
+			child:mousepressed(x, y, button, isTouch)
+		end
+	end
+end
+
 function Container:update(dt)
 
 end

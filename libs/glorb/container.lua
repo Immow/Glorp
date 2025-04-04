@@ -1,9 +1,12 @@
-local Button = require("button")
+local folder_path = (...):match("(.-)[^%.]+$")
+local Button = require(folder_path .. "button")
+
 local Container = {}
 Container.__index = Container
 
 function Container.new(settings)
 	local instance           = setmetatable({}, Container)
+	instance.id              = settings.id
 	instance.x               = settings.x or 0
 	instance.y               = settings.y or 0
 	instance.w               = settings.w or 0
@@ -30,32 +33,6 @@ function Container:addButton(settings)
 	return self
 end
 
-function Container:addContainer(settings)
-	local container = Container.new(settings)
-	table.insert(self.children, container)
-	self:updateChildren()
-	return self
-end
-
-function Container:attach(targets, side)
-	if targets.label then
-		targets = { targets }
-	end
-
-	for i = 1, #targets do
-		if side == "bottom" then
-			self.x = targets[1].x
-			self.y = targets[1].y + targets[1].h
-			self.w = self.w + targets[i].w
-		elseif side == "right" then
-			self.x = targets[1].x + targets[1].w
-			self.y = targets[1].y
-			self.h = self.h + targets[i].h
-		end
-	end
-	return self
-end
-
 function Container:updateChildren()
 	local childrenTotalWidth, childrenTotalHeight = 0, 0
 
@@ -79,7 +56,7 @@ function Container:updateChildren()
 		startX = self.x + (self.w - childrenTotalWidth) / 2
 	elseif self.alignment.horizontal == "right" then
 		startX = self.x + self.w - childrenTotalWidth
-	else -- Default to left
+	else
 		startX = self.x
 	end
 
@@ -105,9 +82,6 @@ function Container:updateChildren()
 			end
 			offsetX = offsetX + child.w + self.spacing
 		else
-			-- child.x = startX + (self.w - child.w) / 2
-			-- child.y = offsetY
-			-- offsetY = offsetY + child.h + self.spacing
 			child.y = offsetY
 			if self.alignment.horizontal == "bottom" then
 				child.x = self.x + self.w - child.w

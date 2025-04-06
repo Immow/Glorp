@@ -26,25 +26,51 @@ function Glorb.attach(element_id, target_ids, side)
 
 	local targets = {}
 	for _, id in ipairs(target_ids) do
-		if not Glorb.elements[id] then
+		local target = Glorb.elements[id]
+		if not target then
 			error("Target element with ID " .. id .. " not found.")
 		end
-		table.insert(targets, Glorb.elements[id])
+		table.insert(targets, target)
 	end
 
-	for i = 1, #targets do
-		if side == "bottom" then
-			element.x = targets[1].x
-			element.y = targets[1].y + targets[1].h
-			element.w = element.w + targets[i].w
-		elseif side == "right" then
-			element.x = targets[1].x + targets[1].w
-			element.y = targets[1].y
-			element.h = element.h + targets[i].h
-		end
+	local anchor = targets[1]
+	local totalWidth, totalHeight = 0, 0
+	for _, target in ipairs(targets) do
+		totalWidth = totalWidth + target.w
+		totalHeight = totalHeight + target.h
+	end
+
+	if side == "bottom" then
+		element.x = anchor.x
+		element.y = anchor.y + anchor.h
+		element.w = totalWidth
+	elseif side == "top" then
+		element.x = anchor.x
+		element.y = anchor.y - element.h
+		element.w = totalWidth
+	elseif side == "right" then
+		element.x = anchor.x + anchor.w
+		element.y = anchor.y
+		element.h = totalHeight
+	elseif side == "left" then
+		element.x = anchor.x - element.w
+		element.y = anchor.y
+		element.h = totalHeight
+	end
+
+	if element.updateChildren then
+		element:updateChildren()
 	end
 
 	return element
+end
+
+function Glorb.finalizeLayout()
+	for _, element in pairs(Glorb.elements) do
+		if element.updateChildren then
+			element:updateChildren()
+		end
+	end
 end
 
 function Glorb.newContainer(settings)

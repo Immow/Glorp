@@ -95,6 +95,14 @@ function Glorb:draw()
 	end
 end
 
+function Glorb:wheelmoved(x, y)
+	for _, element in pairs(self.elements) do
+		if element.wheelmoved then
+			element:wheelmoved(x, y)
+		end
+	end
+end
+
 function Glorb:mousepressed(x, y, button, isTouch)
 	local topmost = nil
 

@@ -1,5 +1,6 @@
 local folder_path = (...):match("(.-)[^%.]+$")
 local Button = require(folder_path .. "button")
+local ScrollArea = require(folder_path .. "scrollarea")
 
 local Container = {}
 Container.__index = Container
@@ -30,6 +31,13 @@ function Container:addButton(settings)
 	local button = Button.new(settings)
 	table.insert(self.children, button)
 	self:updateChildren()
+	return self
+end
+
+function Container:addScrollarea(settings)
+	local scrollarea = ScrollArea.new(settings)
+	table.insert(self.children, scrollarea)
+	self.h = self.children[1].h
 	return self
 end
 
@@ -95,6 +103,14 @@ function Container:updateChildren()
 	end
 end
 
+function Container:wheelmoved(x, y)
+	for _, child in ipairs(self.children) do
+		if child.wheelmoved then
+			child:wheelmoved(x, y)
+		end
+	end
+end
+
 function Container:mousepressed(mx, my, button, isTouch)
 	if mx < self.x or mx > self.x + self.w or my < self.y or my > self.y + self.h then
 		return
@@ -108,7 +124,11 @@ function Container:mousepressed(mx, my, button, isTouch)
 end
 
 function Container:update(dt)
-
+	-- for _, child in ipairs(self.children) do
+	-- 	if child.update then
+	-- 		child:update(dt)
+	-- 	end
+	-- end
 end
 
 function Container:getDimensions()

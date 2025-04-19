@@ -1,34 +1,62 @@
 local Glorb = require("libs.glorb")
 require("tprint")
 
+local active = 1
+local tests = {}
+
+tests[1] = function()
+	Glorb.newContainer({
+		id = "test1",
+		x = 150,
+		y = 100,
+		w = 250,
+		h = 100,
+		scrollable = true,
+		layout = "vertical",
+		alignment = { horizontal = "center", vertical = "top" },
+		borderColor = { 1, 1, 1, 1 },
+		backgroundColor = { 1, 0, 0, 0.5 },
+	})
+		:addButton({ label = "button1" })
+		:addButton({ label = "button2" })
+		:addButton({ label = "button3" })
+end
+
+tests[2] = function()
+	Glorb.newContainer({
+		id = "test1",
+		x = 150,
+		y = 100,
+		w = 250,
+		h = 100,
+		layout = "vertical",
+		alignment = { horizontal = "center", vertical = "top" },
+		borderColor = { 1, 1, 1, 1 },
+		backgroundColor = { 1, 0, 0, 0.5 },
+	})
+		:addButton({ label = "button1" })
+end
+
 function love.load()
-	-- Glorb.newContainer({ id = "test1", w = 250, h = 200, x = 150, y = 100, layout = "vertical", alignment = { horizontal = "left", vertical = "center" }, borderColor = { 1, 1, 1, 1 }, backgroundColor = { 1, 0, 0, 0.5 } })
-	-- 	:addButton({ w = 80, h = 50, label = "button1" })
-	-- 	:addButton({ w = 50, h = 80, label = "button2" })
-	-- Glorb.newContainer({ id = "test2", layout = "horizontal", borderColor = { 1, 1, 1, 1 }, backgroundColor = { 0, 1, 0, 0.5 } })
-	-- 	:addButton({ w = 100, h = 50, label = "button3" })
-	-- Glorb.attach("test2", "test1", "right")
-	-- Glorb.newContainer({ id = "test3", borderColor = { 1, 1, 1, 1 }, backgroundColor = { 0, 0, 1, 0.5 } })
-	-- 	:addButton({ w = 100, h = 50, label = "button5" })
-	-- Glorb.attach("test3", { "test1", "test2" }, "bottom")
-	-- Glorb.newContainer({ id = "test4", borderColor = { 1, 1, 1, 1 }, backgroundColor = { 0, 1, 0, 0.5 } })
-	-- 	:addButton({ w = 50, h = 50, label = "button6" })
-	-- Glorb.attach("test4", { "test1", "test3" }, "left")
-	-- Glorb.newContainer({ id = "test5", borderColor = { 1, 1, 1, 1 }, backgroundColor = { 0, 1, 0, 0.5 } })
-	-- 	:addButton({ w = 75, h = 90, label = "button7" })
-	-- Glorb.attach("test5", { "test1", "test2" }, "top")
+	tests[1]()
+end
 
-	-- 	local ScrollArea = require("glorb.scrollarea")
-
-	-- local scrollArea = ScrollArea.new({ id = "scroll1", x = 100, y = 100, w = 200, h = 300 })
-	-- Glorb.registerElement(scrollArea)
-
-	-- for i = 1, 10 do
-	-- 	scrollArea:addElement(Glorb.Container.new({ w = 180, h = 50, label = "Item " .. i }))
-	-- end
-
-	Glorb.newContainer({ id = "test1", w = 250, h = 200, borderColor = { 1, 1, 1, 1 }, backgroundColor = { 1, 0, 0, 0.5 } })
-		:addScrollarea({ size = 20, h = 400, buttonLabel = "test" })
+function love.keypressed(key, scancode, isrepeat)
+	if key == "p" then
+		Glorb:purge()
+	elseif key == "left" then
+		if active > 1 then
+			active = active - 1
+			Glorb:purge()
+			tests[active]()
+		end
+	elseif key == "right" then
+		if active < #tests then
+			active = active + 1
+			Glorb:purge()
+			tests[active]()
+		end
+	end
 end
 
 function love.mousepressed(x, y, button, isTouch)
@@ -40,5 +68,6 @@ function love.wheelmoved(x, y)
 end
 
 function love.draw()
+	love.window.setTitle("active test " .. active)
 	Glorb:draw()
 end

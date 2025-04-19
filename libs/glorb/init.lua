@@ -14,6 +14,10 @@ function Glorb.registerElement(element)
 	end
 end
 
+function Glorb:purge()
+	self.elements = {}
+end
+
 function Glorb.attach(element_id, target_ids, side)
 	local element = Glorb.elements[element_id]
 	if not element then

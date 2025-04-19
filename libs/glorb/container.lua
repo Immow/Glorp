@@ -1,29 +1,36 @@
 local folder_path = (...):match("(.-)[^%.]+$")
 local Button = require(folder_path .. "button")
-local ScrollArea = require(folder_path .. "scrollarea")
 
 local Container = {}
 Container.__index = Container
 
 function Container.new(settings)
-	local instance           = setmetatable({}, Container)
-	instance.id              = settings.id
-	instance.x               = settings.x or 0
-	instance.y               = settings.y or 0
-	instance.w               = settings.w or 0
-	instance.h               = settings.h or 0
-	instance.layout          = settings.layout or "horizontal"
-	instance.spacing         = settings.spacing or 10
-	instance.label           = "container"
-	instance.border          = settings.border or true
-	instance.borderColor     = settings.borderColor or { 0, 0, 0, 1 }
+	local instance = setmetatable({}, Container)
+	instance.id = settings.id
+	instance.x = settings.x or 0
+	instance.y = settings.y or 0
+	instance.w = settings.w or 0
+	instance.h = settings.h or 0
+	instance.layout = settings.layout or "horizontal"
+	instance.spacing = settings.spacing or 10
+	instance.label = "container"
+	instance.border = settings.border or true
+	instance.borderColor = settings.borderColor or { 0, 0, 0, 1 }
 	instance.backgroundColor = settings.backgroundColor or { 0, 0, 0, 1 }
-	instance.alignment       = {
+	instance.scrollable = settings.scrollable or false
+	instance.scrollY = 0
+	instance.maxScrollY = 0
+	instance.alignment = {
 		horizontal = settings.alignment and settings.alignment.horizontal or "center",
 		vertical = settings.alignment and settings.alignment.vertical or "center"
 	}
 
-	instance.children        = {}
+	if settings.scrollable then
+		instance.vertical = "top"
+	end
+
+	instance.children = {}
+
 	return instance
 end
 
@@ -31,13 +38,6 @@ function Container:addButton(settings)
 	local button = Button.new(settings)
 	table.insert(self.children, button)
 	self:updateChildren()
-	return self
-end
-
-function Container:addScrollarea(settings)
-	local scrollarea = ScrollArea.new(settings)
-	table.insert(self.children, scrollarea)
-	self.h = self.children[1].h
 	return self
 end
 
@@ -55,11 +55,12 @@ function Container:updateChildren()
 	end
 
 	self.w = math.max(self.w, childrenTotalWidth)
-	self.h = math.max(self.h, childrenTotalHeight)
+	if not self.scrollable then
+		self.h = math.max(self.h, childrenTotalHeight)
+	end
+	self.maxScrollY = childrenTotalHeight - self.h
 
 	local startX, startY
-
-	-- Horizontal Alignment
 	if self.alignment.horizontal == "center" then
 		startX = self.x + (self.w - childrenTotalWidth) / 2
 	elseif self.alignment.horizontal == "right" then
@@ -68,7 +69,6 @@ function Container:updateChildren()
 		startX = self.x
 	end
 
-	-- Vertical Alignment
 	if self.alignment.vertical == "center" then
 		startY = self.y + (self.h - childrenTotalHeight) / 2
 	elseif self.alignment.vertical == "bottom" then
@@ -104,10 +104,8 @@ function Container:updateChildren()
 end
 
 function Container:wheelmoved(x, y)
-	for _, child in ipairs(self.children) do
-		if child.wheelmoved then
-			child:wheelmoved(x, y)
-		end
+	if self.scrollable then
+		self.scrollY = math.max(0, math.min(self.scrollY - y * 20, self.maxScrollY))
 	end
 end
 
@@ -116,19 +114,20 @@ function Container:mousepressed(mx, my, button, isTouch)
 		return
 	end
 
+	local adjustedY = my + (self.scrollable and self.scrollY or 0)
 	for _, child in ipairs(self.children) do
 		if child.mousepressed then
-			child:mousepressed(mx, my, button, isTouch)
+			child:mousepressed(mx, adjustedY, button, isTouch)
 		end
 	end
 end
 
 function Container:update(dt)
-	-- for _, child in ipairs(self.children) do
-	-- 	if child.update then
-	-- 		child:update(dt)
-	-- 	end
-	-- end
+	for _, child in ipairs(self.children) do
+		if child.update then
+			child:update(dt)
+		end
+	end
 end
 
 function Container:getDimensions()
@@ -150,10 +149,22 @@ function Container:draw()
 		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 	end
 
-	love.graphics.setColor(1, 1, 1, 1)
+
+	if self.scrollable then
+		love.graphics.setScissor(self.x, self.y, self.w, self.h)
+		love.graphics.push()
+		love.graphics.translate(0, -self.scrollY)
+	end
+
 	for _, child in ipairs(self.children) do
 		child:draw()
 	end
+
+	if self.scrollable then
+		love.graphics.pop()
+		love.graphics.setScissor()
+	end
+
 	love.graphics.setColor(1, 1, 1, 1)
 end
 

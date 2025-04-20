@@ -2,40 +2,281 @@ local Glorb = require("libs.glorb")
 require("tprint")
 
 local active = 1
-local tests = {}
+local tests = {
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			layout = "vertical",
+			alignment = { horizontal = "center", vertical = "center" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+	end,
 
-tests[1] = function()
-	Glorb.newContainer({
-		id = "test1",
-		x = 150,
-		y = 100,
-		w = 250,
-		h = 100,
-		scrollable = true,
-		layout = "vertical",
-		alignment = { horizontal = "center", vertical = "top" },
-		borderColor = { 1, 1, 1, 1 },
-		backgroundColor = { 1, 0, 0, 0.5 },
-	})
-		:addButton({ label = "button1" })
-		:addButton({ label = "button2" })
-		:addButton({ label = "button3" })
-end
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			layout = "vertical",
+			alignment = { horizontal = "left", vertical = "center" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+	end,
 
-tests[2] = function()
-	Glorb.newContainer({
-		id = "test1",
-		x = 150,
-		y = 100,
-		w = 250,
-		h = 100,
-		layout = "vertical",
-		alignment = { horizontal = "center", vertical = "top" },
-		borderColor = { 1, 1, 1, 1 },
-		backgroundColor = { 1, 0, 0, 0.5 },
-	})
-		:addButton({ label = "button1" })
-end
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			layout = "vertical",
+			alignment = { horizontal = "right", vertical = "center" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+	end,
+
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			layout = "vertical",
+			alignment = { horizontal = "center", vertical = "top" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+	end,
+
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			layout = "vertical",
+			alignment = { horizontal = "center", vertical = "bottom" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+	end,
+
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			x = 150,
+			y = 100,
+			w = 250,
+			h = 100,
+			layout = "vertical",
+			alignment = { horizontal = "center", vertical = "center" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+	end,
+
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			x = 150,
+			y = 100,
+			w = 250,
+			h = 100,
+			layout = "vertical",
+			alignment = { horizontal = "left", vertical = "center" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+	end,
+
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			x = 150,
+			y = 100,
+			w = 250,
+			h = 100,
+			layout = "vertical",
+			alignment = { horizontal = "right", vertical = "center" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+	end
+	,
+
+	-- Layout Horizontal
+
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			x = 150,
+			y = 100,
+			w = 250,
+			h = 100,
+			layout = "horizontal",
+			alignment = { horizontal = "center", vertical = "center" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+	end
+	,
+
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			x = 150,
+			y = 100,
+			w = 250,
+			h = 100,
+			layout = "horizontal",
+			alignment = { horizontal = "center", vertical = "top" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+	end
+	,
+
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			x = 150,
+			y = 100,
+			w = 250,
+			h = 100,
+			layout = "horizontal",
+			alignment = { horizontal = "center", vertical = "bottom" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+	end
+	,
+
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			x = 200,
+			y = 200,
+			w = 250,
+			h = 100,
+			layout = "horizontal",
+			alignment = { horizontal = "center", vertical = "bottom" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+		Glorb.newContainer({
+			id = "test2",
+			layout = "horizontal",
+			alignment = { horizontal = "center", vertical = "bottom" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+		Glorb.attach("test2", "test1", "bottom")
+		Glorb.newContainer({
+			id = "test3",
+			layout = "horizontal",
+			alignment = { horizontal = "center", vertical = "bottom" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+		Glorb.attach("test3", "test1", "left")
+		Glorb.newContainer({
+			id = "test4",
+			layout = "horizontal",
+			alignment = { horizontal = "center", vertical = "bottom" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+		Glorb.attach("test4", "test1", "top")
+		Glorb.newContainer({
+			id = "test5",
+			layout = "horizontal",
+			alignment = { horizontal = "center", vertical = "bottom" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+		Glorb.attach("test5", "test1", "right")
+	end
+	,
+
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			x = 200,
+			y = 200,
+			w = 250,
+			h = 100,
+			layout = "horizontal",
+			alignment = { horizontal = "center", vertical = "center" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 }
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+		Glorb.newContainer({
+			id = "test2",
+			layout = "horizontal",
+			alignment = { horizontal = "center", vertical = "center" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 }
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+		Glorb.attach("test2", "test1", "bottom")
+		Glorb.newContainer({
+			id = "test3",
+			layout = "horizontal",
+			alignment = { horizontal = "center", vertical = "center" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 }
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+		Glorb.attach("test3", { "test1", "test2" }, "right")
+	end
+}
 
 function love.load()
 	tests[1]()
@@ -44,18 +285,20 @@ end
 function love.keypressed(key, scancode, isrepeat)
 	if key == "p" then
 		Glorb:purge()
-	elseif key == "left" then
-		if active > 1 then
+	elseif key == "left" or key == "right" then
+		if key == "left" then
 			active = active - 1
-			Glorb:purge()
-			tests[active]()
-		end
-	elseif key == "right" then
-		if active < #tests then
+			if active < 1 then
+				active = #tests
+			end
+		else -- key == "right"
 			active = active + 1
-			Glorb:purge()
-			tests[active]()
+			if active > #tests then
+				active = 1
+			end
 		end
+		Glorb:purge()
+		tests[active]()
 	end
 end
 

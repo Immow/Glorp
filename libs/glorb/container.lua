@@ -42,7 +42,7 @@ function Container:addButton(settings)
 end
 
 function Container:updateChildren()
-	local childrenTotalWidth, childrenTotalHeight = 0, 0
+	local childrenTotalWidth, childrenTotalHeight = -self.spacing, -self.spacing
 
 	for i, child in ipairs(self.children) do
 		if self.layout == "horizontal" then

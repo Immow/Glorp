@@ -6,6 +6,7 @@ Container.__index = Container
 
 function Container.new(settings)
 	local instance = setmetatable({}, Container)
+
 	instance.id = settings.id
 	instance.x = settings.x or 0
 	instance.y = settings.y or 0
@@ -14,15 +15,15 @@ function Container.new(settings)
 	instance.layout = settings.layout or "horizontal"
 	instance.spacing = settings.spacing or 10
 	instance.label = "container"
-	instance.border = settings.border or true
+	instance.border = settings.border ~= false
 	instance.borderColor = settings.borderColor or { 0, 0, 0, 1 }
 	instance.backgroundColor = settings.backgroundColor or { 0, 0, 0, 1 }
 	instance.scrollable = settings.scrollable or false
 	instance.scrollY = 0
 	instance.maxScrollY = 0
 	instance.alignment = {
-		horizontal = settings.alignment and settings.alignment.horizontal or "center",
-		vertical = settings.alignment and settings.alignment.vertical or "center"
+		horizontal = (settings.alignment and settings.alignment.horizontal) or "center",
+		vertical = (settings.alignment and settings.alignment.vertical) or "center"
 	}
 
 	if settings.scrollable then

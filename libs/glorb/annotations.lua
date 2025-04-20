@@ -1,0 +1,15 @@
+---@meta
+
+---@class Glorb.containerSettings
+---@field id string,
+---@field x number,
+---@field y number,
+---@field w number,
+---@field h number,
+---@field layout "horizontal"|"vertical",
+---@field spacing number,
+---@field border boolean,
+---@field borderColor table,
+---@field backgroundColor table,
+---@field scrollable boolean,
+---@field alignment { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}

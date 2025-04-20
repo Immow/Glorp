@@ -276,6 +276,23 @@ local tests = {
 			:addButton({ label = "button3" })
 		Glorb.attach("test3", { "test1", "test2" }, "right")
 	end
+	,
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			x = 200,
+			y = 200,
+			w = 250,
+			h = 100,
+			scrollable = true,
+			alignment = { horizontal = "center", vertical = "center" },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 }
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+	end
 }
 
 function love.load()

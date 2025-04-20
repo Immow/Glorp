@@ -1,4 +1,5 @@
 local folder_path = (...):match("(.-)[^%.]+$")
+require(folder_path .. "glorb.annotations")
 
 local Glorb = {
 	elements = {}
@@ -77,6 +78,7 @@ function Glorb.finalizeLayout()
 	end
 end
 
+---@param settings Glorb.containerSettings
 function Glorb.newContainer(settings)
 	local instance = Glorb.Container.new(settings)
 	Glorb.registerElement(instance)

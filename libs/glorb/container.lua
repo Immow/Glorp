@@ -1,5 +1,6 @@
 local folder_path = (...):match("(.-)[^%.]+$")
 local Button = require(folder_path .. "button")
+local Image = require(folder_path .. "image")
 
 local Container = {}
 Container.__index = Container
@@ -42,15 +43,26 @@ function Container:addButton(settings)
 	return self
 end
 
-function Container:updateChildren()
-	local childrenTotalWidth, childrenTotalHeight = -self.spacing, -self.spacing
+function Container:addImage(settings)
+	local image = Image.new(settings)
+	table.insert(self.children, image)
+	self:updateChildren()
+	return self
+end
 
-	for i, child in ipairs(self.children) do
-		if self.layout == "horizontal" then
-			childrenTotalWidth = childrenTotalWidth + child.w + (self.spacing * (i - 1))
+function Container:updateChildren()
+	local childrenTotalWidth, childrenTotalHeight = 0, 0
+
+	if self.layout == "horizontal" then
+		childrenTotalWidth = -self.spacing
+		for _, child in ipairs(self.children) do
+			childrenTotalWidth = childrenTotalWidth + child.w + self.spacing
 			childrenTotalHeight = math.max(childrenTotalHeight, child.h)
-		else
-			childrenTotalHeight = childrenTotalHeight + child.h + (self.spacing * (i - 1))
+		end
+	else
+		childrenTotalHeight = -self.spacing
+		for _, child in ipairs(self.children) do
+			childrenTotalHeight = childrenTotalHeight + child.h + self.spacing
 			childrenTotalWidth = math.max(childrenTotalWidth, child.w)
 		end
 	end
@@ -59,7 +71,7 @@ function Container:updateChildren()
 	if not self.scrollable then
 		self.h = math.max(self.h, childrenTotalHeight)
 	end
-	self.maxScrollY = childrenTotalHeight - self.h
+	self.maxScrollY = childrenTotalHeight
 
 	local startX, startY
 	if self.alignment.horizontal == "center" then

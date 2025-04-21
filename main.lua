@@ -320,10 +320,40 @@ local tests = {
 			:addImage({ image = glorb_alien })
 			:addImage({ image = glorb_alien })
 	end
+	,
+
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			x = 200,
+			y = 200,
+			w = 200,
+			h = 200,
+			layout = "vertical",
+			scrollable = true,
+			scrollbar = true,
+			alignment = { horizontal = "center", vertical = "center" },
+			showScrollbar = true,
+			bar = { w = 20 },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 }
+		})
+			:addButton({ label = "button1" })
+			:addButton({ label = "button2" })
+			:addButton({ label = "button3" })
+			:addButton({ label = "button4" })
+			:addButton({ label = "button5" })
+			:addButton({ label = "button6" })
+			:addButton({ label = "button7" })
+			:addButton({ label = "button8" })
+			:addImage({ image = glorb_alien })
+			:addButton({ label = "button10" })
+			:addButton({ label = "button11" })
+	end
 }
 
 function love.load()
-	tests[14]()
+	tests[16]()
 end
 
 function love.keypressed(key, scancode, isrepeat)
@@ -350,8 +380,16 @@ function love.mousepressed(x, y, button, isTouch)
 	Glorb:mousepressed(x, y, button, isTouch)
 end
 
+function love.mousereleased(x, y, button, isTouch)
+	Glorb:mousereleased(x, y, button, isTouch)
+end
+
 function love.wheelmoved(x, y)
 	Glorb:wheelmoved(x, y)
+end
+
+function love.mousemoved(x, y, dx, dy)
+	Glorb:mousemoved(x, y, dx, dy)
 end
 
 function love.draw()

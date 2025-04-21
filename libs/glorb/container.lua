@@ -20,15 +20,25 @@ function Container.new(settings)
 	instance.borderColor = settings.borderColor or { 0, 0, 0, 1 }
 	instance.backgroundColor = settings.backgroundColor or { 0, 0, 0, 1 }
 	instance.scrollable = settings.scrollable or false
+	instance.showScrollbar = settings.showScrollbar or false
 	instance.scrollY = 0
 	instance.maxScrollY = 0
+	instance.draggingBar = false
+	instance.barOffsetY = 0
 	instance.alignment = {
 		horizontal = (settings.alignment and settings.alignment.horizontal) or "center",
 		vertical = (settings.alignment and settings.alignment.vertical) or "center"
 	}
+	instance.bar = {
+		x = 0,
+		y = 0,
+		w = (settings.bar and settings.bar.w) or 5,
+		h = (settings.bar and settings.bar.h) or 20,
+		color = settings.barColor or { 0.8, 0.8, 0.8, 0.7 }
+	}
 
 	if settings.scrollable then
-		instance.vertical = "top"
+		instance.alignment.vertical = "top"
 	end
 
 	instance.children = {}
@@ -71,7 +81,7 @@ function Container:updateChildren()
 	if not self.scrollable then
 		self.h = math.max(self.h, childrenTotalHeight)
 	end
-	self.maxScrollY = childrenTotalHeight
+	self.maxScrollY = math.max(0, childrenTotalHeight - self.h)
 
 	local startX, startY
 	if self.alignment.horizontal == "center" then
@@ -104,7 +114,7 @@ function Container:updateChildren()
 			offsetX = offsetX + child.w + self.spacing
 		else
 			child.y = offsetY
-			if self.alignment.horizontal == "bottom" then
+			if self.alignment.horizontal == "right" then
 				child.x = self.x + self.w - child.w
 			elseif self.alignment.horizontal == "center" then
 				child.x = self.x + (self.w - child.w) / 2
@@ -127,11 +137,33 @@ function Container:mousepressed(mx, my, button, isTouch)
 		return
 	end
 
+	if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
+		local barX = self.x + self.w - self.bar.w
+		if mx >= barX and mx <= barX + self.bar.w and my >= self.bar.y and my <= self.bar.y + self.bar.h then
+			self.draggingBar = true
+			self.barOffsetY = my - self.bar.y
+			return
+		end
+	end
+
 	local adjustedY = my + (self.scrollable and self.scrollY or 0)
 	for _, child in ipairs(self.children) do
 		if child.mousepressed then
 			child:mousepressed(mx, adjustedY, button, isTouch)
 		end
+	end
+end
+
+function Container:mousereleased(mx, my, button, isTouch)
+	self.draggingBar = false
+end
+
+function Container:mousemoved(x, y, dx, dy, istouch)
+	if self.draggingBar and self.scrollable then
+		local trackHeight = self.h - self.bar.h
+		local newBarY = math.max(self.y, math.min(y - self.barOffsetY, self.y + trackHeight))
+		self.bar.y = newBarY
+		self.scrollY = ((self.bar.y - self.y) / trackHeight) * self.maxScrollY
 	end
 end
 
@@ -162,7 +194,6 @@ function Container:draw()
 		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 	end
 
-
 	if self.scrollable then
 		love.graphics.setScissor(self.x, self.y, self.w, self.h)
 		love.graphics.push()
@@ -176,6 +207,12 @@ function Container:draw()
 	if self.scrollable then
 		love.graphics.pop()
 		love.graphics.setScissor()
+	end
+
+	if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
+		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
+		love.graphics.setColor(self.bar.color)
+		love.graphics.rectangle("fill", self.x + self.w - self.bar.w, self.bar.y, self.bar.w, self.bar.h)
 	end
 
 	love.graphics.setColor(1, 1, 1, 1)

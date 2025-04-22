@@ -11,16 +11,31 @@
 ---@field border? boolean
 ---@field borderColor? table
 ---@field backgroundColor? table
+---@field showScrollbar? boolean
 ---@field scrollable? boolean
 ---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}
+---@field bar?  { x: number, y: number, w: number ,h: number ,color: table }
 
----@class Button.buttonSettings
+---@class Glorb.Container
+---@field addButton? fun(self: Glorb.Container, settings: Glorb.ButtonSettings): Glorb.Container
+---@field addImage? fun(self: Glorb.Container, settings: Glorb.ImageSettings): Glorb.Container
+
+---@class Glorb.ButtonSettings
 ---@field id? string
 ---@field x? number
 ---@field y? number
 ---@field w? number
 ---@field h? number
+---@field label? string
 ---@field layout? "horizontal"|"vertical"
 ---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}
 ---@field font? string
 ---@field fn? function
+
+---@class Glorb.ImageSettings
+---@field id? string
+---@field x? number
+---@field y? number
+---@field w? number
+---@field h? number
+---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}

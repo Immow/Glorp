@@ -1,11 +1,13 @@
 local folder_path = (...):match("(.-)[^%.]+$")
--- require(folder_path .. "glorb.annotations")
+require(folder_path .. "annotations")
 local Button = require(folder_path .. "button")
 local Image = require(folder_path .. "image")
 
 local Container = {}
 Container.__index = Container
 
+---@param settings Glorb.containerSettings
+---@return Glorb.Container
 function Container.new(settings)
 	local instance = setmetatable({}, Container)
 
@@ -35,7 +37,7 @@ function Container.new(settings)
 		y = 0,
 		w = (settings.bar and settings.bar.w) or 5,
 		h = (settings.bar and settings.bar.h) or 20,
-		color = settings.barColor or { 0.8, 0.8, 0.8, 0.7 }
+		color = (settings.bar and settings.bar.color) or { 0.8, 0.8, 0.8, 0.7 }
 	}
 
 	if settings.scrollable then
@@ -47,7 +49,8 @@ function Container.new(settings)
 	return instance
 end
 
----@param settings Button.buttonSettings
+---@param settings Glorb.ButtonSettings
+---@return Glorb.Container
 function Container:addButton(settings)
 	local button = Button.new(settings)
 	table.insert(self.children, button)

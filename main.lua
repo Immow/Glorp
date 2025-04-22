@@ -335,7 +335,7 @@ local tests = {
 			alignment = { horizontal = "center", vertical = "center" },
 			bar = { w = 20 },
 			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 }
+			backgroundColor = { 1, 0, 0, 0.5 },
 		})
 			:addButton({ label = "button1" })
 			:addButton({ label = "button2" })
@@ -347,7 +347,6 @@ local tests = {
 			:addButton({ label = "button8" })
 			:addImage({ image = glorb_alien })
 			:addButton({ label = "button10" })
-			:addButton({ label = "button11" })
 	end
 }
 

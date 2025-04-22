@@ -79,6 +79,7 @@ function Glorb.finalizeLayout()
 end
 
 ---@param settings Glorb.containerSettings
+---@return Glorb.Container
 function Glorb.newContainer(settings)
 	local instance = Glorb.Container.new(settings)
 	Glorb.registerElement(instance)

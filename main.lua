@@ -348,6 +348,8 @@ local tests = {
 			:addImage({ image = glorb_alien })
 			:addButton({ label = "button10" })
 	end
+	,
+	Glorb.newContainer({})
 }
 
 function love.load()

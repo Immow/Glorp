@@ -8,11 +8,12 @@
 ---@field h? number
 ---@field layout? "horizontal"|"vertical"
 ---@field spacing? number
+---@field label? string
 ---@field border? boolean
 ---@field borderColor? table
 ---@field backgroundColor? table
----@field showScrollbar? boolean
 ---@field scrollable? boolean
+---@field showScrollbar? boolean
 ---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}
 ---@field bar?  { x: number, y: number, w: number ,h: number ,color: table }
 
@@ -33,9 +34,9 @@
 ---@field fn? function
 
 ---@class Glorb.ImageSettings
----@field id? string
+---@field label? string
+---@field image? love.Image
 ---@field x? number
 ---@field y? number
 ---@field w? number
 ---@field h? number
----@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}

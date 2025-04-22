@@ -331,9 +331,8 @@ local tests = {
 			h = 200,
 			layout = "vertical",
 			scrollable = true,
-			scrollbar = true,
-			alignment = { horizontal = "center", vertical = "center" },
 			showScrollbar = true,
+			alignment = { horizontal = "center", vertical = "center" },
 			bar = { w = 20 },
 			borderColor = { 1, 1, 1, 1 },
 			backgroundColor = { 1, 0, 0, 0.5 }

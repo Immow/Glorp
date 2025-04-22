@@ -3,6 +3,7 @@ Button.__index = Button
 
 function Button.new(settings)
 	local instance     = setmetatable({}, Button)
+	instance.id        = settings.id
 	instance.x         = settings.x or 0
 	instance.y         = settings.y or 0
 	instance.w         = settings.w or 100

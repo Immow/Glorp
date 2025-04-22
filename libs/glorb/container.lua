@@ -1,4 +1,5 @@
 local folder_path = (...):match("(.-)[^%.]+$")
+-- require(folder_path .. "glorb.annotations")
 local Button = require(folder_path .. "button")
 local Image = require(folder_path .. "image")
 
@@ -46,9 +47,19 @@ function Container.new(settings)
 	return instance
 end
 
+---@param settings Button.buttonSettings
 function Container:addButton(settings)
 	local button = Button.new(settings)
 	table.insert(self.children, button)
+	self:updateChildren()
+	return self
+end
+
+function Container:addButtonList(settings, list)
+	for i = 1, #list do
+		local button = Button.new(settings)
+		table.insert(self.children, button)
+	end
 	self:updateChildren()
 	return self
 end

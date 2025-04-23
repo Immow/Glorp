@@ -58,15 +58,28 @@ function Container:addButton(settings)
 	return self
 end
 
-function Container:addButtonList(settings, list)
-	for i = 1, #list do
-		local button = Button.new(settings)
+function Container:addButtonList(settings)
+	for i, label in ipairs(settings.list) do
+		local fn = function()
+			settings.target[settings.property] = i
+		end
+
+		local button = Button.new({
+			label = tostring(label),
+			w = settings.w,
+			h = settings.h,
+			fn = fn
+		})
+
 		table.insert(self.children, button)
 	end
+
 	self:updateChildren()
 	return self
 end
 
+---@param settings Glorb.ImageSettings
+---@return Glorb.Container
 function Container:addImage(settings)
 	local image = Image.new(settings)
 	table.insert(self.children, image)

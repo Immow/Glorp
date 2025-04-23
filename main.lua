@@ -1,5 +1,6 @@
 local Glorb = require("libs.glorb")
 require("tprint")
+Game = { currentLevel = 1 }
 
 local glorb_alien = love.graphics.newImage("assets/glorp-alien.png")
 local active = 1
@@ -347,9 +348,32 @@ local tests = {
 			:addButton({ label = "button8" })
 			:addImage({ image = glorb_alien })
 			:addButton({ label = "button10" })
+			:addImage({ image = glorb_alien })
 	end
 	,
-	Glorb.newContainer({})
+	function()
+		Glorb.newContainer({
+			id = "test1",
+			x = 200,
+			y = 200,
+			w = 200,
+			h = 200,
+			layout = "vertical",
+			scrollable = true,
+			showScrollbar = true,
+			alignment = { horizontal = "center", vertical = "center" },
+			bar = { w = 20 },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addButtonList({
+				list = { "Level1", "Level2", "Level3" },
+				w = 100,
+				h = 40,
+				target = Game,
+				property = "currentLevel"
+			})
+	end
 }
 
 function love.load()
@@ -357,6 +381,7 @@ function love.load()
 end
 
 function love.keypressed(key, scancode, isrepeat)
+	print(Game.currentLevel)
 	if key == "p" then
 		Glorb:purge()
 	elseif key == "left" or key == "right" then

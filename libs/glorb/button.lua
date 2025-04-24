@@ -33,7 +33,7 @@ function Button:mousepressed(mx, my, mouseButton)
 end
 
 function Button:getDimensions()
-	return { w = self.w, h = self.h }
+	return self.w, self.h
 end
 
 function Button:getPosition()

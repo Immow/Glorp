@@ -21,6 +21,7 @@
 ---@field addButton? fun(self: Glorb.Container, settings: Glorb.ButtonSettings): Glorb.Container
 ---@field addImage? fun(self: Glorb.Container, settings: Glorb.ImageSettings): Glorb.Container
 ---@field addButtonList? fun(self: Glorb.Container, settings: Glorb.ButtonListSettings): Glorb.Container
+---@field addContainer? fun(self: Glorb.Container, settings: Glorb.containerSettings): Glorb.Container
 
 ---@class Glorb.ButtonSettings
 ---@field id? string

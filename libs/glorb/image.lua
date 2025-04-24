@@ -13,7 +13,7 @@ function Image.new(settings)
 end
 
 function Image:getDimensions()
-	return { w = self.w, h = self.h }
+	return self.w, self.h
 end
 
 function Image:getPosition()

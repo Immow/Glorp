@@ -411,7 +411,7 @@ local tests = {
 
 function love.load()
 	tests[1]()
-	print(Tprint(Glorb.elements))
+	-- print(Tprint(Glorb.elements))
 end
 
 function love.keypressed(key, scancode, isrepeat)

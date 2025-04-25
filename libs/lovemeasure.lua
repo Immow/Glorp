@@ -1,5 +1,17 @@
 local Lovemeasure = {}
 
+local points = {}
+
+function Lovemeasure:mousepressed(x, y, button, isTouch)
+	if #points == 0 then
+		points[1] = { x = x, y = y }
+	elseif #points == 1 then
+		print("x: " .. points[1].x - x, "y: " .. points[1].y - y)
+		points = {}
+	end
+	-- print(Tprint(points))
+end
+
 function Lovemeasure:draw()
 	local font = love.graphics.getFont() or love.graphics.newFont(12)
 	local mx, my = love.mouse.getPosition()

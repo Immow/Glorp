@@ -304,6 +304,7 @@ local tests = {
 			h = 200,
 			layout = "vertical",
 			scrollable = true,
+			scrollDirection = "vertical",
 			alignment = { horizontal = "center", vertical = "center" },
 			borderColor = { 1, 1, 1, 1 },
 			backgroundColor = { 1, 0, 0, 0.5 }
@@ -333,6 +334,7 @@ local tests = {
 			layout = "vertical",
 			scrollable = true,
 			showScrollbar = true,
+			scrollDirection = "vertical",
 			alignment = { horizontal = "center", vertical = "center" },
 			bar = { w = 20 },
 			borderColor = { 1, 1, 1, 1 },
@@ -361,6 +363,7 @@ local tests = {
 			layout = "vertical",
 			scrollable = true,
 			showScrollbar = true,
+			scrollDirection = "vertical",
 			alignment = { horizontal = "center", vertical = "center" },
 			bar = { w = 20 },
 			borderColor = { 1, 1, 1, 1 },
@@ -375,10 +378,56 @@ local tests = {
 				h = 40
 			})
 	end,
+
+	function() -- 18
+		Glorb.newContainer({
+			id = "test1",
+			x = 200,
+			y = 200,
+			w = 500,
+			h = 200,
+			layout = "horizontal",
+			scrollable = true,
+			showScrollbar = true,
+			scrollDirection = "vertical",
+			alignment = { horizontal = "center", vertical = "center" },
+			bar = { w = 20 },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addContainer({
+				id = "test2",
+				borderColor = { 1, 1, 1, 1 },
+				backgroundColor = { 1, 0, 0, 0.5 },
+			})
+			:addButtonList({
+				list = { "Level1", "Level2", "Level3", "Level4", "Level5", "Level6", "Cow", "Dog", "Glorb" },
+				onClick = function() Game:next() end,
+				target = Game,
+				property = "currentLevel",
+				w = 120,
+				h = 40
+			})
+			:done()
+			:addContainer({
+				id = "test3",
+				borderColor = { 1, 1, 1, 1 },
+				backgroundColor = { 1, 0, 0, 0.5 },
+			})
+			:addButtonList({
+				list = { "Level1", "Level2", "Level3", "Level4", "Level5", "Level6", "Cow", "Dog", "Glorb" },
+				onClick = function() Game:next() end,
+				target = Game,
+				property = "currentLevel",
+				w = 120,
+				h = 40
+			})
+			:done()
+	end,
 }
 
 function love.load()
-	tests[1]()
+	tests[18]()
 	-- print(Tprint(Glorb.elements))
 end
 
@@ -404,6 +453,7 @@ end
 
 function love.mousepressed(x, y, button, isTouch)
 	Glorb:mousepressed(x, y, button, isTouch)
+	LM:mousepressed(x, y, button, isTouch)
 end
 
 function love.mousereleased(x, y, button, isTouch)

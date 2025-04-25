@@ -22,6 +22,7 @@ function Container.new(settings)
 	self.children = {}
 	self.parent = nil
 	self.alignment = settings.alignment or { horizontal = "left", vertical = "top" }
+	self.scrollDirection = settings.scrollDirection or nil
 
 	self.border = settings.border ~= false
 	self.borderColor = settings.borderColor or { 0, 0, 0, 1 }
@@ -91,6 +92,9 @@ function Container:addButtonList(settings)
 end
 
 function Container:done()
+	if self.parent then
+		self.parent:getDimensions()
+	end
 	return self.parent or self
 end
 
@@ -109,9 +113,15 @@ function Container:getDimensions()
 		if self.layout == "horizontal" then
 			totalW = totalW + w + self.spacing
 			maxH = math.max(maxH, h)
+			if self.scrollDirection == "vertical" then
+				totalH = totalH + h + self.spacing
+			end
 		else
 			totalH = totalH + h + self.spacing
 			maxW = math.max(maxW, w)
+			if self.scrollDirection == "horizontal" then
+				totalW = totalW + w + self.spacing
+			end
 		end
 	end
 
@@ -127,7 +137,12 @@ function Container:getDimensions()
 		end
 	end
 
-	self.maxScrollY = math.max(0, totalH - self.h)
+	if self.scrollDirection == "horizontal" then
+		self.maxScrollY = math.max(0, totalW - self.w)
+	elseif self.scrollDirection == "vertical" then
+		self.maxScrollY = math.max(0, totalH - self.h)
+	end
+	-- self.maxScrollY = math.max(0, totalH - self.h)
 
 	-- Positioning
 	local offsetX, offsetY = self.x, self.y
@@ -206,6 +221,7 @@ function Container:mousemoved(x, y, dx, dy, istouch)
 end
 
 function Container:update(dt)
+	self:getDimensions()
 	for _, child in ipairs(self.children) do
 		if child.update then
 			child:update(dt)

@@ -1,4 +1,4 @@
--- Updated Glorb Container with recursive dimension calculation, chaining, auto-layout, alignment, and image support
+-- Updated Glorb Container with recursive dimension calculation, chaining, auto-layout, alignment, image support, and scrollbar/scrolling logic
 
 local folder_path = (...):match("(.-)[^%.]+$")
 require(folder_path .. "annotations")
@@ -22,6 +22,27 @@ function Container.new(settings)
 	self.children = {}
 	self.parent = nil
 	self.alignment = settings.alignment or { horizontal = "left", vertical = "top" }
+
+	self.border = settings.border ~= false
+	self.borderColor = settings.borderColor or { 0, 0, 0, 1 }
+	self.backgroundColor = settings.backgroundColor or { 0, 0, 0, 1 }
+	self.scrollable = settings.scrollable or false
+	self.showScrollbar = settings.showScrollbar or false
+	self.scrollY = 0
+	self.maxScrollY = 0
+	self.draggingBar = false
+	self.barOffsetY = 0
+	self.bar = {
+		x = 0,
+		y = 0,
+		w = (settings.bar and settings.bar.w) or 5,
+		h = (settings.bar and settings.bar.h) or 20,
+		color = (settings.bar and settings.bar.color) or { 0.8, 0.8, 0.8, 0.7 }
+	}
+
+	if settings.scrollable then
+		self.alignment.vertical = "top"
+	end
 
 	return self
 end
@@ -74,7 +95,10 @@ function Container:getDimensions()
 	end
 
 	self.w = (self.layout == "horizontal") and math.max(0, totalW) or maxW
-	self.h = (self.layout == "horizontal") and maxH or math.max(0, totalH)
+	if not self.scrollable then
+		self.h = (self.layout == "horizontal") and maxH or math.max(0, totalH)
+	end
+	self.maxScrollY = math.max(0, totalH - self.h)
 
 	-- Position children with alignment
 	local offsetX, offsetY = self.x, self.y
@@ -119,16 +143,90 @@ function Container:getDimensions()
 	return self.w, self.h
 end
 
+function Container:wheelmoved(x, y)
+	if self.scrollable then
+		self.scrollY = math.max(0, math.min(self.scrollY - y * 20, self.maxScrollY))
+	end
+end
+
+function Container:mousepressed(mx, my, button, isTouch)
+	if mx < self.x or mx > self.x + self.w or my < self.y or my > self.y + self.h then
+		return
+	end
+
+	if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
+		local barX = self.x + self.w - self.bar.w
+		if mx >= barX and mx <= barX + self.bar.w and my >= self.bar.y and my <= self.bar.h + self.bar.y then
+			self.draggingBar = true
+			self.barOffsetY = my - self.bar.y
+			return
+		end
+	end
+
+	local adjustedY = my + (self.scrollable and self.scrollY or 0)
+	for _, child in ipairs(self.children) do
+		if child.mousepressed then
+			child:mousepressed(mx, adjustedY, button, isTouch)
+		end
+	end
+end
+
+function Container:mousereleased()
+	self.draggingBar = false
+end
+
+function Container:mousemoved(x, y, dx, dy, istouch)
+	if self.draggingBar and self.scrollable then
+		local trackHeight = self.h - self.bar.h
+		local newBarY = math.max(self.y, math.min(y - self.barOffsetY, self.y + trackHeight))
+		self.bar.y = newBarY
+		self.scrollY = ((self.bar.y - self.y) / trackHeight) * self.maxScrollY
+	end
+end
+
+function Container:update(dt)
+	for _, child in ipairs(self.children) do
+		if child.update then
+			child:update(dt)
+		end
+	end
+end
+
 function Container:draw()
-	love.graphics.setColor(1, 0, 0, 0.5)
-	love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
-	love.graphics.setColor(1, 1, 1, 1)
+	if self.backgroundColor then
+		love.graphics.setColor(self.backgroundColor)
+		love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+	end
+
+	if self.border or self.borderColor then
+		love.graphics.setColor(self.borderColor)
+		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	end
+
+	if self.scrollable then
+		love.graphics.setScissor(self.x, self.y, self.w, self.h)
+		love.graphics.push()
+		love.graphics.translate(0, -self.scrollY)
+	end
 
 	for _, child in ipairs(self.children) do
 		if child.draw then
 			child:draw()
 		end
 	end
+
+	if self.scrollable then
+		love.graphics.pop()
+		love.graphics.setScissor()
+	end
+
+	if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
+		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
+		love.graphics.setColor(self.bar.color)
+		love.graphics.rectangle("fill", self.x + self.w - self.bar.w, self.bar.y, self.bar.w, self.bar.h)
+	end
+
+	love.graphics.setColor(1, 1, 1, 1)
 end
 
 return Container

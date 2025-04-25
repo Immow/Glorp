@@ -69,6 +69,27 @@ function Container:addContainer(settings)
 	return container
 end
 
+function Container:addButtonList(settings)
+	for i, label in ipairs(settings.list) do
+		local fn = function()
+			settings.target[settings.property] = i
+			if settings.onClick then settings.onClick(i, label) end
+		end
+
+		local button = Button.new({
+			label = tostring(label),
+			w = settings.w,
+			h = settings.h,
+			fn = fn
+		})
+
+		table.insert(self.children, button)
+	end
+
+	self:getDimensions()
+	return self
+end
+
 function Container:done()
 	return self.parent or self
 end

@@ -5,7 +5,7 @@ Game = { currentLevel = 1 }
 local glorb_alien = love.graphics.newImage("assets/glorp-alien.png")
 local active = 1
 local tests = {
-	function()
+	function() --1
 		Glorb.newContainer({
 			id = "test1",
 			layout = "vertical",
@@ -18,7 +18,7 @@ local tests = {
 			:addButton({ label = "button3" })
 	end,
 
-	function()
+	function() --2
 		Glorb.newContainer({
 			id = "test1",
 			layout = "vertical",
@@ -31,7 +31,7 @@ local tests = {
 			:addButton({ label = "button3" })
 	end,
 
-	function()
+	function() --3
 		Glorb.newContainer({
 			id = "test1",
 			layout = "vertical",
@@ -44,7 +44,7 @@ local tests = {
 			:addButton({ label = "button3" })
 	end,
 
-	function()
+	function() --4
 		Glorb.newContainer({
 			id = "test1",
 			layout = "vertical",
@@ -57,7 +57,7 @@ local tests = {
 			:addButton({ label = "button3" })
 	end,
 
-	function()
+	function() --5
 		Glorb.newContainer({
 			id = "test1",
 			layout = "vertical",
@@ -70,7 +70,7 @@ local tests = {
 			:addButton({ label = "button3" })
 	end,
 
-	function()
+	function() --6
 		Glorb.newContainer({
 			id = "test1",
 			x = 150,
@@ -87,7 +87,7 @@ local tests = {
 			:addButton({ label = "button3" })
 	end,
 
-	function()
+	function() --7
 		Glorb.newContainer({
 			id = "test1",
 			x = 150,
@@ -104,7 +104,7 @@ local tests = {
 			:addButton({ label = "button3" })
 	end,
 
-	function()
+	function() --8
 		Glorb.newContainer({
 			id = "test1",
 			x = 150,
@@ -124,7 +124,7 @@ local tests = {
 
 	-- Layout Horizontal
 
-	function()
+	function() --9
 		Glorb.newContainer({
 			id = "test1",
 			x = 150,
@@ -142,7 +142,7 @@ local tests = {
 	end
 	,
 
-	function()
+	function() --10
 		Glorb.newContainer({
 			id = "test1",
 			x = 150,
@@ -160,7 +160,7 @@ local tests = {
 	end
 	,
 
-	function()
+	function() --11
 		Glorb.newContainer({
 			id = "test1",
 			x = 150,
@@ -178,7 +178,7 @@ local tests = {
 	end
 	,
 
-	function()
+	function() --12
 		Glorb.newContainer({
 			id = "test1",
 			x = 200,
@@ -240,7 +240,7 @@ local tests = {
 	end
 	,
 
-	function()
+	function() --13
 		Glorb.newContainer({
 			id = "test1",
 			x = 200,
@@ -280,7 +280,7 @@ local tests = {
 	end
 	,
 
-	function()
+	function() --14
 		Glorb.newContainer({
 			id = "test1",
 			x = 200,
@@ -294,7 +294,7 @@ local tests = {
 	end
 	,
 
-	function()
+	function() --15
 		Glorb.newContainer({
 			id = "test1",
 			x = 200,
@@ -323,7 +323,7 @@ local tests = {
 	end
 	,
 
-	function()
+	function() --16
 		Glorb.newContainer({
 			id = "test1",
 			x = 200,
@@ -351,7 +351,7 @@ local tests = {
 			:addImage({ image = glorb_alien })
 	end
 	,
-	function()
+	function() --17
 		Glorb.newContainer({
 			id = "test1",
 			x = 200,
@@ -367,7 +367,7 @@ local tests = {
 			backgroundColor = { 1, 0, 0, 0.5 },
 		})
 			:addButtonList({
-				list = { "Level1", "Level2", "Level3" },
+				list = { "Level1", "Level2", "Level3", "Level4", "Level5", "Level6", "Level7", "Level8" },
 				w = 100,
 				h = 40,
 				target = Game,
@@ -377,7 +377,7 @@ local tests = {
 }
 
 function love.load()
-	tests[16]()
+	tests[17]()
 end
 
 function love.keypressed(key, scancode, isrepeat)

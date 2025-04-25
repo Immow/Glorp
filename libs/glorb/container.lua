@@ -24,8 +24,11 @@ function Container.new(settings)
 	instance.backgroundColor = settings.backgroundColor or { 0, 0, 0, 1 }
 	instance.scrollable = settings.scrollable or false
 	instance.showScrollbar = settings.showScrollbar or false
+	instance.scrollDirection = settings.scrollDirection or "vertical"
 	instance.scrollY = 0
 	instance.maxScrollY = 0
+	instance.scrollX = 0
+	instance.maxScrollX = 0
 	instance.draggingBar = false
 	instance.barOffsetY = 0
 	instance.alignment = {
@@ -89,26 +92,37 @@ end
 
 function Container:updateChildren()
 	local childrenTotalWidth, childrenTotalHeight = 0, 0
+	local maxScrollHeight, maxScrollXWidth = 0, 0
+
 
 	if self.layout == "horizontal" then
 		childrenTotalWidth = -self.spacing
 		for _, child in ipairs(self.children) do
 			childrenTotalWidth = childrenTotalWidth + child.w + self.spacing
 			childrenTotalHeight = math.max(childrenTotalHeight, child.h)
+			maxScrollHeight = maxScrollHeight + child.h + self.spacing
+			maxScrollXWidth = maxScrollXWidth + child.w + self.spacing
 		end
 	else
 		childrenTotalHeight = -self.spacing
 		for _, child in ipairs(self.children) do
 			childrenTotalHeight = childrenTotalHeight + child.h + self.spacing
 			childrenTotalWidth = math.max(childrenTotalWidth, child.w)
+			maxScrollHeight = maxScrollHeight + child.h + self.spacing
+			maxScrollXWidth = maxScrollXWidth + child.w + self.spacing
 		end
 	end
 
-	self.w = math.max(self.w, childrenTotalWidth)
 	if not self.scrollable then
+		self.w = math.max(self.w, childrenTotalWidth)
+		self.h = math.max(self.h, childrenTotalHeight)
+	elseif self.scrollable and self.scrollDirection == "vertical" then
+		self.maxScrollY = maxScrollHeight - (self.h + self.spacing)
+		self.w = math.max(self.w, childrenTotalWidth)
+	elseif self.scrollable and self.scrollDirection == "horizontal" then
+		self.maxScrollX = maxScrollXWidth - (self.w + self.spacing)
 		self.h = math.max(self.h, childrenTotalHeight)
 	end
-	self.maxScrollY = math.max(0, childrenTotalHeight - self.h)
 
 	local startX, startY
 	if self.alignment.horizontal == "center" then

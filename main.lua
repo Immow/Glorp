@@ -1,5 +1,6 @@
 local Glorb = require("libs.glorb")
 require("tprint")
+local LM = require("libs.lovemeasure")
 Game = { currentLevel = 1 }
 function Game:next()
 	print("do stuff to prepare level switching")
@@ -374,39 +375,6 @@ local tests = {
 				h = 40
 			})
 	end,
-
-	function() -- 18
-		local inner_inner_container = Glorb.newContainer({
-				id = "inner_inner_container",
-				layout = "vertical",
-				borderColor = { 1, 1, 1, 1 },
-				backgroundColor = { 0, 0, 1, 0.5 },
-			})
-			:addButton({ label = "inner_inner_container" })
-
-		local inner_container = Glorb.newContainer({
-				id = "inner_container",
-				layout = "vertical",
-				w = 200,
-				borderColor = { 1, 1, 1, 1 },
-				backgroundColor = { 1, 1, 0, 0.5 }
-			})
-			:addButton({ label = "Inner" })
-			:addContainer(inner_inner_container)
-
-		local outer_container = Glorb.newContainer({
-				id = "outer_container",
-				x = 200,
-				y = 200,
-				w = 400,
-				h = 200,
-				layout = "vertical",
-				borderColor = { 1, 1, 1, 1 },
-				backgroundColor = { 1, 0, 0, 0.5 },
-			})
-			:addButton({ label = "Outer" })
-			:addContainer(inner_container)
-	end,
 }
 
 function love.load()
@@ -453,4 +421,5 @@ end
 function love.draw()
 	love.window.setTitle("active test " .. active)
 	Glorb:draw()
+	LM:draw()
 end

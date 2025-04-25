@@ -35,8 +35,11 @@ function Glorb.attach(element_id, target_ids, side)
 		if not target then
 			error("Target element with ID " .. id .. " not found.")
 		end
+		target:getDimensions()
 		table.insert(targets, target)
 	end
+
+	element:getDimensions()
 
 	local anchor = targets[1]
 	local totalWidth, totalHeight = 0, 0
@@ -63,10 +66,7 @@ function Glorb.attach(element_id, target_ids, side)
 		element.h = totalHeight
 	end
 
-	if element.updateChildren then
-		element:updateChildren()
-	end
-
+	element:getDimensions()
 	return element
 end
 

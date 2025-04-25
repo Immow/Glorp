@@ -94,13 +94,21 @@ function Container:getDimensions()
 		end
 	end
 
-	self.w = (self.layout == "horizontal") and math.max(0, totalW) or maxW
-	if not self.scrollable then
-		self.h = (self.layout == "horizontal") and maxH or math.max(0, totalH)
+	if self.layout == "horizontal" then
+		self.w = math.max(self.w, totalW)
+		if not self.scrollable then
+			self.h = math.max(self.h, maxH)
+		end
+	else
+		self.w = math.max(self.w, maxW)
+		if not self.scrollable then
+			self.h = math.max(self.h, totalH)
+		end
 	end
+
 	self.maxScrollY = math.max(0, totalH - self.h)
 
-	-- Position children with alignment
+	-- Positioning
 	local offsetX, offsetY = self.x, self.y
 	if self.alignment.vertical == "center" then
 		offsetY = self.y + (self.h - totalH) / 2
@@ -119,23 +127,15 @@ function Container:getDimensions()
 
 		if self.layout == "horizontal" then
 			child.x = offsetX
-			if self.alignment.vertical == "center" then
-				child.y = self.y + (self.h - h) / 2
-			elseif self.alignment.vertical == "bottom" then
-				child.y = self.y + (self.h - h)
-			else
-				child.y = self.y
-			end
+			child.y = (self.alignment.vertical == "center") and (self.y + (self.h - h) / 2)
+				or (self.alignment.vertical == "bottom") and (self.y + self.h - h)
+				or self.y
 			offsetX = offsetX + w + self.spacing
 		else
+			child.x = (self.alignment.horizontal == "center") and (self.x + (self.w - w) / 2)
+				or (self.alignment.horizontal == "right") and (self.x + self.w - w)
+				or self.x
 			child.y = offsetY
-			if self.alignment.horizontal == "center" then
-				child.x = self.x + (self.w - w) / 2
-			elseif self.alignment.horizontal == "right" then
-				child.x = self.x + (self.w - w)
-			else
-				child.x = self.x
-			end
 			offsetY = offsetY + h + self.spacing
 		end
 	end

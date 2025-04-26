@@ -373,11 +373,73 @@ local tests = {
 				target = Game,
 				property = "currentLevel"
 			})
-	end
+	end,
+
+	function() --18
+		local a = Glorb.newContainer({
+				id = "test1",
+				-- x = 200,
+				-- y = 200,
+				w = 200,
+				h = 200,
+				layout = "vertical",
+				-- scrollable = true,
+				-- showScrollbar = true,
+				alignment = { horizontal = "center", vertical = "center" },
+				bar = { w = 20 },
+				borderColor = { 1, 1, 1, 1 },
+				backgroundColor = { 1, 0, 0, 0.5 },
+			})
+			:addButtonList({
+				list = { "Level1", "Level2", "Level3", "Level4", "Level5", "Level6", "Level7", "Level8" },
+				w = 100,
+				h = 40,
+				target = Game,
+				property = "currentLevel"
+			})
+		local b = Glorb.newContainer({
+				id = "test2",
+				-- x = 200,
+				-- y = 200,
+				w = 200,
+				h = 200,
+				layout = "vertical",
+				-- scrollable = true,
+				-- showScrollbar = true,
+				alignment = { horizontal = "center", vertical = "center" },
+				bar = { w = 20 },
+				borderColor = { 1, 1, 1, 1 },
+				backgroundColor = { 1, 0, 0, 0.5 },
+			})
+			:addButtonList({
+				list = { "Level1", "Level2", "Level3", "Level4", "Level5", "Level6", "Level7", "Level8" },
+				w = 100,
+				h = 40,
+				target = Game,
+				property = "currentLevel"
+			})
+
+		Glorb.newContainer({
+			id = "test3",
+			x = 200,
+			y = 200,
+			w = 500,
+			h = 200,
+			layout = "horizontal",
+			scrollable = true,
+			showScrollbar = true,
+			alignment = { horizontal = "center", vertical = "center" },
+			bar = { w = 20 },
+			borderColor = { 1, 1, 1, 1 },
+			backgroundColor = { 1, 0, 0, 0.5 },
+		})
+			:addContainer(a)
+			:addContainer(b)
+	end,
 }
 
 function love.load()
-	tests[17]()
+	tests[18]()
 end
 
 function love.keypressed(key, scancode, isrepeat)

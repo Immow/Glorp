@@ -61,6 +61,13 @@ function Container:addButton(settings)
 	return self
 end
 
+function Container:addContainer(container)
+	container.parent = self
+	table.insert(self.children, container)
+	self:updateChildren()
+	return self
+end
+
 function Container:addButtonList(settings)
 	for i, label in ipairs(settings.list) do
 		local fn = function()
@@ -209,6 +216,7 @@ function Container:mousemoved(x, y, dx, dy, istouch)
 end
 
 function Container:update(dt)
+	self:updateChildren()
 	for _, child in ipairs(self.children) do
 		if child.update then
 			child:update(dt)

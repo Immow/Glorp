@@ -10,7 +10,6 @@ Container.__index = Container
 ---@return Glorb.Container
 function Container.new(settings)
 	local instance = setmetatable({}, Container)
-
 	instance.id = settings.id
 	instance.x = settings.x or 0
 	instance.y = settings.y or 0
@@ -57,14 +56,12 @@ end
 function Container:addButton(settings)
 	local button = Button.new(settings)
 	table.insert(self.children, button)
-	self:updateChildren()
 	return self
 end
 
 function Container:addContainer(container)
 	container.parent = self
 	table.insert(self.children, container)
-	self:updateChildren()
 	return self
 end
 
@@ -84,7 +81,6 @@ function Container:addButtonList(settings)
 		table.insert(self.children, button)
 	end
 
-	self:updateChildren()
 	return self
 end
 
@@ -93,91 +89,135 @@ end
 function Container:addImage(settings)
 	local image = Image.new(settings)
 	table.insert(self.children, image)
-	self:updateChildren()
 	return self
 end
 
-function Container:updateChildren()
-	local childrenTotalWidth, childrenTotalHeight = 0, 0
-	local maxScrollHeight, maxScrollXWidth = 0, 0
+function Container:positionChildren()
+	local currentX, currentY = self.x, self.y
+	local totalWidth, totalHeight = self:calculateContentWidth(), self:calculateContentHeight()
 
+	if self.scrollable then
+		if self.scrollDirection == "vertical" then
+			currentY = currentY - self.scrollY
+		else
+			currentX = currentX - self.scrollX
+		end
+	end
+
+	for i, child in ipairs(self.children) do
+		-- if self.layout == "horizontal" then
+		child.x = currentX
+		-- Vertical alignment (opposite axis)
+		if self.alignment.vertical == "top" then
+			child.y = self.y
+		elseif self.alignment.vertical == "center" then
+			-- child.y = self.y + (self.h - child.h) / 2
+			child.y = self.y + totalHeight / 2
+		elseif self.alignment.vertical == "bottom" then
+			child.y = self.y + self.h - child.h
+		end
+
+		currentX = currentX + child.w + self.spacing
+		-- end
+	end
+
+	for _, child in ipairs(self.children) do
+		child.y = currentY
+		-- if self.layout == "vertical" then
+		-- Horizontal alignment (opposite axis)
+		if self.alignment.horizontal == "left" then
+			child.x = self.x
+		elseif self.alignment.horizontal == "center" then
+			child.x = self.x + (self.w - child.w) / 2
+		elseif self.alignment.horizontal == "right" then
+			child.x = self.x + self.w - child.w
+		end
+
+		currentY = currentY + child.h + self.spacing
+	end
+	-- end
+end
+
+function Container:calculateContentWidth()
+	if #self.children == 0 then return 0 end
 
 	if self.layout == "horizontal" then
-		childrenTotalWidth = -self.spacing
+		local totalWidth = 0
+		for i, child in ipairs(self.children) do
+			totalWidth = totalWidth + child.w
+		end
+		totalWidth = totalWidth + self.spacing * (#self.children - 1)
+		return math.max(self.w, totalWidth)
+	else
+		local maxWidth = 0
 		for _, child in ipairs(self.children) do
-			childrenTotalWidth = childrenTotalWidth + child.w + self.spacing
-			childrenTotalHeight = math.max(childrenTotalHeight, child.h)
-			maxScrollHeight = maxScrollHeight + child.h + self.spacing
-			maxScrollXWidth = maxScrollXWidth + child.w + self.spacing
+			maxWidth = math.max(maxWidth, child.w)
 		end
-	else
-		childrenTotalHeight = -self.spacing
-		for _, child in ipairs(self.children) do
-			childrenTotalHeight = childrenTotalHeight + child.h + self.spacing
-			childrenTotalWidth = math.max(childrenTotalWidth, child.w)
-			maxScrollHeight = maxScrollHeight + child.h + self.spacing
-			maxScrollXWidth = maxScrollXWidth + child.w + self.spacing
-		end
-	end
-
-	if not self.scrollable then
-		self.w = math.max(self.w, childrenTotalWidth)
-		self.h = math.max(self.h, childrenTotalHeight)
-	elseif self.scrollable and self.scrollDirection == "vertical" then
-		self.maxScrollY = maxScrollHeight - (self.h + self.spacing)
-		self.w = math.max(self.w, childrenTotalWidth)
-	elseif self.scrollable and self.scrollDirection == "horizontal" then
-		self.maxScrollX = maxScrollXWidth - (self.w + self.spacing)
-		self.h = math.max(self.h, childrenTotalHeight)
-	end
-
-	local startX, startY
-	if self.alignment.horizontal == "center" then
-		startX = self.x + (self.w - childrenTotalWidth) / 2
-	elseif self.alignment.horizontal == "right" then
-		startX = self.x + self.w - childrenTotalWidth
-	else
-		startX = self.x
-	end
-
-	if self.alignment.vertical == "center" then
-		startY = self.y + (self.h - childrenTotalHeight) / 2
-	elseif self.alignment.vertical == "bottom" then
-		startY = self.y + self.h - childrenTotalHeight
-	else
-		startY = self.y
-	end
-
-	local offsetX, offsetY = startX, startY
-	for _, child in ipairs(self.children) do
-		if self.layout == "horizontal" then
-			child.x = offsetX
-			if self.alignment.vertical == "bottom" then
-				child.y = self.y + self.h - child.h
-			elseif self.alignment.vertical == "center" then
-				child.y = self.y + (self.h - child.h) / 2
-			else
-				child.y = startY
-			end
-			offsetX = offsetX + child.w + self.spacing
-		else
-			child.y = offsetY
-			if self.alignment.horizontal == "right" then
-				child.x = self.x + self.w - child.w
-			elseif self.alignment.horizontal == "center" then
-				child.x = self.x + (self.w - child.w) / 2
-			else
-				child.x = startX
-			end
-			offsetY = offsetY + child.h + self.spacing
-		end
+		return math.max(self.w, maxWidth)
 	end
 end
 
-function Container:wheelmoved(x, y)
-	if self.scrollable then
-		self.scrollY = math.max(0, math.min(self.scrollY - y * 20, self.maxScrollY))
+function Container:calculateContentHeight()
+	if #self.children == 0 then return 0 end
+
+	if self.layout == "horizontal" then
+		local maxHeight = 0
+		for _, child in ipairs(self.children) do
+			maxHeight = math.max(maxHeight, child.h)
+		end
+		return math.max(self.h, maxHeight)
+	else
+		local totalHeight = 0
+		for _, child in ipairs(self.children) do
+			totalHeight = totalHeight + child.h
+		end
+		totalHeight = totalHeight + self.spacing * (#self.children - 1)
+		return math.max(self.h, totalHeight)
 	end
+end
+
+function Container:calculateScrollSize()
+	if #self.children == 0 then return 0 end
+
+	local totalSize = 0
+
+	if self.scrollDirection == "horizontal" then
+		for _, child in ipairs(self.children) do
+			totalSize = totalSize + child.w
+		end
+	else
+		for _, child in ipairs(self.children) do
+			totalSize = totalSize + child.h
+		end
+	end
+
+	totalSize = totalSize + self.spacing * (#self.children - 1)
+	return totalSize
+end
+
+function Container:wheelmoved(x, y)
+	local mx, my = love.mouse.getPosition()
+
+	local scrolled = false
+	for _, child in ipairs(self.children) do
+		if child.wheelmoved then
+			scrolled = child:wheelmoved(x, y) or scrolled
+		end
+	end
+
+	if scrolled then return true end
+
+	if self.scrollable and self:isMouseInside(mx, my, self) then
+		self.scrollY = math.max(0, math.min(self.scrollY - y * 20, self.maxScrollY))
+		return true --previousScrollY ~= self.scrollY -- Allow scrolling if we can't scroll anymore in this element
+	end
+
+	return scrolled
+end
+
+function Container:isMouseInside(mx, my, target)
+	return mx >= target.x and mx <= target.x + target.w
+		and my >= target.y and my <= target.y + target.h
 end
 
 function Container:mousepressed(mx, my, button, isTouch)
@@ -216,11 +256,37 @@ function Container:mousemoved(x, y, dx, dy, istouch)
 end
 
 function Container:update(dt)
-	self:updateChildren()
+	if #self.children == 0 then return end
+
 	for _, child in ipairs(self.children) do
 		if child.update then
 			child:update(dt)
 		end
+	end
+
+	self.w = (self.scrollable and self.w) or self:calculateContentWidth()
+	self.h = (self.scrollable and self.h) or self:calculateContentHeight()
+
+	self:positionChildren()
+
+	if self.scrollable then
+		local contentHeight = 0
+		for _, child in ipairs(self.children) do
+			if self.layout == "vertical" then
+				if child.calculateContentHeight then
+					contentHeight = contentHeight + child:calculateContentHeight()
+				else
+					contentHeight = contentHeight + child.h + self.spacing
+				end
+			else
+				if child.calculateContentWidth then
+					contentHeight = math.max(contentHeight, child:calculateContentHeight())
+				else
+					contentHeight = math.max(contentHeight, child.w + self.spacing)
+				end
+			end
+		end
+		self.maxScrollY = math.max(0, contentHeight - self.h)
 	end
 end
 

@@ -19,9 +19,8 @@ function Button.new(settings)
 end
 
 function Button:isMouseOnButton(mx, my)
-	local xRegion = self.x <= mx and self.x + self.w >= mx
-	local yRegion = self.y <= my and self.y + self.h >= my
-	return xRegion and yRegion
+	return mx >= self.x and mx <= self.x + self.w
+		and my >= self.y and my <= self.y + self.h
 end
 
 function Button:mousepressed(mx, my, mouseButton)
@@ -55,6 +54,7 @@ function Button:draw()
 	end
 
 	love.graphics.printf(self.label, self.x, textY, self.w, self.alignment.horizontal)
+	love.graphics.print("button y: " .. self.y, self.x, self.y)
 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 

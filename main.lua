@@ -12,12 +12,33 @@ local tests = {
 			alignment = { horizontal = "center", vertical = "center" },
 			borderColor = { 1, 1, 1, 1 },
 			backgroundColor = { 1, 0, 0, 0.5 },
+			scrollable = true,
 			w = 400,
 			h = 400,
 		})
 			:addButton({ label = "button1" })
 			:addButton({ label = "button2" })
 			:addButton({ label = "button3" })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
+			:addImage({ image = glorb_alien })
 	end,
 }
 function love.load()

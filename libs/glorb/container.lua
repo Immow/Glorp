@@ -95,51 +95,23 @@ end
 function Container:positionChildren()
 	local childrenTotalWidth, childrenTotalHeight = self:calculateContentWidth(), self:calculateContentHeight()
 
-	-- if self.layout == "horizontal" then
-	-- 	childrenTotalWidth = -self.spacing
-	-- 	for _, child in ipairs(self.children) do
-	-- 		childrenTotalWidth = childrenTotalWidth + child.w + self.spacing
-	-- 		childrenTotalHeight = math.max(childrenTotalHeight, child.h)
-	-- 	end
-	-- else
-	-- 	childrenTotalHeight = -self.spacing
-	-- 	for _, child in ipairs(self.children) do
-	-- 		childrenTotalHeight = childrenTotalHeight + child.h + self.spacing
-	-- 		childrenTotalWidth = math.max(childrenTotalWidth, child.w)
-	-- 	end
-	-- end
-
-	if not self.scrollable then
-		self.w = math.max(self.w, childrenTotalWidth)
-		self.h = math.max(self.h, childrenTotalHeight)
-	end
-
-	if self.scrollable and self.scrollDirection == "vertical" then
-		self.maxScrollY = math.max(0, childrenTotalHeight - self.h)
-	elseif self.scrollable and self.scrollDirection == "horizontal" then
-		self.maxScrollX = math.max(0, childrenTotalWidth - self.w)
-	end
-
-	-- Alignment-based start positions
-	local startX, startY = self.x, self.y
-
-	if self.layout == "horizontal" then
-		-- Vertical alignment of the group
-		if self.alignment.vertical == "center" then
-			startY = self.y + (self.h - childrenTotalHeight) / 2
-		elseif self.alignment.vertical == "bottom" then
-			startY = self.y + self.h - childrenTotalHeight
-		end
+	local startX, startY
+	if self.alignment.horizontal == "center" then
+		startX = self.x + (self.w - childrenTotalWidth) / 2
+	elseif self.alignment.horizontal == "right" then
+		startX = self.x + self.w - childrenTotalWidth
 	else
-		-- Horizontal alignment of the group
-		if self.alignment.horizontal == "center" then
-			startX = self.x + (self.w - childrenTotalWidth) / 2
-		elseif self.alignment.horizontal == "right" then
-			startX = self.x + self.w - childrenTotalWidth
-		end
+		startX = self.x
 	end
 
-	-- Apply scroll offset
+	if self.alignment.vertical == "center" then
+		startY = self.y + (self.h - childrenTotalHeight) / 2
+	elseif self.alignment.vertical == "bottom" then
+		startY = self.y + self.h - childrenTotalHeight
+	else
+		startY = self.y
+	end
+
 	if self.scrollable then
 		if self.scrollDirection == "vertical" then
 			startY = startY - self.scrollY
@@ -148,13 +120,10 @@ function Container:positionChildren()
 		end
 	end
 
-	-- Position children
 	local offsetX, offsetY = startX, startY
 	for _, child in ipairs(self.children) do
 		if self.layout == "horizontal" then
 			child.x = offsetX
-
-			-- Align each child vertically
 			if self.alignment.vertical == "bottom" then
 				child.y = self.y + self.h - child.h
 			elseif self.alignment.vertical == "center" then
@@ -162,12 +131,9 @@ function Container:positionChildren()
 			else
 				child.y = self.y
 			end
-
 			offsetX = offsetX + child.w + self.spacing
 		else
 			child.y = offsetY
-
-			-- Align each child horizontally
 			if self.alignment.horizontal == "right" then
 				child.x = self.x + self.w - child.w
 			elseif self.alignment.horizontal == "center" then
@@ -175,7 +141,6 @@ function Container:positionChildren()
 			else
 				child.x = self.x
 			end
-
 			offsetY = offsetY + child.h + self.spacing
 		end
 	end
@@ -190,13 +155,13 @@ function Container:calculateContentWidth()
 			totalWidth = totalWidth + child.w
 		end
 		totalWidth = totalWidth + self.spacing * (#self.children - 1)
-		return math.max(self.w, totalWidth)
+		return totalWidth
 	else
 		local maxWidth = 0
 		for _, child in ipairs(self.children) do
 			maxWidth = math.max(maxWidth, child.w)
 		end
-		return math.max(self.w, maxWidth)
+		return maxWidth
 	end
 end
 
@@ -208,14 +173,14 @@ function Container:calculateContentHeight()
 		for _, child in ipairs(self.children) do
 			maxHeight = math.max(maxHeight, child.h)
 		end
-		return math.max(self.h, maxHeight)
+		return maxHeight
 	else
 		local totalHeight = 0
 		for _, child in ipairs(self.children) do
 			totalHeight = totalHeight + child.h
 		end
 		totalHeight = totalHeight + self.spacing * (#self.children - 1)
-		return math.max(self.h, totalHeight)
+		return totalHeight
 	end
 end
 
@@ -264,23 +229,12 @@ function Container:isMouseInside(mx, my, target)
 end
 
 function Container:mousepressed(mx, my, button, isTouch)
-	if mx < self.x or mx > self.x + self.w or my < self.y or my > self.y + self.h then
-		return
-	end
+	-- Optional: only trigger if mouse is inside this container
+	if not self:isMouseInside(mx, my, self) then return end
 
-	if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
-		local barX = self.x + self.w - self.bar.w
-		if mx >= barX and mx <= barX + self.bar.w and my >= self.bar.y and my <= self.bar.y + self.bar.h then
-			self.draggingBar = true
-			self.barOffsetY = my - self.bar.y
-			return
-		end
-	end
-
-	local adjustedY = my + (self.scrollable and self.scrollY or 0)
 	for _, child in ipairs(self.children) do
 		if child.mousepressed then
-			child:mousepressed(mx, adjustedY, button, isTouch)
+			child:mousepressed(mx, my, button, isTouch)
 		end
 	end
 end
@@ -307,8 +261,8 @@ function Container:update(dt)
 		end
 	end
 
-	self.w = (self.scrollable and self.w) or self:calculateContentWidth()
-	self.h = (self.scrollable and self.h) or self:calculateContentHeight()
+	self.w = (self.scrollable and self.w) or math.max(self.w, self:calculateContentWidth())
+	self.h = (self.scrollable and self.h) or math.max(self.h, self:calculateContentHeight())
 
 	self:positionChildren()
 
@@ -329,7 +283,7 @@ function Container:update(dt)
 				end
 			end
 		end
-		self.maxScrollY = math.max(0, contentHeight - self.h)
+		self.maxScrollY = math.max(0, contentHeight - self.h - self.spacing)
 	end
 end
 
@@ -342,38 +296,59 @@ function Container:getPosition()
 end
 
 function Container:draw()
-	if self.backgroundColor then
-		love.graphics.setColor(self.backgroundColor)
-		love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
-	end
+	love.graphics.print("\nscrollY: " .. self.scrollY)
+	-- if self.backgroundColor then
+	-- 	love.graphics.setColor(self.backgroundColor)
+	-- 	love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+	-- end
 
-	if self.border or self.borderColor then
-		love.graphics.setColor(self.borderColor)
-		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
-	end
+	-- if self.border or self.borderColor then
+	-- 	love.graphics.setColor(self.borderColor)
+	-- 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	-- end
 
-	if self.scrollable then
-		love.graphics.setScissor(self.x, self.y, self.w, self.h)
-		love.graphics.push()
-		love.graphics.translate(0, -self.scrollY)
+	-- if self.scrollable then
+	-- 	love.graphics.setScissor(self.x, self.y, self.w, self.h)
+	-- 	love.graphics.push()
+	-- 	love.graphics.translate(0, -self.scrollY)
+	-- end
+
+	-- for _, child in ipairs(self.children) do
+	-- 	child:draw()
+	-- end
+
+	-- if self.scrollable then
+	-- 	love.graphics.pop()
+	-- 	love.graphics.setScissor()
+	-- end
+
+	-- if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
+	-- 	self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
+	-- 	love.graphics.setColor(self.bar.color)
+	-- 	love.graphics.rectangle("fill", self.x + self.w - self.bar.w, self.bar.y, self.bar.w, self.bar.h)
+	-- end
+
+	-- love.graphics.setColor(1, 1, 1, 1)
+
+
+	love.graphics.push("all")
+
+	local sx, sy = love.graphics.transformPoint(self.x, self.y)
+
+	if love.graphics.getScissor() then
+		love.graphics.intersectScissor(sx, sy, self.w, self.h)
+	else
+		love.graphics.setScissor(sx, sy, self.w, self.h)
 	end
 
 	for _, child in ipairs(self.children) do
 		child:draw()
 	end
 
-	if self.scrollable then
-		love.graphics.pop()
-		love.graphics.setScissor()
-	end
-
-	if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
-		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
-		love.graphics.setColor(self.bar.color)
-		love.graphics.rectangle("fill", self.x + self.w - self.bar.w, self.bar.y, self.bar.w, self.bar.h)
-	end
+	love.graphics.pop()
 
 	love.graphics.setColor(1, 1, 1, 1)
+	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 
 return Container

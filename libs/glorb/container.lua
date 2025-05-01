@@ -93,49 +93,92 @@ function Container:addImage(settings)
 end
 
 function Container:positionChildren()
-	local currentX, currentY = self.x, self.y
-	local totalWidth, totalHeight = self:calculateContentWidth(), self:calculateContentHeight()
+	local childrenTotalWidth, childrenTotalHeight = self:calculateContentWidth(), self:calculateContentHeight()
 
+	-- if self.layout == "horizontal" then
+	-- 	childrenTotalWidth = -self.spacing
+	-- 	for _, child in ipairs(self.children) do
+	-- 		childrenTotalWidth = childrenTotalWidth + child.w + self.spacing
+	-- 		childrenTotalHeight = math.max(childrenTotalHeight, child.h)
+	-- 	end
+	-- else
+	-- 	childrenTotalHeight = -self.spacing
+	-- 	for _, child in ipairs(self.children) do
+	-- 		childrenTotalHeight = childrenTotalHeight + child.h + self.spacing
+	-- 		childrenTotalWidth = math.max(childrenTotalWidth, child.w)
+	-- 	end
+	-- end
+
+	if not self.scrollable then
+		self.w = math.max(self.w, childrenTotalWidth)
+		self.h = math.max(self.h, childrenTotalHeight)
+	end
+
+	if self.scrollable and self.scrollDirection == "vertical" then
+		self.maxScrollY = math.max(0, childrenTotalHeight - self.h)
+	elseif self.scrollable and self.scrollDirection == "horizontal" then
+		self.maxScrollX = math.max(0, childrenTotalWidth - self.w)
+	end
+
+	-- Alignment-based start positions
+	local startX, startY = self.x, self.y
+
+	if self.layout == "horizontal" then
+		-- Vertical alignment of the group
+		if self.alignment.vertical == "center" then
+			startY = self.y + (self.h - childrenTotalHeight) / 2
+		elseif self.alignment.vertical == "bottom" then
+			startY = self.y + self.h - childrenTotalHeight
+		end
+	else
+		-- Horizontal alignment of the group
+		if self.alignment.horizontal == "center" then
+			startX = self.x + (self.w - childrenTotalWidth) / 2
+		elseif self.alignment.horizontal == "right" then
+			startX = self.x + self.w - childrenTotalWidth
+		end
+	end
+
+	-- Apply scroll offset
 	if self.scrollable then
 		if self.scrollDirection == "vertical" then
-			currentY = currentY - self.scrollY
-		else
-			currentX = currentX - self.scrollX
+			startY = startY - self.scrollY
+		elseif self.scrollDirection == "horizontal" then
+			startX = startX - self.scrollX
 		end
 	end
 
-	for i, child in ipairs(self.children) do
-		-- if self.layout == "horizontal" then
-		child.x = currentX
-		-- Vertical alignment (opposite axis)
-		if self.alignment.vertical == "top" then
-			child.y = self.y
-		elseif self.alignment.vertical == "center" then
-			-- child.y = self.y + (self.h - child.h) / 2
-			child.y = self.y + totalHeight / 2
-		elseif self.alignment.vertical == "bottom" then
-			child.y = self.y + self.h - child.h
-		end
-
-		currentX = currentX + child.w + self.spacing
-		-- end
-	end
-
+	-- Position children
+	local offsetX, offsetY = startX, startY
 	for _, child in ipairs(self.children) do
-		child.y = currentY
-		-- if self.layout == "vertical" then
-		-- Horizontal alignment (opposite axis)
-		if self.alignment.horizontal == "left" then
-			child.x = self.x
-		elseif self.alignment.horizontal == "center" then
-			child.x = self.x + (self.w - child.w) / 2
-		elseif self.alignment.horizontal == "right" then
-			child.x = self.x + self.w - child.w
-		end
+		if self.layout == "horizontal" then
+			child.x = offsetX
 
-		currentY = currentY + child.h + self.spacing
+			-- Align each child vertically
+			if self.alignment.vertical == "bottom" then
+				child.y = self.y + self.h - child.h
+			elseif self.alignment.vertical == "center" then
+				child.y = self.y + (self.h - child.h) / 2
+			else
+				child.y = self.y
+			end
+
+			offsetX = offsetX + child.w + self.spacing
+		else
+			child.y = offsetY
+
+			-- Align each child horizontally
+			if self.alignment.horizontal == "right" then
+				child.x = self.x + self.w - child.w
+			elseif self.alignment.horizontal == "center" then
+				child.x = self.x + (self.w - child.w) / 2
+			else
+				child.x = self.x
+			end
+
+			offsetY = offsetY + child.h + self.spacing
+		end
 	end
-	-- end
 end
 
 function Container:calculateContentWidth()

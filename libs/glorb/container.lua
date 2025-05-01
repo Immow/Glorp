@@ -37,8 +37,8 @@ function Container.new(settings)
 	instance.bar = {
 		x = 0,
 		y = 0,
-		w = (settings.bar and settings.bar.w) or 5,
-		h = (settings.bar and settings.bar.h) or 20,
+		w = (settings.bar and settings.bar.w) or 20,
+		h = (settings.bar and settings.bar.h) or 80,
 		color = (settings.bar and settings.bar.color) or { 0.8, 0.8, 0.8, 0.7 }
 	}
 
@@ -237,6 +237,15 @@ function Container:mousepressed(mx, my, button, isTouch)
 			child:mousepressed(mx, my, button, isTouch)
 		end
 	end
+
+	if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
+		local barX = self.x + self.w - self.bar.w
+		if mx >= barX and mx <= barX + self.bar.w and my >= self.bar.y and my <= self.bar.y + self.bar.h then
+			self.draggingBar = true
+			self.barOffsetY = my - self.bar.y
+			return
+		end
+	end
 end
 
 function Container:mousereleased(mx, my, button, isTouch)
@@ -349,6 +358,13 @@ function Container:draw()
 
 	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+
+	if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
+		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
+		love.graphics.setColor(self.bar.color)
+		love.graphics.rectangle("fill", self.x + self.w - self.bar.w, self.bar.y, self.bar.w, self.bar.h)
+	end
+	love.graphics.setColor(1, 1, 1, 1)
 end
 
 return Container

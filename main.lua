@@ -15,6 +15,7 @@ local tests = {
 			scrollable = true,
 			w = 400,
 			h = 400,
+			showScrollbar = true,
 		})
 			:addButton({ label = "button1" })
 			:addButton({ label = "button2" })

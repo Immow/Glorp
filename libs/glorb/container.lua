@@ -305,6 +305,16 @@ function Container:getPosition()
 end
 
 function Container:draw()
+	if self.backgroundColor then
+		love.graphics.setColor(self.backgroundColor)
+		love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+	end
+
+	if self.border or self.borderColor then
+		love.graphics.setColor(self.borderColor)
+		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	end
+
 	love.graphics.push("all")
 
 	local sx, sy = love.graphics.transformPoint(self.x, self.y)

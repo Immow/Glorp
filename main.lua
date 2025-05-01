@@ -4,46 +4,64 @@ Game = { currentLevel = 1 }
 
 local glorb_alien = love.graphics.newImage("assets/glorp-alien.png")
 local active = 1
-local tests = {
-	function() --1
-		Glorb.newContainer({
-			id = "test1",
-			layout = "vertical",
-			alignment = { horizontal = "center", vertical = "center" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-			scrollable = true,
-			w = 400,
-			h = 400,
-			showScrollbar = true,
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-	end,
-}
+local mainContainer
+local scrollContainer
+
+mainContainer = Glorb.newContainer({
+		id = "test1",
+		layout = "vertical",
+		alignment = { horizontal = "center", vertical = "center" },
+		borderColor = { 1, 1, 1, 1 },
+		backgroundColor = { 1, 1, 0, 0.5 },
+		-- scrollable = true,
+		w = 400,
+		h = 400,
+		-- showScrollbar = true,
+	})
+	:addButton({ label = "button1" })
+	:addButton({ label = "button2" })
+	:addImage({ image = glorb_alien })
+	:addButton({ label = "button3" })
+
+scrollContainer = Glorb.newContainer({
+		id = "test1",
+		layout = "vertical",
+		alignment = { horizontal = "center", vertical = "center" },
+		borderColor = { 1, 1, 1, 1 },
+		backgroundColor = { 1, 0, 0, 0.5 },
+		scrollable = true,
+		w = 400,
+		h = 400,
+		showScrollbar = true,
+	})
+	:addButton({ label = "button1" })
+	:addButton({ label = "button2" })
+	:addButton({ label = "button3" })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+	:addImage({ image = glorb_alien })
+
+
+mainContainer:addContainer(scrollContainer)
+-- local tests = { mainContainer }
+
+
 function love.load()
-	tests[1]()
+	-- tests[1]()
 end
 
 function love.keypressed(key, scancode, isrepeat)

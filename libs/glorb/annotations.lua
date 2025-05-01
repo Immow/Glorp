@@ -22,8 +22,21 @@
 ---@field addButton? fun(self: Glorb.Container, settings: Glorb.ButtonSettings): Glorb.Container
 ---@field addImage? fun(self: Glorb.Container, settings: Glorb.ImageSettings): Glorb.Container
 ---@field addButtonList? fun(self: Glorb.Container, settings: Glorb.ButtonListSettings): Glorb.Container
+---@field addContainer? fun(self: Glorb.Container, settings: Glorb.ContainerSettings): Glorb.Container
 
 ---@class Glorb.ButtonSettings
+---@field id? string
+---@field x? number
+---@field y? number
+---@field w? number
+---@field h? number
+---@field label? string
+---@field layout? "horizontal"|"vertical"
+---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}
+---@field font? string
+---@field fn? function
+---@
+---@class Glorb.ContainerSettings
 ---@field id? string
 ---@field x? number
 ---@field y? number

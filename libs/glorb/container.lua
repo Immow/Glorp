@@ -305,41 +305,6 @@ function Container:getPosition()
 end
 
 function Container:draw()
-	love.graphics.print("\nscrollY: " .. self.scrollY)
-	-- if self.backgroundColor then
-	-- 	love.graphics.setColor(self.backgroundColor)
-	-- 	love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
-	-- end
-
-	-- if self.border or self.borderColor then
-	-- 	love.graphics.setColor(self.borderColor)
-	-- 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
-	-- end
-
-	-- if self.scrollable then
-	-- 	love.graphics.setScissor(self.x, self.y, self.w, self.h)
-	-- 	love.graphics.push()
-	-- 	love.graphics.translate(0, -self.scrollY)
-	-- end
-
-	-- for _, child in ipairs(self.children) do
-	-- 	child:draw()
-	-- end
-
-	-- if self.scrollable then
-	-- 	love.graphics.pop()
-	-- 	love.graphics.setScissor()
-	-- end
-
-	-- if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
-	-- 	self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
-	-- 	love.graphics.setColor(self.bar.color)
-	-- 	love.graphics.rectangle("fill", self.x + self.w - self.bar.w, self.bar.y, self.bar.w, self.bar.h)
-	-- end
-
-	-- love.graphics.setColor(1, 1, 1, 1)
-
-
 	love.graphics.push("all")
 
 	local sx, sy = love.graphics.transformPoint(self.x, self.y)

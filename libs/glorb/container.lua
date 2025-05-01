@@ -279,13 +279,17 @@ function Container:update(dt)
 		local contentHeight = 0
 		for _, child in ipairs(self.children) do
 			if self.layout == "vertical" then
-				if child.calculateContentHeight then
+				if child.scrollable then
+					contentHeight = contentHeight + child.h + self.spacing
+				elseif child.calculateContentHeight then
 					contentHeight = contentHeight + child:calculateContentHeight()
 				else
 					contentHeight = contentHeight + child.h + self.spacing
 				end
 			else
-				if child.calculateContentWidth then
+				if child.scrollable then
+					contentHeight = contentHeight + child.h + self.spacing
+				elseif child.calculateContentWidth then
 					contentHeight = math.max(contentHeight, child:calculateContentHeight())
 				else
 					contentHeight = math.max(contentHeight, child.w + self.spacing)

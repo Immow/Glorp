@@ -479,6 +479,10 @@ function love.mousemoved(x, y, dx, dy)
 	Glorb:mousemoved(x, y, dx, dy)
 end
 
+function love.update(dt)
+	Glorb:update(dt)
+end
+
 function love.draw()
 	love.window.setTitle("active test " .. active)
 	Glorb:draw()

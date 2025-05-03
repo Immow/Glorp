@@ -6,22 +6,19 @@ local glorb_alien = love.graphics.newImage("assets/glorp-alien.png")
 local active = 1
 local mainContainer
 local scrollContainer
+local scrollContainer2
 
 mainContainer = Glorb.newContainer({
-		id = "mainContainer",
-		layout = "vertical",
-		alignment = { horizontal = "center", vertical = "center" },
-		borderColor = { 1, 1, 1, 1 },
-		backgroundColor = { 1, 1, 0, 0.5 },
-		scrollable = true,
-		w = 600,
-		h = 400,
-		showScrollbar = true,
-	})
-	:addButton({ label = "button1" })
-	:addButton({ label = "button2" })
-	:addImage({ image = glorb_alien })
-	:addButton({ label = "button3" })
+	id = "mainContainer",
+	layout = "horizontal",
+	alignment = { horizontal = "center", vertical = "center" },
+	borderColor = { 1, 1, 1, 1 },
+	backgroundColor = { 1, 1, 0, 0.5 },
+	scrollable = true,
+	w = 600,
+	h = 400,
+	-- showScrollbar = true,
+})
 
 scrollContainer = Glorb.newContainer({
 		id = "scrollContainer",
@@ -29,12 +26,11 @@ scrollContainer = Glorb.newContainer({
 		alignment = { horizontal = "center", vertical = "center" },
 		borderColor = { 1, 1, 1, 1 },
 		backgroundColor = { 1, 0, 0, 0.5 },
-		scrollable = true,
-		w = 300,
-		h = 300,
-		showScrollbar = true,
+		-- scrollable = true,
+		w = 200,
+		h = 600,
+		-- showScrollbar = true,
 	})
-	:addButton({ label = "button1" })
 	:addImage({ image = glorb_alien })
 	:addImage({ image = glorb_alien })
 	:addImage({ image = glorb_alien })
@@ -48,34 +44,55 @@ scrollContainer = Glorb.newContainer({
 	:addImage({ image = glorb_alien })
 	:addImage({ image = glorb_alien })
 	:addImage({ image = glorb_alien })
+
+scrollContainer2 = Glorb.newContainer({
+		id = "scrollContainer2",
+		layout = "vertical",
+		alignment = { horizontal = "center", vertical = "center" },
+		borderColor = { 1, 1, 1, 1 },
+		backgroundColor = { 1, 0, 0, 0.5 },
+		-- scrollable = true,
+		w = 200,
+		h = 600,
+		-- showScrollbar = true,
+	})
+	:addButton({ label = "test1" })
+	:addButton({ label = "test2" })
+	:addButton({ label = "test3" })
+	:addButton({ label = "test4" })
+	:addButton({ label = "test5" })
+	:addButton({ label = "test6" })
+	:addButton({ label = "test7" })
+	:addButton({ label = "test8" })
+	:addButton({ label = "test9" })
+	:addButton({ label = "test10" })
 
 mainContainer:addContainer(scrollContainer)
--- local tests = { mainContainer }
-
+mainContainer:addContainer(scrollContainer2)
 
 function love.load()
 	-- tests[1]()
 end
 
 function love.keypressed(key, scancode, isrepeat)
-	print(Game.currentLevel)
-	if key == "p" then
-		Glorb:purge()
-	elseif key == "left" or key == "right" then
-		if key == "left" then
-			active = active - 1
-			if active < 1 then
-				active = #tests
-			end
-		else -- key == "right"
-			active = active + 1
-			if active > #tests then
-				active = 1
-			end
-		end
-		Glorb:purge()
-		tests[active]()
-	end
+	-- print(Game.currentLevel)
+	-- if key == "p" then
+	-- 	Glorb:purge()
+	-- elseif key == "left" or key == "right" then
+	-- 	if key == "left" then
+	-- 		active = active - 1
+	-- 		if active < 1 then
+	-- 			active = #tests
+	-- 		end
+	-- 	else -- key == "right"
+	-- 		active = active + 1
+	-- 		if active > #tests then
+	-- 			active = 1
+	-- 		end
+	-- 	end
+	-- 	Glorb:purge()
+	-- 	tests[active]()
+	-- end
 end
 
 function love.mousepressed(x, y, button, isTouch)

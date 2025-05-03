@@ -38,7 +38,7 @@ function Container.new(settings)
 		x = 0,
 		y = 0,
 		w = (settings.bar and settings.bar.w) or 20,
-		h = (settings.bar and settings.bar.h) or 80,
+		h = (settings.bar and settings.bar.h) or 50,
 		color = (settings.bar and settings.bar.color) or { 0.8, 0.8, 0.8, 0.7 }
 	}
 
@@ -62,7 +62,6 @@ end
 function Container:addContainer(container)
 	container.parent = self
 	table.insert(self.children, container)
-	return self
 end
 
 function Container:addButtonList(settings)
@@ -132,7 +131,9 @@ function Container:positionChildren()
 				child.y = self.y
 			end
 			offsetX = offsetX + child.w + self.spacing
+			child.y = offsetY
 		else
+			child.x = offsetX
 			child.y = offsetY
 			if self.alignment.horizontal == "right" then
 				child.x = self.x + self.w - child.w
@@ -270,33 +271,40 @@ function Container:update(dt)
 		end
 	end
 
-	self.w = (self.scrollable and self.w) or math.max(self.w, self:calculateContentWidth())
-	self.h = (self.scrollable and self.h) or math.max(self.h, self:calculateContentHeight())
+	self.w = (self.scrollable and self.w) or self:calculateContentWidth()
+	self.h = (self.scrollable and self.h) or self:calculateContentHeight()
 
 	self:positionChildren()
 
-	if self.scrollable then
+	if self.scrollable and self.scrollDirection == "vertical" then
 		local contentHeight = 0
-		for _, child in ipairs(self.children) do
-			if self.layout == "vertical" then
-				if child.scrollable then
-					contentHeight = contentHeight + child.h + self.spacing
-				elseif child.calculateContentHeight then
-					contentHeight = contentHeight + child:calculateContentHeight()
+		local spacingCount = 0
+
+		if self.layout == "vertical" then
+			for _, child in ipairs(self.children) do
+				local h = 0
+				if child.calculateContentHeight and not child.scrollable then
+					h = child:calculateContentHeight()
 				else
-					contentHeight = contentHeight + child.h + self.spacing
+					h = child.h
 				end
-			else
-				if child.scrollable then
-					contentHeight = contentHeight + child.h + self.spacing
-				elseif child.calculateContentWidth then
-					contentHeight = math.max(contentHeight, child:calculateContentHeight())
+				contentHeight = contentHeight + h
+				spacingCount = spacingCount + 1
+			end
+			contentHeight = contentHeight + self.spacing * math.max(0, spacingCount - 1)
+		else -- layout is horizontal but vertical scrolling
+			for _, child in ipairs(self.children) do
+				local h = 0
+				if child.calculateContentHeight and not child.scrollable then
+					h = child:calculateContentHeight()
 				else
-					contentHeight = math.max(contentHeight, child.w + self.spacing)
+					h = child.h
 				end
+				contentHeight = math.max(contentHeight, h)
 			end
 		end
-		self.maxScrollY = math.max(0, contentHeight - self.h - self.spacing)
+
+		self.maxScrollY = math.max(0, contentHeight - self.h)
 	end
 end
 
@@ -338,12 +346,13 @@ function Container:draw()
 	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 
-	if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
-		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
-		love.graphics.setColor(self.bar.color)
-		love.graphics.rectangle("fill", self.x + self.w - self.bar.w, self.bar.y, self.bar.w, self.bar.h)
-	end
+	-- if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
+	-- 	self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
+	-- 	love.graphics.setColor(self.bar.color)
+	-- 	love.graphics.rectangle("fill", self.x + self.w - self.bar.w, self.bar.y, self.bar.w, self.bar.h)
+	-- end
 	love.graphics.setColor(1, 1, 1, 1)
+	love.graphics.print(self.maxScrollY, self.x, self.y)
 end
 
 return Container

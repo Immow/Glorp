@@ -346,11 +346,11 @@ function Container:draw()
 	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 
-	-- if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
-	-- 	self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
-	-- 	love.graphics.setColor(self.bar.color)
-	-- 	love.graphics.rectangle("fill", self.x + self.w - self.bar.w, self.bar.y, self.bar.w, self.bar.h)
-	-- end
+	if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
+		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
+		love.graphics.setColor(self.bar.color)
+		love.graphics.rectangle("fill", self.x + self.w - self.bar.w, self.bar.y, self.bar.w, self.bar.h)
+	end
 	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.print(self.maxScrollY, self.x, self.y)
 end

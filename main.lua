@@ -1,6 +1,7 @@
 local Glorb = require("libs.glorb")
 require("tprint")
 Game = { currentLevel = 1 }
+DEBUG = false
 
 local glorb_alien = love.graphics.newImage("assets/glorp-alien.png")
 local active = 1
@@ -15,43 +16,58 @@ mainContainer = Glorb.newContainer({
 	borderColor = { 1, 1, 1, 1 },
 	backgroundColor = { 1, 1, 0, 0.5 },
 	scrollable = true,
+	scrollDirection = "horizontal",
 	w = 600,
 	h = 400,
 	showScrollbar = true,
 })
-
-scrollContainer = Glorb.newContainer({
-	id = "scrollContainer",
-	layout = "vertical",
-	alignment = { horizontal = "center", vertical = "center" },
-	borderColor = { 1, 1, 1, 1 },
-	backgroundColor = { 1, 0, 0, 0.5 },
-	-- scrollable = true,
-	w = 200,
-	h = 300,
-	-- showScrollbar = true,
-})
 for i = 1, 10 do
-	scrollContainer:addImage({ image = glorb_alien })
+	mainContainer:addImage({ image = glorb_alien })
 end
 
-scrollContainer2 = Glorb.newContainer({
-	id = "scrollContainer2",
-	layout = "vertical",
-	alignment = { horizontal = "center", vertical = "center" },
-	borderColor = { 1, 1, 1, 1 },
-	backgroundColor = { 1, 0, 0, 0.5 },
-	scrollable = true,
-	w = 200,
-	h = 300,
-	showScrollbar = true,
-})
-for i = 1, 10 do
-	scrollContainer2:addImage({ image = glorb_alien })
-end
+-- 128 * 10 = 1280
+-- 9 * 10 = 90
+-- 1370
 
-mainContainer:addContainer(scrollContainer)
-mainContainer:addContainer(scrollContainer2)
+-- scrollContainer = Glorb.newContainer({
+-- 	id = "scrollContainer",
+-- 	layout = "vertical",
+-- 	alignment = { horizontal = "center", vertical = "center" },
+-- 	borderColor = { 1, 1, 1, 1 },
+-- 	backgroundColor = { 1, 0, 0, 0.5 },
+-- 	scrollDirection = "vertical",
+-- 	scrollable = true,
+-- 	w = 200,
+-- 	h = 200,
+-- 	showScrollbar = true,
+-- })
+-- for i = 1, 10 do
+-- 	scrollContainer:addImage({ image = glorb_alien })
+-- end
+
+-- scrollContainer2 = Glorb.newContainer({
+-- 	id = "scrollContainer2",
+-- 	layout = "vertical",
+-- 	alignment = { horizontal = "center", vertical = "center" },
+-- 	borderColor = { 1, 1, 1, 1 },
+-- 	backgroundColor = { 1, 0, 0, 0.5 },
+-- 	scrollable = true,
+-- 	w = 200,
+-- 	h = 300,
+-- 	showScrollbar = true,
+-- })
+
+-- local list = {
+-- 	"A", "B", "C", "D", "E", "D", "F", "G", "H", "I"
+-- }
+
+-- for i = 1, 10 do
+-- 	scrollContainer2:addButton({ label = "test " .. i, fn = function() print(list[i]) end })
+-- end
+
+
+-- mainContainer:addContainer(scrollContainer)
+-- mainContainer:addContainer(scrollContainer2)
 
 function love.load()
 	-- tests[1]()
@@ -76,6 +92,10 @@ function love.keypressed(key, scancode, isrepeat)
 	-- 	Glorb:purge()
 	-- 	tests[active]()
 	-- end
+
+	if key == "d" then
+		DEBUG = not DEBUG
+	end
 end
 
 function love.mousepressed(x, y, button, isTouch)

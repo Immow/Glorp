@@ -95,17 +95,17 @@ function Container:positionChildren()
 	local childrenTotalWidth, childrenTotalHeight = self:calculateContentWidth(), self:calculateContentHeight()
 
 	local startX, startY
-	if self.alignment.horizontal == "center" then
+	if self.alignment.horizontal == "center" and not self.scrollDirection == "horizontal" then
 		startX = self.x + (self.w - childrenTotalWidth) / 2
-	elseif self.alignment.horizontal == "right" then
+	elseif self.alignment.horizontal == "right" and not self.scrollDirection == "horizontal" then
 		startX = self.x + self.w - childrenTotalWidth
 	else
 		startX = self.x
 	end
 
-	if self.alignment.vertical == "center" then
+	if self.alignment.vertical == "center" and not self.scrollDirection == "vertical" then
 		startY = self.y + (self.h - childrenTotalHeight) / 2
-	elseif self.alignment.vertical == "bottom" then
+	elseif self.alignment.vertical == "bottom" and not self.scrollDirection == "vertical" then
 		startY = self.y + self.h - childrenTotalHeight
 	else
 		startY = self.y
@@ -123,6 +123,7 @@ function Container:positionChildren()
 	for _, child in ipairs(self.children) do
 		if self.layout == "horizontal" then
 			child.x = offsetX
+			child.y = offsetY
 			if self.alignment.vertical == "bottom" then
 				child.y = self.y + self.h - child.h
 			elseif self.alignment.vertical == "center" then
@@ -131,7 +132,6 @@ function Container:positionChildren()
 				child.y = self.y
 			end
 			offsetX = offsetX + child.w + self.spacing
-			child.y = offsetY
 		else
 			child.x = offsetX
 			child.y = offsetY
@@ -239,11 +239,24 @@ function Container:mousepressed(mx, my, button, isTouch)
 		end
 	end
 
-	if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
+	if not (self.showScrollbar and self.scrollable) then return end
+
+	-- Vertical scrollbar
+	if self.scrollDirection == "vertical" and self.maxScrollY > 0 then
 		local barX = self.x + self.w - self.bar.w
 		if mx >= barX and mx <= barX + self.bar.w and my >= self.bar.y and my <= self.bar.y + self.bar.h then
 			self.draggingBar = true
 			self.barOffsetY = my - self.bar.y
+			return
+		end
+	end
+
+	-- Horizontal scrollbar
+	if self.scrollDirection == "horizontal" and self.maxScrollX > 0 then
+		local barY = self.y + self.h - self.bar.h
+		if my >= barY and my <= barY + self.bar.h and mx >= self.bar.x and mx <= self.bar.x + self.bar.w then
+			self.draggingBar = true
+			self.barOffsetX = mx - self.bar.x
 			return
 		end
 	end
@@ -266,10 +279,17 @@ function Container:mousemoved(x, y, dx, dy, istouch)
 	end
 
 	if self.draggingBar and self.scrollable then
-		local trackHeight = self.h - self.bar.h
-		local newBarY = math.max(self.y, math.min(y - self.barOffsetY, self.y + trackHeight))
-		self.bar.y = newBarY
-		self.scrollY = ((self.bar.y - self.y) / trackHeight) * self.maxScrollY
+		if self.scrollDirection == "vertical" then
+			local trackHeight = self.h - self.bar.h
+			local newBarY = math.max(self.y, math.min(y - self.barOffsetY, self.y + trackHeight))
+			self.bar.y = newBarY
+			self.scrollY = ((self.bar.y - self.y) / trackHeight) * self.maxScrollY
+		elseif self.scrollDirection == "horizontal" then
+			local trackWidth = self.w - self.bar.w
+			local newBarX = math.max(self.x, math.min(x - self.barOffsetX, self.x + trackWidth))
+			self.bar.x = newBarX
+			self.scrollX = ((self.bar.x - self.x) / trackWidth) * self.maxScrollX
+		end
 	end
 end
 
@@ -282,40 +302,55 @@ function Container:update(dt)
 		end
 	end
 
-	self.w = (self.scrollable and self.w) or self:calculateContentWidth()
-	self.h = (self.scrollable and self.h) or self:calculateContentHeight()
+	self.w = (self.scrollable and self.w) or math.max(self.w, self:calculateContentWidth())
+	self.h = (self.scrollable and self.h) or math.max(self.h, self:calculateContentHeight())
 
 	self:positionChildren()
 
-	if self.scrollable and self.scrollDirection == "vertical" then
-		local contentHeight = 0
-		local spacingCount = 0
+	if self.scrollable then
+		if self.scrollDirection == "vertical" then
+			local contentHeight = 0
+			local spacingCount = 0
 
-		if self.layout == "vertical" then
-			for _, child in ipairs(self.children) do
-				local h = 0
-				if child.calculateContentHeight and not child.scrollable then
-					h = child:calculateContentHeight()
-				else
-					h = child.h
+			if self.layout == "vertical" then
+				for _, child in ipairs(self.children) do
+					local h = (child.calculateContentHeight and not child.scrollable) and child:calculateContentHeight() or
+						child.h
+					contentHeight = contentHeight + h
+					spacingCount = spacingCount + 1
 				end
-				contentHeight = contentHeight + h
-				spacingCount = spacingCount + 1
-			end
-			contentHeight = contentHeight + self.spacing * math.max(0, spacingCount - 1)
-		else -- layout is horizontal but vertical scrolling
-			for _, child in ipairs(self.children) do
-				local h = 0
-				if child.calculateContentHeight and not child.scrollable then
-					h = child:calculateContentHeight()
-				else
-					h = child.h
+				contentHeight = contentHeight + self.spacing * math.max(0, spacingCount - 1)
+			else -- layout is horizontal but vertical scrolling
+				for _, child in ipairs(self.children) do
+					local h = (child.calculateContentHeight and not child.scrollable) and child:calculateContentHeight() or
+						child.h
+					contentHeight = math.max(contentHeight, h)
 				end
-				contentHeight = math.max(contentHeight, h)
 			end
+
+			self.maxScrollY = math.max(0, contentHeight - self.h)
+		elseif self.scrollDirection == "horizontal" then
+			local contentWidth = 0
+			local spacingCount = 0
+
+			if self.layout == "horizontal" then
+				for _, child in ipairs(self.children) do
+					local w = (child.calculateContentWidth and not child.scrollable) and child:calculateContentWidth() or
+						child.w
+					contentWidth = contentWidth + w
+					spacingCount = spacingCount + 1
+				end
+				contentWidth = contentWidth + self.spacing * math.max(0, spacingCount - 1)
+			else -- layout is vertical but horizontal scrolling
+				for _, child in ipairs(self.children) do
+					local w = (child.calculateContentWidth and not child.scrollable) and child:calculateContentWidth() or
+						child.w
+					contentWidth = math.max(contentWidth, w)
+				end
+			end
+
+			self.maxScrollX = math.max(0, contentWidth - self.w)
 		end
-
-		self.maxScrollY = math.max(0, contentHeight - self.h)
 	end
 end
 
@@ -342,10 +377,12 @@ function Container:draw()
 
 	local sx, sy = love.graphics.transformPoint(self.x, self.y)
 
-	if love.graphics.getScissor() then
-		love.graphics.intersectScissor(sx, sy, self.w, self.h)
-	else
-		love.graphics.setScissor(sx, sy, self.w, self.h)
+	if not DEBUG then
+		if love.graphics.getScissor() then
+			love.graphics.intersectScissor(sx, sy, self.w, self.h)
+		else
+			love.graphics.setScissor(sx, sy, self.w, self.h)
+		end
 	end
 
 	for _, child in ipairs(self.children) do
@@ -357,13 +394,21 @@ function Container:draw()
 	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 
-	if self.showScrollbar and self.scrollable and self.maxScrollY > 0 then
+	-- Draw vertical scrollbar
+	if self.scrollDirection == "vertical" and self.maxScrollY > 0 then
 		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
 		love.graphics.setColor(self.bar.color)
 		love.graphics.rectangle("fill", self.x + self.w - self.bar.w, self.bar.y, self.bar.w, self.bar.h)
+
+		-- Draw horizontal scrollbar
+	elseif self.scrollDirection == "horizontal" and self.maxScrollX > 0 then
+		self.bar.x = self.x + (self.scrollX / self.maxScrollX) * (self.w - self.bar.w)
+		love.graphics.setColor(self.bar.color)
+		love.graphics.rectangle("fill", self.bar.x, self.y + self.h - self.bar.h, self.bar.w, self.bar.h)
 	end
+
 	love.graphics.setColor(1, 1, 1, 1)
-	love.graphics.print(self.maxScrollY, self.x, self.y)
+	love.graphics.print(self.maxScrollX, self.x, self.y)
 end
 
 return Container

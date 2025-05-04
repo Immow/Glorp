@@ -54,7 +54,6 @@ function Button:draw()
 	end
 
 	love.graphics.printf(self.label, self.x, textY, self.w, self.alignment.horizontal)
-	love.graphics.print("button y: " .. self.y, self.x, self.y)
 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 

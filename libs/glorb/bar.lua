@@ -7,7 +7,6 @@ function Bar.new(settings)
 	instance.x     = 0
 	instance.y     = 0
 	instance.image = settings.image or nil
-
 	local defaultW = (settings.scrollDirection == "vertical") and 20 or 50
 	local defaultH = (settings.scrollDirection == "vertical") and 50 or 20
 

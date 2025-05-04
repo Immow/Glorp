@@ -2,6 +2,7 @@ local folder_path = (...):match("(.-)[^%.]+$")
 require(folder_path .. "annotations")
 local Button = require(folder_path .. "button")
 local Image = require(folder_path .. "image")
+local Bar = require(folder_path .. "bar")
 
 local Container = {}
 Container.__index = Container
@@ -34,17 +35,16 @@ function Container.new(settings)
 		horizontal = (settings.alignment and settings.alignment.horizontal) or "center",
 		vertical = (settings.alignment and settings.alignment.vertical) or "center"
 	}
-	instance.bar = {
-		x = 0,
-		y = 0,
-		w = (settings.bar and settings.bar.w) or 20,
-		h = (settings.bar and settings.bar.h) or 50,
-		color = (settings.bar and settings.bar.color) or { 0.8, 0.8, 0.8, 0.7 }
-	}
 
-	if settings.scrollable then
-		instance.alignment.vertical = "top"
+	if settings.scrollable and not settings.scrollDirection then
+		if settings.layout == "vertical" then
+			settings.scrollDirection = "vertical"
+		else
+			settings.scrollDirection = "horizontal"
+		end
 	end
+
+	instance.bar = Bar.new(settings)
 
 	instance.children = {}
 
@@ -95,17 +95,17 @@ function Container:positionChildren()
 	local childrenTotalWidth, childrenTotalHeight = self:calculateContentWidth(), self:calculateContentHeight()
 
 	local startX, startY
-	if self.alignment.horizontal == "center" and not self.scrollDirection == "horizontal" then
+	if self.alignment.horizontal == "center" and self.scrollDirection ~= "horizontal" then
 		startX = self.x + (self.w - childrenTotalWidth) / 2
-	elseif self.alignment.horizontal == "right" and not self.scrollDirection == "horizontal" then
+	elseif self.alignment.horizontal == "right" and self.scrollDirection ~= "horizontal" then
 		startX = self.x + self.w - childrenTotalWidth
 	else
 		startX = self.x
 	end
 
-	if self.alignment.vertical == "center" and not self.scrollDirection == "vertical" then
+	if self.alignment.vertical == "center" and self.scrollDirection ~= "vertical" then
 		startY = self.y + (self.h - childrenTotalHeight) / 2
-	elseif self.alignment.vertical == "bottom" and not self.scrollDirection == "vertical" then
+	elseif self.alignment.vertical == "bottom" and self.scrollDirection ~= "vertical" then
 		startY = self.y + self.h - childrenTotalHeight
 	else
 		startY = self.y

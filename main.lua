@@ -11,15 +11,16 @@ local scrollContainer2
 
 mainContainer = Glorb.newContainer({
 	id = "mainContainer",
-	layout = "horizontal",
+	layout = "vertical",
 	alignment = { horizontal = "center", vertical = "center" },
 	borderColor = { 1, 1, 1, 1 },
 	backgroundColor = { 1, 1, 0, 0.5 },
 	scrollable = true,
-	scrollDirection = "horizontal",
+	-- scrollDirection = "horizontal",
 	w = 600,
 	h = 400,
 	showScrollbar = true,
+	bar = { color = { 1, 0, 0, 1 } },
 })
 for i = 1, 10 do
 	mainContainer:addImage({ image = glorb_alien })
@@ -49,6 +50,7 @@ end
 -- 	id = "scrollContainer2",
 -- 	layout = "vertical",
 -- 	alignment = { horizontal = "center", vertical = "center" },
+-- 	-- scrollDirection = "vertical",
 -- 	borderColor = { 1, 1, 1, 1 },
 -- 	backgroundColor = { 1, 0, 0, 0.5 },
 -- 	scrollable = true,

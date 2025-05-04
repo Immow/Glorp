@@ -10,7 +10,7 @@ local scrollContainer2
 
 mainContainer = Glorb.newContainer({
 	id = "mainContainer",
-	layout = "vertical",
+	layout = "horizontal",
 	alignment = { horizontal = "center", vertical = "center" },
 	borderColor = { 1, 1, 1, 1 },
 	backgroundColor = { 1, 1, 0, 0.5 },
@@ -26,36 +26,29 @@ scrollContainer = Glorb.newContainer({
 	alignment = { horizontal = "center", vertical = "center" },
 	borderColor = { 1, 1, 1, 1 },
 	backgroundColor = { 1, 0, 0, 0.5 },
-	scrollable = true,
+	-- scrollable = true,
 	w = 200,
 	h = 300,
-	showScrollbar = true,
+	-- showScrollbar = true,
 })
 for i = 1, 10 do
 	scrollContainer:addImage({ image = glorb_alien })
 end
 
 scrollContainer2 = Glorb.newContainer({
-		id = "scrollContainer2",
-		layout = "vertical",
-		alignment = { horizontal = "center", vertical = "center" },
-		borderColor = { 1, 1, 1, 1 },
-		backgroundColor = { 1, 0, 0, 0.5 },
-		scrollable = true,
-		w = 200,
-		h = 200,
-		showScrollbar = true,
-	})
-	:addButton({ label = "test1" })
-	:addButton({ label = "test2" })
-	:addButton({ label = "test3" })
-	:addButton({ label = "test4" })
-	:addButton({ label = "test5" })
-	:addButton({ label = "test6" })
-	:addButton({ label = "test7" })
-	:addButton({ label = "test8" })
-	:addButton({ label = "test9" })
-	:addButton({ label = "test10" })
+	id = "scrollContainer2",
+	layout = "vertical",
+	alignment = { horizontal = "center", vertical = "center" },
+	borderColor = { 1, 1, 1, 1 },
+	backgroundColor = { 1, 0, 0, 0.5 },
+	scrollable = true,
+	w = 200,
+	h = 300,
+	showScrollbar = true,
+})
+for i = 1, 10 do
+	scrollContainer2:addImage({ image = glorb_alien })
+end
 
 mainContainer:addContainer(scrollContainer)
 mainContainer:addContainer(scrollContainer2)

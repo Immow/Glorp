@@ -250,10 +250,21 @@ function Container:mousepressed(mx, my, button, isTouch)
 end
 
 function Container:mousereleased(mx, my, button, isTouch)
+	for _, child in ipairs(self.children) do
+		if child.mousereleased then
+			child:mousereleased(mx, my, button, isTouch)
+		end
+	end
 	self.draggingBar = false
 end
 
 function Container:mousemoved(x, y, dx, dy, istouch)
+	for _, child in ipairs(self.children) do
+		if child.mousemoved then
+			child:mousemoved(x, y, dx, dy, istouch)
+		end
+	end
+
 	if self.draggingBar and self.scrollable then
 		local trackHeight = self.h - self.bar.h
 		local newBarY = math.max(self.y, math.min(y - self.barOffsetY, self.y + trackHeight))

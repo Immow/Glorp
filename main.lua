@@ -16,11 +16,13 @@ mainContainer = Glorb.newContainer({
 	borderColor = { 1, 1, 1, 1 },
 	backgroundColor = { 1, 1, 0, 0.5 },
 	scrollable = true,
-	-- scrollDirection = "horizontal",
+	scrollDirection = "vertical",
 	w = 600,
 	h = 400,
-	showScrollbar = true,
-	bar = { color = { 1, 0, 0, 1 } },
+	-- scrollBar = {
+	-- 	-- bar = { color = { 1, 0, 0, 1 } },
+	-- 	-- track = { showScrollTrack = false }
+	-- },
 })
 for i = 1, 10 do
 	mainContainer:addImage({ image = glorb_alien })

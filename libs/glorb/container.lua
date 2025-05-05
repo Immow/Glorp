@@ -3,6 +3,7 @@ require(folder_path .. "annotations")
 local Button = require(folder_path .. "button")
 local Image = require(folder_path .. "image")
 local Bar = require(folder_path .. "bar")
+local Track = require(folder_path .. "track")
 
 local Container = {}
 Container.__index = Container
@@ -23,7 +24,7 @@ function Container.new(settings)
 	instance.borderColor = settings.borderColor or { 0, 0, 0, 1 }
 	instance.backgroundColor = settings.backgroundColor or { 0, 0, 0, 1 }
 	instance.scrollable = settings.scrollable or false
-	instance.showScrollbar = settings.showScrollbar or false
+	-- instance.showScrollbar = settings.showScrollbar or false
 	instance.scrollDirection = settings.scrollDirection or "vertical"
 	instance.scrollY = 0
 	instance.maxScrollY = 0
@@ -45,6 +46,7 @@ function Container.new(settings)
 	end
 
 	instance.bar = Bar.new(settings)
+	instance.track = Track.new(settings)
 
 	instance.children = {}
 
@@ -239,7 +241,7 @@ function Container:mousepressed(mx, my, button, isTouch)
 		end
 	end
 
-	if not (self.showScrollbar and self.scrollable) then return end
+	if not self.scrollable then return end
 
 	-- Vertical scrollbar
 	if self.scrollDirection == "vertical" and self.maxScrollY > 0 then
@@ -396,19 +398,26 @@ function Container:draw()
 
 	-- Draw vertical scrollbar
 	if self.scrollDirection == "vertical" and self.maxScrollY > 0 then
+		local trackX = self.x + self.w - self.bar.w
+		local trackY = self.y
+		self.track:draw(trackX, trackY, self.bar.w, self.h)
+
+		-- Draw thumb
 		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
-		love.graphics.setColor(self.bar.color)
-		love.graphics.rectangle("fill", self.x + self.w - self.bar.w, self.bar.y, self.bar.w, self.bar.h)
+		self.bar:draw(trackX, self.bar.y)
 
 		-- Draw horizontal scrollbar
 	elseif self.scrollDirection == "horizontal" and self.maxScrollX > 0 then
+		local trackX = self.x
+		local trackY = self.y + self.h - self.bar.h
+		self.track:draw(trackX, trackY, self.w, self.bar.h)
+
+		-- Draw thumb
 		self.bar.x = self.x + (self.scrollX / self.maxScrollX) * (self.w - self.bar.w)
-		love.graphics.setColor(self.bar.color)
-		love.graphics.rectangle("fill", self.bar.x, self.y + self.h - self.bar.h, self.bar.w, self.bar.h)
+		self.bar:draw(self.bar.x, trackY)
 	end
 
 	love.graphics.setColor(1, 1, 1, 1)
-	love.graphics.print(self.maxScrollX, self.x, self.y)
 end
 
 return Container

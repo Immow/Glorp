@@ -17,3 +17,33 @@
 ## Getting Started
 
 ### Installation
+
+### example usage:
+```lua
+local Glorb = require("libs.glorb")
+local mainContainer
+
+function love.load()
+	mainContainer = Glorb.newContainer({
+		id = "mainContainer",
+		x = 100,
+		y = 100,
+		w = 300,
+		h = 400,
+		scrollBar = {
+			bar = { color = { 1, 0, 0, 1 } },
+			track = { showScrollTrack = true }
+		}
+	})
+
+	mainContainer:addText({ text = "Hello Glorb!", w = 280, align = "center" })
+end
+
+function love.update(dt)
+	Glorb:update(dt)
+end
+
+function love.draw()
+	Glorb:draw()
+end
+```

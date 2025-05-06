@@ -24,11 +24,10 @@
 ---@field addButtonList? fun(self: Glorb.Container, settings: Glorb.ButtonListSettings): Glorb.Container
 ---@field addText? fun(self: Glorb.Container, settings: Glorb.TextSettings): Glorb.Container
 ---@field addContainer? fun(self: Glorb.Container, settings: Glorb.Container): Glorb.Container
+---@field addDropDown? fun(self: Glorb.Container, settings: Glorb.DropDownSettings): Glorb.Container
 
 ---@class Glorb.ButtonSettings
 ---@field id? string
----@field x? number
----@field y? number
 ---@field w? number
 ---@field h? number
 ---@field label? string
@@ -39,8 +38,6 @@
 
 ---@class Glorb.ButtonListSettings
 ---@field id? string
----@field x? number
----@field y? number
 ---@field w? number
 ---@field h? number
 ---@field label? string
@@ -50,8 +47,6 @@
 ---@field fn? function
 
 ---@class Glorb.TextSettings
----@field x? number
----@field y? number
 ---@field w? number
 ---@field h? number
 ---@field color? table
@@ -62,7 +57,16 @@
 ---@class Glorb.ImageSettings
 ---@field label? string
 ---@field image? love.Image
----@field x? number
----@field y? number
 ---@field w? number
 ---@field h? number
+
+---@class Glorb.DropDownSettings
+---@field w? number
+---@field h? number
+---@field bgColor? table
+---@field hoverColor? table
+---@field textColor? table
+---@field text? string
+---@field align? "left"|"center"|"right"
+---@field font? string
+---@field options? table

@@ -5,6 +5,7 @@ local Image = require(folder_path .. "image")
 local Bar = require(folder_path .. "bar")
 local Track = require(folder_path .. "track")
 local Text = require(folder_path .. "text")
+local DropDown = require(folder_path .. "dropdown")
 
 local Container = {}
 Container.__index = Container
@@ -14,6 +15,7 @@ Container.__index = Container
 function Container.new(settings)
 	local instance = setmetatable({}, Container)
 	instance.id = settings.id
+	instance.type = "container"
 	instance.x = settings.x or 0
 	instance.y = settings.y or 0
 	instance.w = settings.w or 0
@@ -21,6 +23,7 @@ function Container.new(settings)
 	instance.layout = settings.layout or "horizontal"
 	instance.spacing = settings.spacing or 10
 	instance.label = "container"
+	instance.activeDropDown = nil
 	instance.border = settings.border ~= false
 	instance.borderColor = settings.borderColor or { 0, 0, 0, 1 }
 	instance.backgroundColor = settings.backgroundColor or { 0, 0, 0, 1 }
@@ -69,6 +72,14 @@ function Container:addText(settings)
 	settings.w = w
 	local text = Text.new(settings)
 	table.insert(self.children, text)
+	return self
+end
+
+---@param settings Glorb.DropDownSettings
+---@return Glorb.Container
+function Container:addDropDown(settings)
+	local dropdown = DropDown.new(settings)
+	table.insert(self.children, dropdown)
 	return self
 end
 
@@ -243,12 +254,23 @@ function Container:isMouseInside(mx, my, target)
 end
 
 function Container:mousepressed(mx, my, button, isTouch)
-	-- Optional: only trigger if mouse is inside this container
 	if not self:isMouseInside(mx, my, self) then return end
+
+	if self.activeDropDown then
+		self.activeDropDown:mousepressed(mx, my, button, isTouch)
+		self.activeDropDown = nil
+		return
+	end
 
 	for _, child in ipairs(self.children) do
 		if child.mousepressed then
-			child:mousepressed(mx, my, button, isTouch)
+			local handled = child:mousepressed(mx, my, button, isTouch)
+			if handled then
+				if child.type == "dropdown" then
+					self.activeDropDown = child
+				end
+				return true
+			end
 		end
 	end
 
@@ -418,9 +440,16 @@ function Container:draw()
 			love.graphics.setScissor(sx, sy, self.w, self.h)
 		end
 	end
-
+	local expandedDropdown = nil
 	for _, child in ipairs(self.children) do
 		child:draw()
+		if child.expanded then
+			expandedDropdown = child
+		end
+	end
+
+	if expandedDropdown then
+		expandedDropdown:draw()
 	end
 
 	love.graphics.pop()

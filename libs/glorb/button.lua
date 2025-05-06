@@ -4,11 +4,13 @@ Button.__index = Button
 function Button.new(settings)
 	local instance     = setmetatable({}, Button)
 	instance.id        = settings.id
+	instance.type      = "button"
 	instance.x         = settings.x or 0
 	instance.y         = settings.y or 0
 	instance.w         = settings.w or 100
 	instance.h         = settings.h or 50
 	instance.label     = settings.label or ""
+	instance.hovered   = false
 	instance.alignment = {
 		horizontal = settings.alignment and settings.alignment.horizontal or "center",
 		vertical = settings.alignment and settings.alignment.vertical or "center"
@@ -40,10 +42,17 @@ function Button:getPosition()
 end
 
 function Button:update(dt)
-
+	local mx, my = love.mouse.getPosition()
+	self.hovered = mx >= self.x and mx <= self.x + self.w and my >= self.y and my <= self.y + self.h
 end
 
 function Button:draw()
+	if self.hovered then
+		love.graphics.setColor(0.2, 0.6, 1, 0.2) -- hover background
+		love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+	end
+
+	love.graphics.setColor(1, 1, 1, 1) -- reset color
 	local textHeight = self.font:getHeight()
 	local textY = self.y
 

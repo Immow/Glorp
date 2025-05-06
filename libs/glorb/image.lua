@@ -4,6 +4,7 @@ Image.__index = Image
 function Image.new(settings)
 	local instance = setmetatable({}, Image)
 	instance.label = settings.label or ""
+	instance.type  = "image"
 	instance.image = settings.image
 	instance.x     = settings.x or 0
 	instance.y     = settings.y or 0

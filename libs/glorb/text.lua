@@ -3,7 +3,7 @@ Text.__index = Text
 
 function Text.new(settings)
 	local instance = setmetatable({}, Text)
-
+	instance.type  = "text"
 	instance.text  = settings.text or ""
 	instance.font  = settings.font or love.graphics:getFont()
 	instance.color = settings.color or { 1, 1, 1, 1 }

@@ -11,38 +11,55 @@ local scrollContainer2
 
 mainContainer = Glorb.newContainer({
 		id = "mainContainer",
-		layout = "vertical",
-		alignment = { horizontal = "left", vertical = "center" },
-		borderColor = { 1, 1, 1, 1 },
-		backgroundColor = { 1, 1, 0, 0.5 },
-		-- scrollable = true,
-		-- scrollDirection = "vertical",
-		w = 600,
+		x = 100,
+		y = 100,
+		w = 300,
 		h = 400,
+		layout = "vertical",
+		scrollable = true,
 		-- scrollBar = {
-		-- 	-- bar = { color = { 1, 0, 0, 1 } },
-		-- 	-- track = { showScrollTrack = false }
-		-- },
+		-- 	bar = { color = { 1, 0, 0, 1 } },
+		-- 	track = { showScrollTrack = true }
+		-- }
 	})
-	:addText({
-		text =
-		"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+	:addDropDown({
+		options = {
+			{ name = "Apple",  value = "apple" },
+			{ name = "Banana", value = "banana" },
+		},
+		onSelect = function(i, val)
+			print("Selected:", i, val.value)
+		end
 	})
+	:addButton({ label = "test" })
+
+-- mainContainer:addText({ text = "Hello Glorb!", w = 280, align = "center" })
 -- for i = 1, 10 do
 -- 	mainContainer:addImage({ image = glorb_alien })
 -- end
 
--- scrollContainer = Glorb.newContainer({
--- 	id = "scrollContainer",
--- 	layout = "vertical",
--- 	alignment = { horizontal = "center", vertical = "center" },
--- 	borderColor = { 1, 1, 1, 1 },
--- 	backgroundColor = { 1, 0, 0, 0.5 },
--- 	scrollDirection = "vertical",
--- 	scrollable = true,
--- 	w = 200,
--- 	h = 200,
--- })
+scrollContainer = Glorb.newContainer({
+		id = "scrollContainer",
+		layout = "vertical",
+		alignment = { horizontal = "center", vertical = "center" },
+		borderColor = { 1, 1, 1, 1 },
+		backgroundColor = { 1, 0, 0, 0.5 },
+		scrollDirection = "vertical",
+		scrollable = true,
+		w = 200,
+		h = 200,
+	})
+	:addDropDown({
+		options = {
+			{ name = "Apple",  value = "apple" },
+			{ name = "Banana", value = "banana" },
+		},
+		onSelect = function(i, val)
+			print("Selected:", i, val.value)
+		end
+	})
+	:addButton({ label = "test" })
+
 -- for i = 1, 10 do
 -- 	scrollContainer:addImage({ image = glorb_alien })
 -- end
@@ -68,7 +85,7 @@ mainContainer = Glorb.newContainer({
 -- end
 
 
--- mainContainer:addContainer(scrollContainer)
+mainContainer:addContainer(scrollContainer)
 -- mainContainer:addContainer(scrollContainer2)
 
 function love.load()

@@ -10,27 +10,27 @@ local scrollContainer
 local scrollContainer2
 
 mainContainer = Glorb.newContainer({
-	id = "mainContainer",
-	layout = "vertical",
-	alignment = { horizontal = "center", vertical = "center" },
-	borderColor = { 1, 1, 1, 1 },
-	backgroundColor = { 1, 1, 0, 0.5 },
-	scrollable = true,
-	scrollDirection = "vertical",
-	w = 600,
-	h = 400,
-	-- scrollBar = {
-	-- 	-- bar = { color = { 1, 0, 0, 1 } },
-	-- 	-- track = { showScrollTrack = false }
-	-- },
-})
-for i = 1, 10 do
-	mainContainer:addImage({ image = glorb_alien })
-end
-
--- 128 * 10 = 1280
--- 9 * 10 = 90
--- 1370
+		id = "mainContainer",
+		layout = "vertical",
+		alignment = { horizontal = "left", vertical = "center" },
+		borderColor = { 1, 1, 1, 1 },
+		backgroundColor = { 1, 1, 0, 0.5 },
+		-- scrollable = true,
+		-- scrollDirection = "vertical",
+		w = 600,
+		h = 400,
+		-- scrollBar = {
+		-- 	-- bar = { color = { 1, 0, 0, 1 } },
+		-- 	-- track = { showScrollTrack = false }
+		-- },
+	})
+	:addText({
+		text =
+		"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+	})
+-- for i = 1, 10 do
+-- 	mainContainer:addImage({ image = glorb_alien })
+-- end
 
 -- scrollContainer = Glorb.newContainer({
 -- 	id = "scrollContainer",
@@ -42,7 +42,6 @@ end
 -- 	scrollable = true,
 -- 	w = 200,
 -- 	h = 200,
--- 	showScrollbar = true,
 -- })
 -- for i = 1, 10 do
 -- 	scrollContainer:addImage({ image = glorb_alien })
@@ -58,7 +57,6 @@ end
 -- 	scrollable = true,
 -- 	w = 200,
 -- 	h = 300,
--- 	showScrollbar = true,
 -- })
 
 -- local list = {

@@ -4,6 +4,7 @@ local Button = require(folder_path .. "button")
 local Image = require(folder_path .. "image")
 local Bar = require(folder_path .. "bar")
 local Track = require(folder_path .. "track")
+local Text = require(folder_path .. "text")
 
 local Container = {}
 Container.__index = Container
@@ -58,6 +59,16 @@ end
 function Container:addButton(settings)
 	local button = Button.new(settings)
 	table.insert(self.children, button)
+	return self
+end
+
+---@param settings Glorb.TextSettings
+---@return Glorb.Container
+function Container:addText(settings)
+	local w = settings.w or self.w
+	settings.w = w
+	local text = Text.new(settings)
+	table.insert(self.children, text)
 	return self
 end
 
@@ -370,6 +381,27 @@ function Container:draw()
 		love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
 	end
 
+	-- Draw vertical scrollbar
+	if self.scrollDirection == "vertical" and self.maxScrollY > 0 then
+		local trackX = self.x + self.w - self.bar.w
+		local trackY = self.y
+		self.track:draw(trackX, trackY, self.bar.w, self.h)
+
+		-- Draw thumb
+		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
+		self.bar:draw(trackX, self.bar.y)
+
+		-- Draw horizontal scrollbar
+	elseif self.scrollDirection == "horizontal" and self.maxScrollX > 0 then
+		local trackX = self.x
+		local trackY = self.y + self.h - self.bar.h
+		self.track:draw(trackX, trackY, self.w, self.bar.h)
+
+		-- Draw thumb
+		self.bar.x = self.x + (self.scrollX / self.maxScrollX) * (self.w - self.bar.w)
+		self.bar:draw(self.bar.x, trackY)
+	end
+
 	if self.border or self.borderColor then
 		love.graphics.setColor(self.borderColor)
 		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
@@ -396,26 +428,7 @@ function Container:draw()
 	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 
-	-- Draw vertical scrollbar
-	if self.scrollDirection == "vertical" and self.maxScrollY > 0 then
-		local trackX = self.x + self.w - self.bar.w
-		local trackY = self.y
-		self.track:draw(trackX, trackY, self.bar.w, self.h)
 
-		-- Draw thumb
-		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
-		self.bar:draw(trackX, self.bar.y)
-
-		-- Draw horizontal scrollbar
-	elseif self.scrollDirection == "horizontal" and self.maxScrollX > 0 then
-		local trackX = self.x
-		local trackY = self.y + self.h - self.bar.h
-		self.track:draw(trackX, trackY, self.w, self.bar.h)
-
-		-- Draw thumb
-		self.bar.x = self.x + (self.scrollX / self.maxScrollX) * (self.w - self.bar.w)
-		self.bar:draw(self.bar.x, trackY)
-	end
 
 	love.graphics.setColor(1, 1, 1, 1)
 end

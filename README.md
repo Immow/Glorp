@@ -39,6 +39,22 @@ function love.load()
 	mainContainer:addText({ text = "Hello Glorb!", w = 280, align = "center" })
 end
 
+function love.mousepressed(x, y, button, isTouch)
+	Glorb:mousepressed(x, y, button, isTouch)
+end
+
+function love.mousereleased(x, y, button, isTouch)
+	Glorb:mousereleased(x, y, button, isTouch)
+end
+
+function love.wheelmoved(x, y)
+	Glorb:wheelmoved(x, y)
+end
+
+function love.mousemoved(x, y, dx, dy)
+	Glorb:mousemoved(x, y, dx, dy)
+end
+
 function love.update(dt)
 	Glorb:update(dt)
 end
@@ -46,4 +62,6 @@ end
 function love.draw()
 	Glorb:draw()
 end
+
+-- more will follow when the libs grows
 ```

@@ -86,25 +86,9 @@ function Glorb.newContainer(settings)
 	return instance
 end
 
-function Glorb:update(dt)
-	for _, element in pairs(self.elements) do
-		if element.update then
-			element:update(dt)
-		end
-	end
-end
-
-function Glorb:draw()
-	for _, element in pairs(self.elements) do
-		if element.draw then
-			element:draw()
-		end
-	end
-end
-
 function Glorb:wheelmoved(x, y)
 	for _, element in pairs(self.elements) do
-		if element.wheelmoved then
+		if element.wheelmoved and not element.parent then
 			element:wheelmoved(x, y)
 		end
 	end
@@ -112,7 +96,7 @@ end
 
 function Glorb:mousemoved(x, y, dx, dy)
 	for _, element in pairs(self.elements) do
-		if element.wheelmoved then
+		if element.mousemoved and not element.parent then
 			element:mousemoved(x, y, dx, dy)
 		end
 	end
@@ -120,7 +104,7 @@ end
 
 function Glorb:mousereleased(x, y, button, isTouch)
 	for _, element in pairs(self.elements) do
-		if element.wheelmoved then
+		if element.mousereleased and not element.parent then
 			element:mousereleased(x, y, button, isTouch)
 		end
 	end
@@ -130,13 +114,29 @@ function Glorb:mousepressed(x, y, button, isTouch)
 	local topmost = nil
 
 	for _, element in pairs(self.elements) do
-		if element.mousepressed and x >= element.x and x <= element.x + element.w and y >= element.y and y <= element.y + element.h then
+		if element.mousepressed and not element.parent and x >= element.x and x <= element.x + element.w and y >= element.y and y <= element.y + element.h then
 			topmost = element
 		end
 	end
 
 	if topmost then
 		topmost:mousepressed(x, y, button, isTouch)
+	end
+end
+
+function Glorb:update(dt)
+	for _, element in pairs(self.elements) do
+		if element.update and not element.parent then
+			element:update(dt)
+		end
+	end
+end
+
+function Glorb:draw()
+	for _, element in pairs(self.elements) do
+		if element.draw and not element.parent then
+			element:draw()
+		end
 	end
 end
 

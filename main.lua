@@ -1,423 +1,132 @@
 local Glorb = require("libs.glorb")
 require("tprint")
 Game = { currentLevel = 1 }
+DEBUG = false
 
 local glorb_alien = love.graphics.newImage("assets/glorp-alien.png")
 local active = 1
-local tests = {
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			layout = "vertical",
-			alignment = { horizontal = "center", vertical = "center" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-	end,
+local mainContainer
+local scrollContainer
+local scrollContainer2
 
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			layout = "vertical",
-			alignment = { horizontal = "left", vertical = "center" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-	end,
+mainContainer = Glorb.newContainer({
+		id = "mainContainer",
+		layout = "vertical",
+		alignment = { horizontal = "left", vertical = "center" },
+		borderColor = { 1, 1, 1, 1 },
+		backgroundColor = { 1, 1, 0, 0.5 },
+		-- scrollable = true,
+		-- scrollDirection = "vertical",
+		w = 600,
+		h = 400,
+		-- scrollBar = {
+		-- 	-- bar = { color = { 1, 0, 0, 1 } },
+		-- 	-- track = { showScrollTrack = false }
+		-- },
+	})
+	:addText({
+		text =
+		"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+	})
+-- for i = 1, 10 do
+-- 	mainContainer:addImage({ image = glorb_alien })
+-- end
 
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			layout = "vertical",
-			alignment = { horizontal = "right", vertical = "center" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-	end,
+-- scrollContainer = Glorb.newContainer({
+-- 	id = "scrollContainer",
+-- 	layout = "vertical",
+-- 	alignment = { horizontal = "center", vertical = "center" },
+-- 	borderColor = { 1, 1, 1, 1 },
+-- 	backgroundColor = { 1, 0, 0, 0.5 },
+-- 	scrollDirection = "vertical",
+-- 	scrollable = true,
+-- 	w = 200,
+-- 	h = 200,
+-- })
+-- for i = 1, 10 do
+-- 	scrollContainer:addImage({ image = glorb_alien })
+-- end
 
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			layout = "vertical",
-			alignment = { horizontal = "center", vertical = "top" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-	end,
+-- scrollContainer2 = Glorb.newContainer({
+-- 	id = "scrollContainer2",
+-- 	layout = "vertical",
+-- 	alignment = { horizontal = "center", vertical = "center" },
+-- 	-- scrollDirection = "vertical",
+-- 	borderColor = { 1, 1, 1, 1 },
+-- 	backgroundColor = { 1, 0, 0, 0.5 },
+-- 	scrollable = true,
+-- 	w = 200,
+-- 	h = 300,
+-- })
 
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			layout = "vertical",
-			alignment = { horizontal = "center", vertical = "bottom" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-	end,
+-- local list = {
+-- 	"A", "B", "C", "D", "E", "D", "F", "G", "H", "I"
+-- }
 
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			x = 150,
-			y = 100,
-			w = 250,
-			h = 100,
-			layout = "vertical",
-			alignment = { horizontal = "center", vertical = "center" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-	end,
+-- for i = 1, 10 do
+-- 	scrollContainer2:addButton({ label = "test " .. i, fn = function() print(list[i]) end })
+-- end
 
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			x = 150,
-			y = 100,
-			w = 250,
-			h = 100,
-			layout = "vertical",
-			alignment = { horizontal = "left", vertical = "center" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-	end,
 
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			x = 150,
-			y = 100,
-			w = 250,
-			h = 100,
-			layout = "vertical",
-			alignment = { horizontal = "right", vertical = "center" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-	end
-	,
-
-	-- Layout Horizontal
-
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			x = 150,
-			y = 100,
-			w = 250,
-			h = 100,
-			layout = "horizontal",
-			alignment = { horizontal = "center", vertical = "center" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-	end
-	,
-
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			x = 150,
-			y = 100,
-			w = 250,
-			h = 100,
-			layout = "horizontal",
-			alignment = { horizontal = "center", vertical = "top" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-	end
-	,
-
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			x = 150,
-			y = 100,
-			w = 250,
-			h = 100,
-			layout = "horizontal",
-			alignment = { horizontal = "center", vertical = "bottom" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-	end
-	,
-
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			x = 200,
-			y = 200,
-			w = 250,
-			h = 100,
-			layout = "horizontal",
-			alignment = { horizontal = "center", vertical = "bottom" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-		Glorb.newContainer({
-			id = "test2",
-			layout = "horizontal",
-			alignment = { horizontal = "center", vertical = "bottom" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-		Glorb.attach("test2", "test1", "bottom")
-		Glorb.newContainer({
-			id = "test3",
-			layout = "horizontal",
-			alignment = { horizontal = "center", vertical = "bottom" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-		Glorb.attach("test3", "test1", "left")
-		Glorb.newContainer({
-			id = "test4",
-			layout = "horizontal",
-			alignment = { horizontal = "center", vertical = "bottom" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-		Glorb.attach("test4", "test1", "top")
-		Glorb.newContainer({
-			id = "test5",
-			layout = "horizontal",
-			alignment = { horizontal = "center", vertical = "bottom" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-		Glorb.attach("test5", "test1", "right")
-	end
-	,
-
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			x = 200,
-			y = 200,
-			w = 250,
-			h = 100,
-			layout = "horizontal",
-			alignment = { horizontal = "center", vertical = "center" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 }
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-		Glorb.newContainer({
-			id = "test2",
-			layout = "horizontal",
-			alignment = { horizontal = "center", vertical = "center" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 }
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-		Glorb.attach("test2", "test1", "bottom")
-		Glorb.newContainer({
-			id = "test3",
-			layout = "horizontal",
-			alignment = { horizontal = "center", vertical = "center" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 }
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-		Glorb.attach("test3", { "test1", "test2" }, "right")
-	end
-	,
-
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			x = 200,
-			y = 200,
-			layout = "vertical",
-			alignment = { horizontal = "center", vertical = "center" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 }
-		})
-			:addImage({ image = glorb_alien })
-	end
-	,
-
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			x = 200,
-			y = 200,
-			w = 200,
-			h = 200,
-			layout = "vertical",
-			scrollable = true,
-			alignment = { horizontal = "center", vertical = "center" },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 }
-		})
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-			:addImage({ image = glorb_alien })
-	end
-	,
-
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			x = 200,
-			y = 200,
-			w = 200,
-			h = 200,
-			layout = "vertical",
-			scrollable = true,
-			showScrollbar = true,
-			alignment = { horizontal = "center", vertical = "center" },
-			bar = { w = 20 },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButton({ label = "button1" })
-			:addButton({ label = "button2" })
-			:addButton({ label = "button3" })
-			:addButton({ label = "button4" })
-			:addButton({ label = "button5" })
-			:addButton({ label = "button6" })
-			:addButton({ label = "button7" })
-			:addButton({ label = "button8" })
-			:addImage({ image = glorb_alien })
-			:addButton({ label = "button10" })
-			:addImage({ image = glorb_alien })
-	end
-	,
-	function()
-		Glorb.newContainer({
-			id = "test1",
-			x = 200,
-			y = 200,
-			w = 200,
-			h = 200,
-			layout = "vertical",
-			scrollable = true,
-			showScrollbar = true,
-			alignment = { horizontal = "center", vertical = "center" },
-			bar = { w = 20 },
-			borderColor = { 1, 1, 1, 1 },
-			backgroundColor = { 1, 0, 0, 0.5 },
-		})
-			:addButtonList({
-				list = { "Level1", "Level2", "Level3" },
-				w = 100,
-				h = 40,
-				target = Game,
-				property = "currentLevel"
-			})
-	end
-}
+-- mainContainer:addContainer(scrollContainer)
+-- mainContainer:addContainer(scrollContainer2)
 
 function love.load()
-	tests[16]()
+	-- tests[1]()
 end
 
 function love.keypressed(key, scancode, isrepeat)
-	print(Game.currentLevel)
-	if key == "p" then
-		Glorb:purge()
-	elseif key == "left" or key == "right" then
-		if key == "left" then
-			active = active - 1
-			if active < 1 then
-				active = #tests
-			end
-		else -- key == "right"
-			active = active + 1
-			if active > #tests then
-				active = 1
-			end
-		end
-		Glorb:purge()
-		tests[active]()
+	-- print(Game.currentLevel)
+	-- if key == "p" then
+	-- 	Glorb:purge()
+	-- elseif key == "left" or key == "right" then
+	-- 	if key == "left" then
+	-- 		active = active - 1
+	-- 		if active < 1 then
+	-- 			active = #tests
+	-- 		end
+	-- 	else -- key == "right"
+	-- 		active = active + 1
+	-- 		if active > #tests then
+	-- 			active = 1
+	-- 		end
+	-- 	end
+	-- 	Glorb:purge()
+	-- 	tests[active]()
+	-- end
+
+	if key == "d" then
+		DEBUG = not DEBUG
 	end
 end
 
 function love.mousepressed(x, y, button, isTouch)
 	Glorb:mousepressed(x, y, button, isTouch)
+	-- mainContainer:mousepressed(x, y, button, isTouch)
 end
 
 function love.mousereleased(x, y, button, isTouch)
 	Glorb:mousereleased(x, y, button, isTouch)
+	-- mainContainer:mousereleased(x, y, button, isTouch)
 end
 
 function love.wheelmoved(x, y)
 	Glorb:wheelmoved(x, y)
+	-- mainContainer:wheelmoved(x, y)
 end
 
 function love.mousemoved(x, y, dx, dy)
 	Glorb:mousemoved(x, y, dx, dy)
+	-- mainContainer:mousemoved(x, y, dx, dy)
+end
+
+function love.update(dt)
+	Glorb:update(dt)
+	-- mainContainer:update(dt)
 end
 
 function love.draw()
-	love.window.setTitle("active test " .. active)
+	-- love.window.setTitle("active test " .. active)
 	Glorb:draw()
+	-- mainContainer:draw()
 end

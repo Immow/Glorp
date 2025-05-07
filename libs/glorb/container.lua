@@ -6,6 +6,7 @@ local Bar = require(folder_path .. "bar")
 local Track = require(folder_path .. "track")
 local Text = require(folder_path .. "text")
 local DropDown = require(folder_path .. "dropdown")
+local activeDropDown
 
 local Container = {}
 Container.__index = Container
@@ -23,12 +24,10 @@ function Container.new(settings)
 	instance.layout = settings.layout or "horizontal"
 	instance.spacing = settings.spacing or 10
 	instance.label = "container"
-	instance.activeDropDown = nil
 	instance.border = settings.border ~= false
 	instance.borderColor = settings.borderColor or { 0, 0, 0, 1 }
 	instance.backgroundColor = settings.backgroundColor or { 0, 0, 0, 1 }
 	instance.scrollable = settings.scrollable or false
-	-- instance.showScrollbar = settings.showScrollbar or false
 	instance.scrollDirection = settings.scrollDirection or "vertical"
 	instance.scrollY = 0
 	instance.maxScrollY = 0
@@ -254,11 +253,11 @@ function Container:isMouseInside(mx, my, target)
 end
 
 function Container:mousepressed(mx, my, button, isTouch)
-	if not self:isMouseInside(mx, my, self) then return end
+	-- if not self:isMouseInside(mx, my, self) then return end
 
-	if self.activeDropDown then
-		self.activeDropDown:mousepressed(mx, my, button, isTouch)
-		self.activeDropDown = nil
+	if activeDropDown then
+		activeDropDown:mousepressed(mx, my, button, isTouch)
+		activeDropDown = nil
 		return
 	end
 
@@ -267,7 +266,7 @@ function Container:mousepressed(mx, my, button, isTouch)
 			local handled = child:mousepressed(mx, my, button, isTouch)
 			if handled then
 				if child.type == "dropdown" then
-					self.activeDropDown = child
+					activeDropDown = child
 				end
 				return true
 			end
@@ -440,16 +439,9 @@ function Container:draw()
 			love.graphics.setScissor(sx, sy, self.w, self.h)
 		end
 	end
-	local expandedDropdown = nil
+
 	for _, child in ipairs(self.children) do
 		child:draw()
-		if child.expanded then
-			expandedDropdown = child
-		end
-	end
-
-	if expandedDropdown then
-		expandedDropdown:draw()
 	end
 
 	love.graphics.pop()
@@ -457,7 +449,10 @@ function Container:draw()
 	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 
-
+	if activeDropDown then
+		activeDropDown:draw()
+		love.graphics.print("activeDropDown")
+	end
 
 	love.graphics.setColor(1, 1, 1, 1)
 end

@@ -114,7 +114,7 @@ function Glorb:mousepressed(x, y, button, isTouch)
 	local topmost = nil
 
 	for _, element in pairs(self.elements) do
-		if element.mousepressed and not element.parent and x >= element.x and x <= element.x + element.w and y >= element.y and y <= element.y + element.h then
+		if element.mousepressed and not element.parent then
 			topmost = element
 		end
 	end

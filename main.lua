@@ -1,14 +1,14 @@
-local Glorb = require("libs.glorb")
+local Glorp = require("libs.glorp")
 require("tprint")
 Game = { currentLevel = 1 }
 DEBUG = false
 
-local glorb_alien = love.graphics.newImage("assets/glorp-alien.png")
+local glorp_alien = love.graphics.newImage("assets/glorp-alien.png")
 local mainContainer
 local scrollContainer
 local scrollContainer2
 
-mainContainer = Glorb.newContainer({
+mainContainer = Glorp.newContainer({
 		id = "mainContainer",
 		x = 100,
 		y = 100,
@@ -58,12 +58,12 @@ mainContainer = Glorb.newContainer({
 -- 	end
 -- })
 
--- mainContainer:addText({ text = "Hello Glorb!", w = 280, align = "center" })
+-- mainContainer:addText({ text = "Hello Glorp!", w = 280, align = "center" })
 -- for i = 1, 10 do
--- 	mainContainer:addImage({ image = glorb_alien })
+-- 	mainContainer:addImage({ image = glorp_alien })
 -- end
 
--- scrollContainer = Glorb.newContainer({
+-- scrollContainer = Glorp.newContainer({
 -- 		id = "scrollContainer",
 -- 		layout = "vertical",
 -- 		alignment = { horizontal = "center", vertical = "center" },
@@ -86,10 +86,10 @@ mainContainer = Glorb.newContainer({
 -- 	:addButton({ label = "test" })
 
 -- for i = 1, 10 do
--- 	scrollContainer:addImage({ image = glorb_alien })
+-- 	scrollContainer:addImage({ image = glorp_alien })
 -- end
 
--- scrollContainer2 = Glorb.newContainer({
+-- scrollContainer2 = Glorp.newContainer({
 -- 	id = "scrollContainer2",
 -- 	layout = "vertical",
 -- 	alignment = { horizontal = "center", vertical = "center" },
@@ -118,36 +118,36 @@ function love.load()
 end
 
 function love.keypressed(key, scancode, isrepeat)
-	Glorb:keypressed(key, scancode, isrepeat)
+	Glorp:keypressed(key, scancode, isrepeat)
 	if key == "d" then
 		DEBUG = not DEBUG
 	end
 end
 
 function love.textinput(text)
-	Glorb:textinput(text)
+	Glorp:textinput(text)
 end
 
 function love.mousepressed(x, y, button, isTouch)
-	Glorb:mousepressed(x, y, button, isTouch)
+	Glorp:mousepressed(x, y, button, isTouch)
 end
 
 function love.mousereleased(x, y, button, isTouch)
-	Glorb:mousereleased(x, y, button, isTouch)
+	Glorp:mousereleased(x, y, button, isTouch)
 end
 
 function love.wheelmoved(x, y)
-	Glorb:wheelmoved(x, y)
+	Glorp:wheelmoved(x, y)
 end
 
 function love.mousemoved(x, y, dx, dy)
-	Glorb:mousemoved(x, y, dx, dy)
+	Glorp:mousemoved(x, y, dx, dy)
 end
 
 function love.update(dt)
-	Glorb:update(dt)
+	Glorp:update(dt)
 end
 
 function love.draw()
-	Glorb:draw()
+	Glorp:draw()
 end

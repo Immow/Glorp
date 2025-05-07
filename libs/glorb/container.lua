@@ -12,8 +12,8 @@ local activeDropDown
 local Container = {}
 Container.__index = Container
 
----@param settings Glorb.containerSettings
----@return Glorb.Container
+---@param settings Glorp.containerSettings
+---@return Glorp.Container
 function Container.new(settings)
 	local instance = setmetatable({}, Container)
 	instance.id = settings.id
@@ -57,16 +57,16 @@ function Container.new(settings)
 	return instance
 end
 
----@param settings Glorb.ButtonSettings
----@return Glorb.Container
+---@param settings Glorp.ButtonSettings
+---@return Glorp.Container
 function Container:addButton(settings)
 	local button = Button.new(settings)
 	table.insert(self.children, button)
 	return self
 end
 
----@param settings Glorb.TextSettings
----@return Glorb.Container
+---@param settings Glorp.TextSettings
+---@return Glorp.Container
 function Container:addText(settings)
 	local w = settings.w or self.w
 	settings.w = w
@@ -75,8 +75,8 @@ function Container:addText(settings)
 	return self
 end
 
----@param settings Glorb.DropDownSettings
----@return Glorb.Container
+---@param settings Glorp.DropDownSettings
+---@return Glorp.Container
 function Container:addDropDown(settings)
 	local dropdown = DropDown.new(settings)
 	table.insert(self.children, dropdown)
@@ -113,8 +113,8 @@ function Container:addButtonList(settings)
 	return self
 end
 
----@param settings Glorb.ImageSettings
----@return Glorb.Container
+---@param settings Glorp.ImageSettings
+---@return Glorp.Container
 function Container:addImage(settings)
 	local image = Image.new(settings)
 	table.insert(self.children, image)

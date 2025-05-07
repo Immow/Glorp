@@ -1,6 +1,6 @@
 ---@meta
 
----@class Glorb.containerSettings
+---@class Glorp.containerSettings
 ---@field id? string
 ---@field x? number
 ---@field y? number
@@ -18,16 +18,16 @@
 ---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}
 ---@field bar?  { x: number, y: number, w: number ,h: number ,color: table }
 
----@class Glorb.Container
----@field addButton? fun(self: Glorb.Container, settings: Glorb.ButtonSettings): Glorb.Container
----@field addImage? fun(self: Glorb.Container, settings: Glorb.ImageSettings): Glorb.Container
----@field addButtonList? fun(self: Glorb.Container, settings: Glorb.ButtonListSettings): Glorb.Container
----@field addText? fun(self: Glorb.Container, settings: Glorb.TextSettings): Glorb.Container
----@field addContainer? fun(self: Glorb.Container, settings: Glorb.Container): Glorb.Container
----@field addDropDown? fun(self: Glorb.Container, settings: Glorb.DropDownSettings): Glorb.Container
----@field addForm? fun(self: Glorb.Container, settings: Glorb.FormSettings): Glorb.Container
+---@class Glorp.Container
+---@field addButton? fun(self: Glorp.Container, settings: Glorp.ButtonSettings): Glorp.Container
+---@field addImage? fun(self: Glorp.Container, settings: Glorp.ImageSettings): Glorp.Container
+---@field addButtonList? fun(self: Glorp.Container, settings: Glorp.ButtonListSettings): Glorp.Container
+---@field addText? fun(self: Glorp.Container, settings: Glorp.TextSettings): Glorp.Container
+---@field addContainer? fun(self: Glorp.Container, settings: Glorp.Container): Glorp.Container
+---@field addDropDown? fun(self: Glorp.Container, settings: Glorp.DropDownSettings): Glorp.Container
+---@field addForm? fun(self: Glorp.Container, settings: Glorp.FormSettings): Glorp.Container
 
----@class Glorb.ButtonSettings
+---@class Glorp.ButtonSettings
 ---@field id? string
 ---@field w? number
 ---@field h? number
@@ -37,7 +37,7 @@
 ---@field font? string
 ---@field fn? function
 
----@class Glorb.ButtonListSettings
+---@class Glorp.ButtonListSettings
 ---@field id? string
 ---@field w? number
 ---@field h? number
@@ -47,7 +47,7 @@
 ---@field font? string
 ---@field fn? function
 
----@class Glorb.TextSettings
+---@class Glorp.TextSettings
 ---@field w? number
 ---@field h? number
 ---@field color? table
@@ -55,19 +55,19 @@
 ---@field align? "left"|"center"|"right"
 ---@field font? string
 
----@class Glorb.ImageSettings
+---@class Glorp.ImageSettings
 ---@field label? string
 ---@field image? love.Image
 ---@field w? number
 ---@field h? number
 
----@class Glorb.FormSettings
+---@class Glorp.FormSettings
 ---@field label? string
 ---@field image? love.Image
 ---@field w? number
 ---@field h? number
 
----@class Glorb.DropDownSettings
+---@class Glorp.DropDownSettings
 ---@field w? number
 ---@field h? number
 ---@field bgColor? table

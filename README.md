@@ -1,6 +1,6 @@
-# Glorb (work in progress)
+# Glorp (work in progress)
 
-**Glorb** is a lightweight, modular GUI library for [LÖVE](https://love2d.org/) that provides a flexible way to build user interfaces using containers, scrollbars, buttons, and text elements. Inspired by simple layout systems and designed with puzzle and tool games in mind, Glorb offers fine-grained control over layout, visuals, and structure.
+**Glorp** is a lightweight, modular GUI library for [LÖVE](https://love2d.org/) that provides a flexible way to build user interfaces using containers, scrollbars, buttons, and text elements. Inspired by simple layout systems and designed with puzzle and tool games in mind, Glorp offers fine-grained control over layout, visuals, and structure.
 
 ---
 
@@ -20,11 +20,11 @@
 
 ### example usage:
 ```lua
-local Glorb = require("libs.glorb")
+local Glorp = require("libs.glorp")
 local mainContainer
 
 function love.load()
-	mainContainer = Glorb.newContainer({
+	mainContainer = Glorp.newContainer({
 		id = "mainContainer",
 		x = 100,
 		y = 100,
@@ -36,31 +36,31 @@ function love.load()
 		}
 	})
 
-	mainContainer:addText({ text = "Hello Glorb!", w = 280, align = "center" })
+	mainContainer:addText({ text = "Hello Glorp!", w = 280, align = "center" })
 end
 
 function love.mousepressed(x, y, button, isTouch)
-	Glorb:mousepressed(x, y, button, isTouch)
+	Glorp:mousepressed(x, y, button, isTouch)
 end
 
 function love.mousereleased(x, y, button, isTouch)
-	Glorb:mousereleased(x, y, button, isTouch)
+	Glorp:mousereleased(x, y, button, isTouch)
 end
 
 function love.wheelmoved(x, y)
-	Glorb:wheelmoved(x, y)
+	Glorp:wheelmoved(x, y)
 end
 
 function love.mousemoved(x, y, dx, dy)
-	Glorb:mousemoved(x, y, dx, dy)
+	Glorp:mousemoved(x, y, dx, dy)
 end
 
 function love.update(dt)
-	Glorb:update(dt)
+	Glorp:update(dt)
 end
 
 function love.draw()
-	Glorb:draw()
+	Glorp:draw()
 end
 
 -- more will follow when the libs grows

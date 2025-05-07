@@ -124,6 +124,22 @@ function Glorb:mousepressed(x, y, button, isTouch)
 	end
 end
 
+function Glorb:textinput(text)
+	for _, element in pairs(self.elements) do
+		if element.textinput and not element.parent then
+			element:textinput(text)
+		end
+	end
+end
+
+function Glorb:keypressed(key, scancode, isrepeat)
+	for _, element in pairs(self.elements) do
+		if element.keypressed and not element.parent then
+			element:keypressed(key, scancode, isrepeat)
+		end
+	end
+end
+
 function Glorb:update(dt)
 	for _, element in pairs(self.elements) do
 		if element.update and not element.parent then

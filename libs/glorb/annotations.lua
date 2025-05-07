@@ -25,6 +25,7 @@
 ---@field addText? fun(self: Glorb.Container, settings: Glorb.TextSettings): Glorb.Container
 ---@field addContainer? fun(self: Glorb.Container, settings: Glorb.Container): Glorb.Container
 ---@field addDropDown? fun(self: Glorb.Container, settings: Glorb.DropDownSettings): Glorb.Container
+---@field addForm? fun(self: Glorb.Container, settings: Glorb.FormSettings): Glorb.Container
 
 ---@class Glorb.ButtonSettings
 ---@field id? string
@@ -55,6 +56,12 @@
 ---@field font? string
 
 ---@class Glorb.ImageSettings
+---@field label? string
+---@field image? love.Image
+---@field w? number
+---@field h? number
+
+---@class Glorb.FormSettings
 ---@field label? string
 ---@field image? love.Image
 ---@field w? number

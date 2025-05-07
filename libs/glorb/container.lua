@@ -6,6 +6,7 @@ local Bar = require(folder_path .. "bar")
 local Track = require(folder_path .. "track")
 local Text = require(folder_path .. "text")
 local DropDown = require(folder_path .. "dropdown")
+local Form = require(folder_path .. "form")
 local activeDropDown
 
 local Container = {}
@@ -79,6 +80,12 @@ end
 function Container:addDropDown(settings)
 	local dropdown = DropDown.new(settings)
 	table.insert(self.children, dropdown)
+	return self
+end
+
+function Container:addForm(settings)
+	local form = Form.new(settings)
+	table.insert(self.children, form)
 	return self
 end
 
@@ -323,6 +330,22 @@ function Container:mousemoved(x, y, dx, dy, istouch)
 			local newBarX = math.max(self.x, math.min(x - self.barOffsetX, self.x + trackWidth))
 			self.bar.x = newBarX
 			self.scrollX = ((self.bar.x - self.x) / trackWidth) * self.maxScrollX
+		end
+	end
+end
+
+function Container:keypressed(key, scancode, isrepeat)
+	for _, child in ipairs(self.children) do
+		if child.keypressed then
+			child:keypressed(key, scancode, isrepeat)
+		end
+	end
+end
+
+function Container:textinput(text)
+	for _, child in ipairs(self.children) do
+		if child.textinput then
+			child:textinput(text)
 		end
 	end
 end

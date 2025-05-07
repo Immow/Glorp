@@ -4,7 +4,6 @@ Game = { currentLevel = 1 }
 DEBUG = false
 
 local glorb_alien = love.graphics.newImage("assets/glorp-alien.png")
-local active = 1
 local mainContainer
 local scrollContainer
 local scrollContainer2
@@ -23,40 +22,41 @@ mainContainer = Glorb.newContainer({
 		-- 	track = { showScrollTrack = true }
 		-- }
 	})
-	:addDropDown({
-		options = {
-			{ name = "Apple",  value = "apple" },
-			{ name = "Banana", value = "banana" },
-		},
-		onSelect = function(i, val)
-			print("Selected:", i, val.value)
-		end
-	})
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addButton({ label = "test" })
-	:addDropDown({
-		options = {
-			{ name = "Apple",  value = "apple" },
-			{ name = "Banana", value = "banana" },
-		},
-		onSelect = function(i, val)
-			print("Selected:", i, val.value)
-		end
-	})
+	:addForm({ text = "test", previewText = "test2" })
+-- :addDropDown({
+-- 	options = {
+-- 		{ name = "Apple",  value = "apple" },
+-- 		{ name = "Banana", value = "banana" },
+-- 	},
+-- 	onSelect = function(i, val)
+-- 		print("Selected:", i, val.value)
+-- 	end
+-- })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addButton({ label = "test" })
+-- :addDropDown({
+-- 	options = {
+-- 		{ name = "Apple",  value = "apple" },
+-- 		{ name = "Banana", value = "banana" },
+-- 	},
+-- 	onSelect = function(i, val)
+-- 		print("Selected:", i, val.value)
+-- 	end
+-- })
 
 -- mainContainer:addText({ text = "Hello Glorb!", w = 280, align = "center" })
 -- for i = 1, 10 do
@@ -114,61 +114,40 @@ mainContainer = Glorb.newContainer({
 -- mainContainer:addContainer(scrollContainer2)
 
 function love.load()
-	-- tests[1]()
+
 end
 
 function love.keypressed(key, scancode, isrepeat)
-	-- print(Game.currentLevel)
-	-- if key == "p" then
-	-- 	Glorb:purge()
-	-- elseif key == "left" or key == "right" then
-	-- 	if key == "left" then
-	-- 		active = active - 1
-	-- 		if active < 1 then
-	-- 			active = #tests
-	-- 		end
-	-- 	else -- key == "right"
-	-- 		active = active + 1
-	-- 		if active > #tests then
-	-- 			active = 1
-	-- 		end
-	-- 	end
-	-- 	Glorb:purge()
-	-- 	tests[active]()
-	-- end
-
+	Glorb:keypressed(key, scancode, isrepeat)
 	if key == "d" then
 		DEBUG = not DEBUG
 	end
 end
 
+function love.textinput(text)
+	Glorb:textinput(text)
+end
+
 function love.mousepressed(x, y, button, isTouch)
 	Glorb:mousepressed(x, y, button, isTouch)
-	-- mainContainer:mousepressed(x, y, button, isTouch)
 end
 
 function love.mousereleased(x, y, button, isTouch)
 	Glorb:mousereleased(x, y, button, isTouch)
-	-- mainContainer:mousereleased(x, y, button, isTouch)
 end
 
 function love.wheelmoved(x, y)
 	Glorb:wheelmoved(x, y)
-	-- mainContainer:wheelmoved(x, y)
 end
 
 function love.mousemoved(x, y, dx, dy)
 	Glorb:mousemoved(x, y, dx, dy)
-	-- mainContainer:mousemoved(x, y, dx, dy)
 end
 
 function love.update(dt)
 	Glorb:update(dt)
-	-- mainContainer:update(dt)
 end
 
 function love.draw()
-	-- love.window.setTitle("active test " .. active)
 	Glorb:draw()
-	-- mainContainer:draw()
 end

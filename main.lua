@@ -16,13 +16,26 @@ mainContainer = Glorp.newContainer({
 		h = 400,
 		layout = "vertical",
 		alignment = { horizontal = "center", vertical = "bottom" },
-		scrollable = true,
+		-- scrollable = true,
 		-- scrollBar = {
 		-- 	bar = { color = { 1, 0, 0, 1 } },
 		-- 	track = { showScrollTrack = true }
 		-- }
 	})
-	:addForm({ text = "test", previewText = "test2" })
+	:addSlider({ w = 20, h = 200, startValue = 25, orientation = "vertical" })
+-- :addForm({
+-- 	id = "loginForm",
+-- 	fields = {
+-- 		{ name = "username", label = "Username", value = "" },
+-- 		{ name = "password", label = "Password", value = "" },
+-- 	},
+-- 	onSubmit = function(data)
+-- 		print("Form submitted:")
+-- 		for k, v in pairs(data) do
+-- 			print(k, v)
+-- 		end
+-- 	end
+-- })
 -- :addDropDown({
 -- 	options = {
 -- 		{ name = "Apple",  value = "apple" },

@@ -3,6 +3,7 @@ Image.__index = Image
 
 function Image.new(settings)
 	local instance = setmetatable({}, Image)
+	instance.id    = settings.id or nil
 	instance.label = settings.label or ""
 	instance.type  = "image"
 	instance.image = settings.image

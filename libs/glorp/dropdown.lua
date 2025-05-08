@@ -2,25 +2,25 @@ local Dropdown = {}
 Dropdown.__index = Dropdown
 
 function Dropdown.new(settings)
-	local instance = setmetatable({}, Dropdown)
+	local instance            = setmetatable({}, Dropdown)
 
-	instance.id = settings.id
-	instance.x = settings.x or 0
-	instance.y = settings.y or 0
-	instance.w = settings.w or 200
-	instance.h = settings.h or 30
-	instance.type = "dropdown"
-	instance.options = settings.options or {}
-	instance.selectedIndex = settings.selectedIndex or 1
-	instance.expanded = false
+	instance.id               = settings.id or nil
+	instance.x                = settings.x or 0
+	instance.y                = settings.y or 0
+	instance.w                = settings.w or 200
+	instance.h                = settings.h or 30
+	instance.type             = "dropdown"
+	instance.options          = settings.options or {}
+	instance.selectedIndex    = settings.selectedIndex or 1
+	instance.expanded         = false
 
-	instance.onSelect = settings.onSelect or function(index, value) end
+	instance.onSelect         = settings.onSelect or function(index, value) end
 
-	instance.font = settings.font or love.graphics:getFont()
-	instance.bgColor = settings.bgColor or { 0.2, 0.2, 0.2, 1 }
-	instance.hoverColor = settings.hoverColor or { 0.3, 0.3, 0.3, 1 }
+	instance.font             = settings.font or love.graphics:getFont()
+	instance.bgColor          = settings.bgColor or { 0.2, 0.2, 0.2, 1 }
+	instance.hoverColor       = settings.hoverColor or { 0.3, 0.3, 0.3, 1 }
 	instance.hoverOptionColor = settings.hoverOptionColor or { 0.2, 0.6, 1, 1 }
-	instance.textColor = settings.textColor or { 1, 1, 1, 1 }
+	instance.textColor        = settings.textColor or { 1, 1, 1, 1 }
 
 	return instance
 end

@@ -7,6 +7,7 @@ local Track = require(folder_path .. "track")
 local Text = require(folder_path .. "text")
 local DropDown = require(folder_path .. "dropdown")
 local Form = require(folder_path .. "form")
+local Slider = require(folder_path .. "slider")
 local activeDropDown
 
 local Container = {}
@@ -53,8 +54,12 @@ function Container.new(settings)
 	instance.track = Track.new(settings)
 
 	instance.children = {}
-
 	return instance
+end
+
+function Container:addContainer(container)
+	container.parent = self
+	table.insert(self.children, container)
 end
 
 ---@param settings Glorp.ButtonSettings
@@ -89,35 +94,38 @@ function Container:addForm(settings)
 	return self
 end
 
-function Container:addContainer(container)
-	container.parent = self
-	table.insert(self.children, container)
-end
+-- function Container:addButtonList(settings)
+-- 	for i, label in ipairs(settings.list) do
+-- 		local fn = function()
+-- 			settings.target[settings.property] = i
+-- 		end
 
-function Container:addButtonList(settings)
-	for i, label in ipairs(settings.list) do
-		local fn = function()
-			settings.target[settings.property] = i
-		end
+-- 		local button = Button.new({
+-- 			label = tostring(label),
+-- 			w = settings.w,
+-- 			h = settings.h,
+-- 			fn = fn
+-- 		})
 
-		local button = Button.new({
-			label = tostring(label),
-			w = settings.w,
-			h = settings.h,
-			fn = fn
-		})
+-- 		table.insert(self.children, button)
+-- 	end
 
-		table.insert(self.children, button)
-	end
-
-	return self
-end
+-- 	return self
+-- end
 
 ---@param settings Glorp.ImageSettings
 ---@return Glorp.Container
 function Container:addImage(settings)
 	local image = Image.new(settings)
 	table.insert(self.children, image)
+	return self
+end
+
+---@param settings Glorp.SliderSettings
+---@return Glorp.Container
+function Container:addSlider(settings)
+	local slider = Slider.new(settings)
+	table.insert(self.children, slider)
 	return self
 end
 
@@ -173,6 +181,10 @@ function Container:positionChildren()
 				child.x = self.x
 			end
 			offsetY = offsetY + child.h + self.spacing
+		end
+
+		if child.type == "slider" then
+			child:setPosition(child.x, child.y)
 		end
 	end
 end

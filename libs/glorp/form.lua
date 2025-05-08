@@ -3,22 +3,22 @@ Form.__index = Form
 
 function Form.new(settings)
 	local instance             = setmetatable({}, Form)
-
-	instance.text              = settings.text or ""
+	instance.id                = settings.id or nil
+	instance.type              = "form"
 	instance.font              = settings.font or love.graphics.getFont()
 	instance.color             = settings.color or { 1, 1, 1, 1 }
 	instance.x                 = settings.x or 0
 	instance.y                 = settings.y or 0
-	instance.w                 = settings.w or 200
+	instance.w                 = settings.w or 250
 	instance.h                 = settings.h or instance.font:getHeight() + 4
 	instance.offset            = 4
-	instance.clickedInForm     = false
 	instance.limit             = settings.limit or nil
-	instance.masked            = settings.masked or false
-
 	instance.backgroundColor   = settings.backgroundColor or { 0, 0, 0, 0.2 }
 	instance.borderColor       = settings.borderColor or { 0.7, 0.7, 0.7, 1 }
 	instance.activeBorderColor = settings.activeBorderColor or { 1, 1, 1, 1 }
+	instance.onSubmit          = settings.onSubmit or nil
+	instance.fields            = settings.fields or {}
+	instance.activeFieldIndex  = 1
 
 	instance.cursorTimer       = 0
 	instance.cursorDir         = 1
@@ -39,57 +39,73 @@ function Form:update(dt)
 end
 
 function Form:textinput(t)
-	if self.clickedInForm then
-		local textToAdd = t
-		if self.limit then
-			if #self.text + #t > self.limit then
-				textToAdd = t:sub(1, self.limit - #self.text)
-			end
-		end
-		if self.font:getWidth(self.text .. textToAdd) < self.w - 8 then
-			self.text = self.text .. textToAdd
-		end
+	local field = self.fields[self.activeFieldIndex]
+	if field and (not self.limit or #field.value < self.limit) then
+		field.value = field.value .. t
 	end
 end
 
 function Form:keypressed(key)
-	if self.clickedInForm then
-		if key == "backspace" then
-			self.text = self.text:sub(1, -2)
-		elseif key == "return" or key == "kpenter" then
-			self.clickedInForm = false
+	local field = self.fields[self.activeFieldIndex]
+	if not field then return end
+
+	if key == "backspace" then
+		field.value = field.value:sub(1, -2)
+	elseif key == "return" or key == "kpenter" then
+		if self.onSubmit then
+			local result = {}
+			for _, f in ipairs(self.fields) do
+				result[f.name] = f.value
+			end
+			self.onSubmit(result)
 		end
+	elseif key == "tab" then
+		self.activeFieldIndex = self.activeFieldIndex % #self.fields + 1
 	end
 end
 
 function Form:mousepressed(mx, my, mouseButton)
-	if mouseButton ~= 1 then return end
-	self.clickedInForm = mx >= self.x and mx <= self.x + self.w and my >= self.y and my <= self.y + self.h
+	if mouseButton ~= 1 then return false end
+
+	local fieldHeight = self.h
+	for i, field in ipairs(self.fields) do
+		local y = self.y + (i - 1) * (fieldHeight + 10)
+		local inputX = self.x + 100
+		if mx >= inputX and mx <= inputX + self.w - 100 and my >= y and my <= y + fieldHeight then
+			self.activeFieldIndex = i
+			return true
+		end
+	end
+	return false
 end
 
 function Form:draw()
-	-- Background
-	love.graphics.setColor(self.backgroundColor)
-	love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+	local fieldHeight = self.h
+	for i, field in ipairs(self.fields) do
+		local y = self.y + (i - 1) * (fieldHeight + 10)
+		local inputX = self.x + 100
 
-	-- Border
-	love.graphics.setColor(self.clickedInForm and self.activeBorderColor or self.borderColor)
-	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+		love.graphics.setColor(1, 1, 1)
+		love.graphics.print(field.label, self.x, y)
 
-	-- Text
-	love.graphics.setColor(self.color)
-	local displayText = self.masked and string.rep("*", #self.text) or self.text
-	love.graphics.print(displayText, self.x + self.offset, self.y + 2)
+		love.graphics.setColor(self.backgroundColor)
+		love.graphics.rectangle("fill", inputX, y, self.w - 100, fieldHeight)
 
-	-- Cursor
-	if self.clickedInForm and self.cursorTimer > 0.5 then
-		local textW = self.font:getWidth(displayText)
-		love.graphics.line(
-			self.x + self.offset + textW + 1,
-			self.y + 2,
-			self.x + self.offset + textW + 1,
-			self.y + self.h - 2
-		)
+		love.graphics.setColor(i == self.activeFieldIndex and self.activeBorderColor or self.borderColor)
+		love.graphics.rectangle("line", inputX, y, self.w - 100, fieldHeight)
+
+		love.graphics.setColor(self.color)
+		love.graphics.print(field.value, inputX + 4, y + 2)
+
+		if i == self.activeFieldIndex and self.cursorTimer > 0.5 then
+			local textW = self.font:getWidth(field.value)
+			love.graphics.line(
+				inputX + 4 + textW + 1,
+				y + 2,
+				inputX + 4 + textW + 1,
+				y + fieldHeight - 2
+			)
+		end
 	end
 end
 

@@ -6,18 +6,20 @@ function Form.new(settings)
 	instance.id                = settings.id or nil
 	instance.type              = "form"
 	instance.font              = settings.font or love.graphics.getFont()
+	instance.fields            = settings.fields or {}
+	instance.fieldHeight       = instance.font:getHeight() + 4
 	instance.color             = settings.color or { 1, 1, 1, 1 }
+	instance.offset            = 10
 	instance.x                 = settings.x or 0
 	instance.y                 = settings.y or 0
 	instance.w                 = settings.w or 250
-	instance.h                 = settings.h or instance.font:getHeight() + 4
-	instance.offset            = 4
+	instance.h                 = math.max(instance.fieldHeight, instance.fieldHeight * #instance.fields) +
+		(#instance.fields - 1) * instance.offset
 	instance.limit             = settings.limit or nil
 	instance.backgroundColor   = settings.backgroundColor or { 0, 0, 0, 0.2 }
 	instance.borderColor       = settings.borderColor or { 0.7, 0.7, 0.7, 1 }
 	instance.activeBorderColor = settings.activeBorderColor or { 1, 1, 1, 1 }
 	instance.onSubmit          = settings.onSubmit or nil
-	instance.fields            = settings.fields or {}
 	instance.activeFieldIndex  = 1
 
 	instance.cursorTimer       = 0
@@ -69,7 +71,7 @@ function Form:mousepressed(mx, my, mouseButton)
 
 	local fieldHeight = self.h
 	for i, field in ipairs(self.fields) do
-		local y = self.y + (i - 1) * (fieldHeight + 10)
+		local y = self.y + (i - 1) * (fieldHeight + self.offset)
 		local inputX = self.x + 100
 		if mx >= inputX and mx <= inputX + self.w - 100 and my >= y and my <= y + fieldHeight then
 			self.activeFieldIndex = i
@@ -80,19 +82,18 @@ function Form:mousepressed(mx, my, mouseButton)
 end
 
 function Form:draw()
-	local fieldHeight = self.h
 	for i, field in ipairs(self.fields) do
-		local y = self.y + (i - 1) * (fieldHeight + 10)
+		local y = self.y + (i - 1) * (self.fieldHeight + self.offset)
 		local inputX = self.x + 100
 
 		love.graphics.setColor(1, 1, 1)
 		love.graphics.print(field.label, self.x, y)
 
 		love.graphics.setColor(self.backgroundColor)
-		love.graphics.rectangle("fill", inputX, y, self.w - 100, fieldHeight)
+		love.graphics.rectangle("fill", inputX, y, self.w - 100, self.fieldHeight)
 
 		love.graphics.setColor(i == self.activeFieldIndex and self.activeBorderColor or self.borderColor)
-		love.graphics.rectangle("line", inputX, y, self.w - 100, fieldHeight)
+		love.graphics.rectangle("line", inputX, y, self.w - 100, self.fieldHeight)
 
 		love.graphics.setColor(self.color)
 		love.graphics.print(field.value, inputX + 4, y + 2)
@@ -103,7 +104,7 @@ function Form:draw()
 				inputX + 4 + textW + 1,
 				y + 2,
 				inputX + 4 + textW + 1,
-				y + fieldHeight - 2
+				y + self.fieldHeight - 2
 			)
 		end
 	end

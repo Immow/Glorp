@@ -8,7 +8,7 @@ function Button.new(settings)
 	instance.x         = settings.x or 0
 	instance.y         = settings.y or 0
 	instance.w         = settings.w or 100
-	instance.h         = settings.h or 50
+	instance.h         = settings.h or 30
 	instance.label     = settings.label or ""
 	instance.hovered   = false
 	instance.alignment = {

@@ -153,9 +153,9 @@ end
 
 function love.keypressed(key, scancode, isrepeat)
 	Glorp:keypressed(key, scancode, isrepeat)
-	if key == "d" then
-		DEBUG = not DEBUG
-	end
+	-- if key == "d" then
+	-- 	DEBUG = not DEBUG
+	-- end
 end
 
 function love.textinput(text)

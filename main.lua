@@ -22,28 +22,33 @@ mainContainer = Glorp.newContainer({
 		-- 	track = { showScrollTrack = true }
 		-- }
 	})
-	:addSlider({
-		id = "A",
-		w = 200,
-		h = 20,
-		startValue = 25,
-		orientation = "horizontal",
-		onRelease = function(val)
-			print(
-				"Slider released at:", val)
+	:addCheckBox({
+		onRelease = function()
+			print("Enabled")
 		end
 	})
-	:addSlider({
-		id = "B",
-		w = 200,
-		h = 20,
-		startValue = 25,
-		orientation = "horizontal",
-		onRelease = function(val)
-			print(
-				"Slider released at:", val)
-		end
-	})
+-- :addSlider({
+-- 	id = "A",
+-- 	w = 200,
+-- 	h = 20,
+-- 	startValue = 25,
+-- 	orientation = "horizontal",
+-- 	onRelease = function(val)
+-- 		print(
+-- 			"Slider released at:", val)
+-- 	end
+-- })
+-- :addSlider({
+-- 	id = "B",
+-- 	w = 200,
+-- 	h = 20,
+-- 	startValue = 25,
+-- 	orientation = "horizontal",
+-- 	onRelease = function(val)
+-- 		print(
+-- 			"Slider released at:", val)
+-- 	end
+-- })
 -- :addForm({
 -- 	id = "loginForm",
 -- 	fields = {

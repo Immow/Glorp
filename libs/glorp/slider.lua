@@ -2,28 +2,28 @@ local Slider = {}
 Slider.__index = Slider
 
 function Slider.new(settings)
-	local instance = setmetatable({}, Slider)
-	instance.type = "slider"
-	instance.id = settings.id or nil
-	instance.orientation = settings.orientation or "horizontal"
-	instance.knob_w = settings.knob_w or 20
-	instance.knob_h = settings.knob_h or 20
-	instance.x = settings.x or 0
-	instance.y = settings.y or 0
-	instance.w = settings.w or 100
-	instance.h = settings.h or 40
-	instance.startValue = math.max(0, math.min((settings.startValue or 0) / 100, 1)) -- Normalize startValue
-	instance.groove_h = settings.groove_h or 8
-	instance.sliderRangeMax = settings.sliderRangeMax or 1
-	instance.sliderRangeMin = settings.sliderRangeMin or 0
-	instance.active = false
-	instance.grooveColor = settings.grooveColor or { 0.3, 0.3, 0.3 }
-	instance.knobColor = settings.knobColor or { 1, 1, 1 }
+	local instance           = setmetatable({}, Slider)
+	instance.type            = "slider"
+	instance.id              = settings.id or nil
+	instance.orientation     = settings.orientation or "horizontal"
+	instance.knob_w          = settings.knob_w or 20
+	instance.knob_h          = settings.knob_h or 20
+	instance.x               = settings.x or 0
+	instance.y               = settings.y or 0
+	instance.w               = settings.w or 100
+	instance.h               = settings.h or 40
+	instance.startValue      = math.max(0, math.min((settings.startValue or 0) / 100, 1))
+	instance.groove_h        = settings.groove_h or 8
+	instance.sliderRangeMax  = settings.sliderRangeMax or 1
+	instance.sliderRangeMin  = settings.sliderRangeMin or 0
+	instance.active          = false
+	instance.grooveColor     = settings.grooveColor or { 0.3, 0.3, 0.3 }
+	instance.knobColor       = settings.knobColor or { 1, 1, 1 }
 	instance.knobBorderColor = settings.knobBorderColor or { 0, 0, 0 }
-	instance.onRelease = settings.onRelease or nil
+	instance.onRelease       = settings.onRelease or nil
 
-	instance.start_x = instance.x
-	instance.start_y = instance.y
+	instance.start_x         = instance.x
+	instance.start_y         = instance.y
 
 	return instance
 end

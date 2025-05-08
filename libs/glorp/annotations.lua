@@ -27,6 +27,7 @@
 ---@field addDropDown? fun(self: Glorp.Container, settings: Glorp.DropDownSettings): Glorp.Container
 ---@field addForm? fun(self: Glorp.Container, settings: Glorp.FormSettings): Glorp.Container
 ---@field addSlider? fun(self: Glorp.Container, settings: Glorp.SliderSettings): Glorp.Container
+---@field addCheckBox? fun(self: Glorp.Container, settings: Glorp.CheckBoxSettings): Glorp.Container
 
 ---@class Glorp.ButtonSettings
 ---@field id? any
@@ -43,23 +44,6 @@
 ---@field w? number
 ---@field h? number
 ---@field fn? function
-
-
--- instance.startValue       = settings.startValue or 0
--- instance.groove_h         = settings.groove_h or 8
--- instance.knob_w           = settings.knob_w or 20
--- instance.knob_h           = settings.knob_h or 20
--- instance.knob_x           = instance.x + (instance.w - instance.knob_w) * instance.startValue
--- instance.start_x          = settings.x or 0
--- instance.start_y          = settings.y or 0
--- instance.sliderRangeMax   = settings.sliderRangeMax or 1
--- instance.sliderRangeMin   = settings.sliderRangeMin or 0
--- instance.active           = false
--- instance.parentDimensions = {}
--- instance.grooveColor      = settings.grooveColor or { 0.3, 0.3, 0.3 }
--- instance.knobColor        = settings.knobColor or { 1, 1, 1 }
--- instance.knobBorderColor  = settings.knobBorderColor or { 0, 0, 0 }
-
 
 ---@class Glorp.ButtonListSettings
 ---@field id? any
@@ -101,3 +85,7 @@
 ---@field align? "left"|"center"|"right"
 ---@field font? string
 ---@field options? table
+
+---@class Glorp.CheckBoxSettings
+---@field w? number
+---@field h? number

@@ -15,6 +15,11 @@
 ---@field scrollable? boolean
 ---@field scrollDirection? "horizontal"|"vertical"
 ---@field showScrollbar? boolean
+---@field padding? number
+---@field paddingTop? number
+---@field paddingRight? number
+---@field paddingBottom? number
+---@field paddingLeft? number
 ---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}
 ---@field bar?  { x: number, y: number, w: number ,h: number ,color: table }
 

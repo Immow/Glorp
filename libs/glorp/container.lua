@@ -32,6 +32,9 @@ function Container.new(settings)
 	instance.borderColor = settings.borderColor or { 0, 0, 0, 1 }
 	instance.backgroundColor = settings.backgroundColor or { 0, 0, 0, 1 }
 	instance.scrollable = settings.scrollable or false
+	if instance.scrollable and (instance.w <= 0 or instance.h <= 0) then
+		error("Scrollable containers must have both width and height greater than 0.")
+	end
 	instance.scrollDirection = settings.scrollDirection or "vertical"
 	instance.scrollY = 0
 	instance.maxScrollY = 0
@@ -51,6 +54,13 @@ function Container.new(settings)
 			settings.scrollDirection = "horizontal"
 		end
 	end
+
+	instance.padding = {
+		top = settings.paddingTop or settings.padding or 0,
+		right = settings.paddingRight or settings.padding or 0,
+		bottom = settings.paddingBottom or settings.padding or 0,
+		left = settings.paddingLeft or settings.padding or 0,
+	}
 
 	instance.bar = Bar.new(settings)
 	instance.track = Track.new(settings)
@@ -148,19 +158,19 @@ function Container:positionChildren()
 
 	local startX, startY
 	if self.alignment.horizontal == "center" and self.scrollDirection ~= "horizontal" then
-		startX = self.x + (self.w - childrenTotalWidth) / 2
+		startX = self.x + self.padding.left + (self.w - self.padding.left - self.padding.right - childrenTotalWidth) / 2
 	elseif self.alignment.horizontal == "right" and self.scrollDirection ~= "horizontal" then
-		startX = self.x + self.w - childrenTotalWidth
+		startX = self.x + self.w - self.padding.right - childrenTotalWidth
 	else
-		startX = self.x
+		startX = self.x + self.padding.left
 	end
 
 	if self.alignment.vertical == "center" and self.scrollDirection ~= "vertical" then
-		startY = self.y + (self.h - childrenTotalHeight) / 2
+		startY = self.y + self.padding.top + (self.h - self.padding.top - self.padding.bottom - childrenTotalHeight) / 2
 	elseif self.alignment.vertical == "bottom" and self.scrollDirection ~= "vertical" then
-		startY = self.y + self.h - childrenTotalHeight
+		startY = self.y + self.h - self.padding.bottom - childrenTotalHeight
 	else
-		startY = self.y
+		startY = self.y + self.padding.top
 	end
 
 	if self.scrollable then
@@ -176,24 +186,28 @@ function Container:positionChildren()
 		if self.layout == "horizontal" then
 			child.x = offsetX
 			child.y = offsetY
+
 			if self.alignment.vertical == "bottom" then
-				child.y = self.y + self.h - child.h
+				child.y = self.y + self.h - self.padding.bottom - child.h
 			elseif self.alignment.vertical == "center" then
-				child.y = self.y + (self.h - child.h) / 2
+				child.y = self.y + self.padding.top + (self.h - self.padding.top - self.padding.bottom - child.h) / 2
 			else
-				child.y = self.y
+				child.y = self.y + self.padding.top
 			end
+
 			offsetX = offsetX + child.w + self.spacing
 		else
 			child.x = offsetX
 			child.y = offsetY
+
 			if self.alignment.horizontal == "right" then
-				child.x = self.x + self.w - child.w
+				child.x = self.x + self.w - self.padding.right - child.w
 			elseif self.alignment.horizontal == "center" then
-				child.x = self.x + (self.w - child.w) / 2
+				child.x = self.x + self.padding.left + (self.w - self.padding.left - self.padding.right - child.w) / 2
 			else
-				child.x = self.x
+				child.x = self.x + self.padding.left
 			end
+
 			offsetY = offsetY + child.h + self.spacing
 		end
 
@@ -212,13 +226,13 @@ function Container:calculateContentWidth()
 			totalWidth = totalWidth + child.w
 		end
 		totalWidth = totalWidth + self.spacing * (#self.children - 1)
-		return totalWidth
+		return totalWidth + self.padding.left + self.padding.right
 	else
 		local maxWidth = 0
 		for _, child in ipairs(self.children) do
 			maxWidth = math.max(maxWidth, child.w)
 		end
-		return maxWidth
+		return maxWidth + self.padding.left + self.padding.right
 	end
 end
 
@@ -230,34 +244,15 @@ function Container:calculateContentHeight()
 		for _, child in ipairs(self.children) do
 			maxHeight = math.max(maxHeight, child.h)
 		end
-		return maxHeight
+		return maxHeight + self.padding.top + self.padding.bottom
 	else
 		local totalHeight = 0
 		for _, child in ipairs(self.children) do
 			totalHeight = totalHeight + child.h
 		end
 		totalHeight = totalHeight + self.spacing * (#self.children - 1)
-		return totalHeight
+		return totalHeight + self.padding.top + self.padding.bottom
 	end
-end
-
-function Container:calculateScrollSize()
-	if #self.children == 0 then return 0 end
-
-	local totalSize = 0
-
-	if self.scrollDirection == "horizontal" then
-		for _, child in ipairs(self.children) do
-			totalSize = totalSize + child.w
-		end
-	else
-		for _, child in ipairs(self.children) do
-			totalSize = totalSize + child.h
-		end
-	end
-
-	totalSize = totalSize + self.spacing * (#self.children - 1)
-	return totalSize
 end
 
 function Container:wheelmoved(x, y)
@@ -403,6 +398,7 @@ function Container:update(dt)
 					spacingCount = spacingCount + 1
 				end
 				contentHeight = contentHeight + self.spacing * math.max(0, spacingCount - 1)
+				contentHeight = contentHeight + self.padding.top + self.padding.bottom
 			else -- layout is horizontal but vertical scrolling
 				for _, child in ipairs(self.children) do
 					local h = (child.calculateContentHeight and not child.scrollable) and child:calculateContentHeight() or
@@ -424,6 +420,7 @@ function Container:update(dt)
 					spacingCount = spacingCount + 1
 				end
 				contentWidth = contentWidth + self.spacing * math.max(0, spacingCount - 1)
+				contentWidth = contentWidth + self.padding.left + self.padding.right
 			else -- layout is vertical but horizontal scrolling
 				for _, child in ipairs(self.children) do
 					local w = (child.calculateContentWidth and not child.scrollable) and child:calculateContentWidth() or

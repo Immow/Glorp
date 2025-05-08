@@ -17,6 +17,7 @@ mainContainer = Glorp.newContainer({
 		layout = "vertical",
 		alignment = { horizontal = "left", vertical = "center" },
 		scrollable = true,
+		padding = 10
 		-- scrollBar = {
 		-- 	bar = { color = { 1, 0, 0, 1 } },
 		-- 	track = { showScrollTrack = true }

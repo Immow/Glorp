@@ -3,10 +3,12 @@ CheckBox.__index = CheckBox
 
 function CheckBox.new(settings)
 	local instance      = setmetatable({}, CheckBox)
+	instance.boxWidth   = settings.boxWidth or 30
+	instance.boxHeight  = settings.boxHeight or 30
 	instance.x          = settings.x or 0
 	instance.y          = settings.y or 0
-	instance.w          = settings.w or 30
-	instance.h          = settings.h or 30
+	instance.w          = instance.boxWidth
+	instance.h          = instance.boxHeight
 	instance.checkInset = settings.checkInset or 3
 	instance.checked    = settings.checked or false
 	instance.onRelease  = settings.onRelease or nil

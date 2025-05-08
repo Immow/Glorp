@@ -9,6 +9,7 @@ local DropDown = require(folder_path .. "dropdown")
 local Form = require(folder_path .. "form")
 local Slider = require(folder_path .. "slider")
 local CheckBox = require(folder_path .. "checkbox")
+local RadioButton = require(folder_path .. "radiobutton")
 local activeDropDown
 
 local Container = {}
@@ -98,6 +99,12 @@ end
 function Container:addCheckBox(settings)
 	local cb = CheckBox.new(settings)
 	table.insert(self.children, cb)
+	return self
+end
+
+function Container:addRadioButton(settings)
+	local rb = RadioButton.new(settings)
+	table.insert(self.children, rb)
 	return self
 end
 

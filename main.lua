@@ -14,88 +14,83 @@ mainContainer = Glorp.newContainer({
 		y = 100,
 		w = 300,
 		h = 400,
-		layout = "horizontal",
-		alignment = { horizontal = "center", vertical = "center" },
-		-- scrollable = true,
+		layout = "vertical",
+		alignment = { horizontal = "left", vertical = "center" },
+		scrollable = true,
 		-- scrollBar = {
 		-- 	bar = { color = { 1, 0, 0, 1 } },
 		-- 	track = { showScrollTrack = true }
 		-- }
 	})
-	:addCheckBox({
-		onRelease = function()
-			print("Enabled")
+	:addRadioButton({
+		label = "test",
+		onRelease = function(isChecked)
+			if isChecked then print("enabled") else print("disabled") end
 		end
 	})
--- :addSlider({
--- 	id = "A",
--- 	w = 200,
--- 	h = 20,
--- 	startValue = 25,
--- 	orientation = "horizontal",
--- 	onRelease = function(val)
--- 		print(
--- 			"Slider released at:", val)
--- 	end
--- })
--- :addSlider({
--- 	id = "B",
--- 	w = 200,
--- 	h = 20,
--- 	startValue = 25,
--- 	orientation = "horizontal",
--- 	onRelease = function(val)
--- 		print(
--- 			"Slider released at:", val)
--- 	end
--- })
--- :addForm({
--- 	id = "loginForm",
--- 	fields = {
--- 		{ name = "username", label = "Username", value = "" },
--- 		{ name = "password", label = "Password", value = "" },
--- 	},
--- 	onSubmit = function(data)
--- 		print("Form submitted:")
--- 		for k, v in pairs(data) do
--- 			print(k, v)
--- 		end
--- 	end
--- })
--- :addDropDown({
--- 	options = {
--- 		{ name = "Apple",  value = "apple" },
--- 		{ name = "Banana", value = "banana" },
--- 	},
--- 	onSelect = function(i, val)
--- 		print("Selected:", i, val.value)
--- 	end
--- })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addButton({ label = "test" })
--- :addDropDown({
--- 	options = {
--- 		{ name = "Apple",  value = "apple" },
--- 		{ name = "Banana", value = "banana" },
--- 	},
--- 	onSelect = function(i, val)
--- 		print("Selected:", i, val.value)
--- 	end
--- })
+	:addCheckBox({
+		onRelease = function(isChecked)
+			if isChecked then print("enabled") else print("disabled") end
+		end
+	})
+	:addSlider({
+		id = "A",
+		w = 200,
+		h = 20,
+		startValue = 25,
+		orientation = "horizontal",
+		onRelease = function(val)
+			print(
+				"Slider released at:", val)
+		end
+	})
+	:addForm({
+		id = "loginForm",
+		fields = {
+			{ name = "username", label = "Username", value = "" },
+			{ name = "password", label = "Password", value = "" },
+		},
+		onSubmit = function(data)
+			print("Form submitted:")
+			for k, v in pairs(data) do
+				print(k, v)
+			end
+		end
+	})
+	:addDropDown({
+		options = {
+			{ name = "Apple",  value = "apple" },
+			{ name = "Banana", value = "banana" },
+		},
+		onSelect = function(i, val)
+			print("Selected:", i, val.value)
+		end
+	})
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addButton({ label = "test" })
+	:addDropDown({
+		options = {
+			{ name = "Apple",  value = "apple" },
+			{ name = "Banana", value = "banana" },
+		},
+		onSelect = function(i, val)
+			print("Selected:", i, val.value)
+		end
+	})
 
 -- mainContainer:addText({ text = "Hello Glorp!", w = 280, align = "center" })
 -- for i = 1, 10 do

@@ -28,6 +28,7 @@
 ---@field addForm? fun(self: Glorp.Container, settings: Glorp.FormSettings): Glorp.Container
 ---@field addSlider? fun(self: Glorp.Container, settings: Glorp.SliderSettings): Glorp.Container
 ---@field addCheckBox? fun(self: Glorp.Container, settings: Glorp.CheckBoxSettings): Glorp.Container
+---@field addRadioButton? fun(self: Glorp.Container, settings: Glorp.RadioButtonSettings): Glorp.Container
 
 ---@class Glorp.ButtonSettings
 ---@field id? any
@@ -87,5 +88,9 @@
 ---@field options? table
 
 ---@class Glorp.CheckBoxSettings
+---@field w? number
+---@field h? number
+
+---@class Glorp.RadioButtonSettings
 ---@field w? number
 ---@field h? number

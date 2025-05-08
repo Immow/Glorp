@@ -14,15 +14,36 @@ mainContainer = Glorp.newContainer({
 		y = 100,
 		w = 300,
 		h = 400,
-		layout = "vertical",
-		alignment = { horizontal = "center", vertical = "bottom" },
+		layout = "horizontal",
+		alignment = { horizontal = "center", vertical = "center" },
 		-- scrollable = true,
 		-- scrollBar = {
 		-- 	bar = { color = { 1, 0, 0, 1 } },
 		-- 	track = { showScrollTrack = true }
 		-- }
 	})
-	:addSlider({ w = 20, h = 200, startValue = 25, orientation = "vertical" })
+	:addSlider({
+		id = "A",
+		w = 200,
+		h = 20,
+		startValue = 25,
+		orientation = "horizontal",
+		onRelease = function(val)
+			print(
+				"Slider released at:", val)
+		end
+	})
+	:addSlider({
+		id = "B",
+		w = 200,
+		h = 20,
+		startValue = 25,
+		orientation = "horizontal",
+		onRelease = function(val)
+			print(
+				"Slider released at:", val)
+		end
+	})
 -- :addForm({
 -- 	id = "loginForm",
 -- 	fields = {

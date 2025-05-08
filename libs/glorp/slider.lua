@@ -17,13 +17,10 @@ function Slider.new(settings)
 	instance.sliderRangeMax = settings.sliderRangeMax or 1
 	instance.sliderRangeMin = settings.sliderRangeMin or 0
 	instance.active = false
-	instance.parentDimensions = {}
 	instance.grooveColor = settings.grooveColor or { 0.3, 0.3, 0.3 }
 	instance.knobColor = settings.knobColor or { 1, 1, 1 }
 	instance.knobBorderColor = settings.knobBorderColor or { 0, 0, 0 }
-
-	-- Internal knob position tracking
-	instance:setPosition(instance.x, instance.y) -- Call setPosition to properly initialize the knob position
+	instance.onRelease = settings.onRelease or nil
 
 	instance.start_x = instance.x
 	instance.start_y = instance.y
@@ -118,11 +115,12 @@ function Slider:setPosition(x, y)
 end
 
 function Slider:mousereleased()
-	self.active = false
-end
-
-function Slider:update(dt)
-	-- No-op for now
+	if self.active then
+		self.active = false
+		if self.onRelease then
+			self.onRelease(self:getValue())
+		end
+	end
 end
 
 function Slider:drawGroove()

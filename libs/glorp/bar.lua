@@ -2,19 +2,19 @@ local Bar = {}
 Bar.__index = Bar
 
 function Bar.new(settings)
-	local instance = setmetatable({}, Bar)
+	local instance        = setmetatable({}, Bar)
 
 	local scrollDirection = settings.scrollDirection
-	local scrollBar = settings.scrollBar or {}
-	local bar = scrollBar.bar or {}
+	local scrollBar       = settings.scrollBar or {}
+	local bar             = scrollBar.bar or {}
+	instance.id           = settings.id or nil
+	instance.image        = bar.image or nil
 
-	instance.image = bar.image or nil
+	local defaultW        = (scrollDirection == "vertical") and 20 or 50
+	local defaultH        = (scrollDirection == "vertical") and 50 or 20
 
-	local defaultW = (scrollDirection == "vertical") and 20 or 50
-	local defaultH = (scrollDirection == "vertical") and 50 or 20
-
-	instance.w = bar.w or defaultW
-	instance.h = bar.h or defaultH
+	instance.w            = bar.w or defaultW
+	instance.h            = bar.h or defaultH
 
 	if instance.image then
 		instance.w = settings.image:getWidth()

@@ -3,7 +3,7 @@
 ---@alias Glorp.Color number[] # RGBA array: {r, g, b, a}
 
 ---@class Glorp.containerSettings
----@field id? any
+---@field id? string
 ---@field x? number
 ---@field y? number
 ---@field w? number
@@ -37,11 +37,13 @@
 ---@field addSlider? fun(self: Glorp.Container, settings: Glorp.SliderSettings): Glorp.Container
 ---@field addCheckBox? fun(self: Glorp.Container, settings: Glorp.CheckBoxSettings): Glorp.Container
 ---@field addRadioButton? fun(self: Glorp.Container, settings: Glorp.RadioButtonSettings): Glorp.Container
+---@field getChild fun(self: Glorp.Container, id: string)
 
 ---@class Glorp.scrollBarSettings
 ---@field bar? Glorp.barSettings
 
 ---@class Glorp.barSettings
+---@field id? string
 ---@field image? love.Image
 ---@field w? number
 ---@field h? number
@@ -49,7 +51,7 @@
 ---@field showScrollBar? boolean
 
 ---@class Glorp.ButtonSettings
----@field id? any
+---@field id? string
 ---@field w? number
 ---@field h? number
 ---@field label? string
@@ -59,7 +61,7 @@
 ---@field fn? function
 
 ---@class Glorp.SliderSettings
----@field id? any
+---@field id? string
 ---@field w? number
 ---@field h? number
 ---@field fn? function
@@ -76,7 +78,7 @@
 ---@field onRelease? fun(value: number)
 
 ---@class Glorp.ButtonListSettings
----@field id? any
+---@field id? string
 ---@field w? number
 ---@field h? number
 ---@field label? string
@@ -86,6 +88,7 @@
 ---@field fn? function
 
 ---@class Glorp.TextSettings
+---@field id? string
 ---@field w? number
 ---@field h? number
 ---@field color? Glorp.Color
@@ -98,7 +101,7 @@
 ---@field image? love.Image
 ---@field w? number
 ---@field h? number
----@field id? any
+---@field id? string
 ---@field x? number
 ---@field y? number
 
@@ -109,7 +112,7 @@
 ---@field y? number
 ---@field w? number
 ---@field h? number
----@field id? any
+---@field id? string
 ---@field fields? {name: string, label: string}
 ---@field font? love.Font
 ---@field color? Glorp.Color
@@ -128,7 +131,7 @@
 ---@field text? string
 ---@field align? "left"|"center"|"right"
 ---@field font? string
----@field id? any
+---@field id? string
 ---@field x? number
 ---@field y? number
 ---@field selectedIndex? number
@@ -139,7 +142,7 @@
 ---@class Glorp.CheckBoxSettings
 ---@field w? number
 ---@field h? number
----@field id? any
+---@field id? string
 ---@field boxWidth? number
 ---@field boxHeight? number
 ---@field x? number
@@ -151,7 +154,7 @@
 ---@class Glorp.RadioButtonSettings
 ---@field w? number
 ---@field h? number
----@field id? any
+---@field id? string
 ---@field label? string
 ---@field font? love.Font
 ---@field radius? number

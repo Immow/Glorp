@@ -70,14 +70,6 @@ function Glorp.attach(element_id, target_ids, side)
 	return element
 end
 
-function Glorp.finalizeLayout()
-	for _, element in pairs(Glorp.elements) do
-		if element.updateChildren then
-			element:updateChildren()
-		end
-	end
-end
-
 ---@param settings Glorp.containerSettings
 ---@return Glorp.Container
 function Glorp.newContainer(settings)

@@ -93,36 +93,39 @@ mainContainer = Glorp.newContainer({
 		end
 	})
 
+local bla = mainContainer:getChild("loginForm")
+print(bla.id)
+
 -- mainContainer:addText({ text = "Hello Glorp!", w = 280, align = "center" })
 -- for i = 1, 10 do
 -- 	mainContainer:addImage({ image = glorp_alien })
 -- end
 
--- scrollContainer = Glorp.newContainer({
--- 		id = "scrollContainer",
--- 		layout = "vertical",
--- 		alignment = { horizontal = "center", vertical = "center" },
--- 		borderColor = { 1, 1, 1, 1 },
--- 		backgroundColor = { 1, 0, 0, 0.5 },
--- 		scrollDirection = "vertical",
--- 		scrollable = true,
--- 		w = 200,
--- 		h = 200,
--- 	})
--- 	:addDropDown({
--- 		options = {
--- 			{ name = "Apple",  value = "apple" },
--- 			{ name = "Banana", value = "banana" },
--- 		},
--- 		onSelect = function(i, val)
--- 			print("Selected:", i, val.value)
--- 		end
--- 	})
--- 	:addButton({ label = "test" })
+scrollContainer = Glorp.newContainer({
+		id = "scrollContainer",
+		layout = "vertical",
+		alignment = { horizontal = "center", vertical = "center" },
+		borderColor = { 1, 1, 1, 1 },
+		backgroundColor = { 1, 0, 0, 0.5 },
+		scrollDirection = "vertical",
+		scrollable = true,
+		w = 200,
+		h = 200,
+	})
+	:addDropDown({
+		options = {
+			{ name = "Apple",  value = "apple" },
+			{ name = "Banana", value = "banana" },
+		},
+		onSelect = function(i, val)
+			print("Selected:", i, val.value)
+		end
+	})
+	:addButton({ label = "test" })
 
--- for i = 1, 10 do
--- 	scrollContainer:addImage({ image = glorp_alien })
--- end
+for i = 1, 10 do
+	scrollContainer:addImage({ image = glorp_alien })
+end
 
 -- scrollContainer2 = Glorp.newContainer({
 -- 	id = "scrollContainer2",
@@ -145,7 +148,7 @@ mainContainer = Glorp.newContainer({
 -- end
 
 
--- mainContainer:addContainer(scrollContainer)
+mainContainer:addContainer(scrollContainer)
 -- mainContainer:addContainer(scrollContainer2)
 
 function love.load()

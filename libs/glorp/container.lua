@@ -19,6 +19,7 @@ Container.__index = Container
 ---@return Glorp.Container
 function Container.new(settings)
 	local instance = setmetatable({}, Container)
+	instance.childIds = {}
 	instance.id = settings.id
 	instance.type = "container"
 	instance.x = settings.x or 0
@@ -74,10 +75,21 @@ function Container:addContainer(container)
 	table.insert(self.children, container)
 end
 
+function Container:addChildId(id, reference)
+	if not id then return end
+
+	if self.childIds[id] then
+		error("Duplicate child ID: " .. id)
+	else
+		self.childIds[id] = reference
+	end
+end
+
 ---@param settings Glorp.ButtonSettings
 ---@return Glorp.Container
 function Container:addButton(settings)
 	local button = Button.new(settings)
+	self:addChildId(settings.id, button)
 	table.insert(self.children, button)
 	return self
 end
@@ -88,6 +100,7 @@ function Container:addText(settings)
 	local w = settings.w or self.w
 	settings.w = w
 	local text = Text.new(settings)
+	self:addChildId(settings.id, text)
 	table.insert(self.children, text)
 	return self
 end
@@ -96,26 +109,35 @@ end
 ---@return Glorp.Container
 function Container:addDropDown(settings)
 	local dropdown = DropDown.new(settings)
+	self:addChildId(settings.id, dropdown)
 	table.insert(self.children, dropdown)
 	return self
 end
 
 function Container:addForm(settings)
 	local form = Form.new(settings)
+	self:addChildId(settings.id, form)
 	table.insert(self.children, form)
 	return self
 end
 
 function Container:addCheckBox(settings)
 	local cb = CheckBox.new(settings)
+	self:addChildId(settings.id, cb)
 	table.insert(self.children, cb)
 	return self
 end
 
 function Container:addRadioButton(settings)
 	local rb = RadioButton.new(settings)
+	self:addChildId(settings.id, rb)
 	table.insert(self.children, rb)
 	return self
+end
+
+---@param id string
+function Container:getChild(id)
+	return self.childIds[id]
 end
 
 -- function Container:addButtonList(settings)
@@ -141,6 +163,7 @@ end
 ---@return Glorp.Container
 function Container:addImage(settings)
 	local image = Image.new(settings)
+	self:addChildId(settings.id, image)
 	table.insert(self.children, image)
 	return self
 end
@@ -149,6 +172,7 @@ end
 ---@return Glorp.Container
 function Container:addSlider(settings)
 	local slider = Slider.new(settings)
+	self:addChildId(settings.id, slider)
 	table.insert(self.children, slider)
 	return self
 end

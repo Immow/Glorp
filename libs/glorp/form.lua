@@ -7,6 +7,7 @@ function Form.new(settings)
 	instance.type              = "form"
 	instance.font              = settings.font or love.graphics.getFont()
 	instance.fields            = settings.fields or {}
+	instance.fields.value      = settings.fields and settings.fields.value or ""
 	instance.fieldHeight       = instance.font:getHeight() + 4
 	instance.color             = settings.color or { 1, 1, 1, 1 }
 	instance.offset            = 10
@@ -59,7 +60,7 @@ function Form:keypressed(key)
 			for _, f in ipairs(self.fields) do
 				result[f.name] = f.value
 			end
-			self.onSubmit(result)
+			self.onSubmit(result) -- TODO might add check so all fields have data before running onSubmit
 		end
 	elseif key == "tab" then
 		self.activeFieldIndex = self.activeFieldIndex % #self.fields + 1
@@ -83,6 +84,7 @@ end
 
 function Form:draw()
 	for i, field in ipairs(self.fields) do
+		field.value = field.value or ""
 		local y = self.y + (i - 1) * (self.fieldHeight + self.offset)
 		local inputX = self.x + 100
 

@@ -48,8 +48,8 @@ mainContainer = Glorp.newContainer({
 	:addForm({
 		id = "loginForm",
 		fields = {
-			{ name = "username", label = "Username", value = "" },
-			{ name = "password", label = "Password", value = "" },
+			{ name = "username", label = "Username" },
+			{ name = "password", label = "Password" },
 		},
 		onSubmit = function(data)
 			print("Form submitted:")

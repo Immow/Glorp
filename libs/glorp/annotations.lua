@@ -1,5 +1,7 @@
 ---@meta
 
+---@alias Glorp.Color number[] # RGBA array: {r, g, b, a}
+
 ---@class Glorp.containerSettings
 ---@field id? any
 ---@field x? number
@@ -10,10 +12,11 @@
 ---@field spacing? number
 ---@field label? string
 ---@field border? boolean
----@field borderColor? table
----@field backgroundColor? table
+---@field borderColor? Glorp.Color
+---@field backgroundColor? Glorp.Color
 ---@field scrollable? boolean
 ---@field scrollDirection? "horizontal"|"vertical"
+---@field scrollBar? Glorp.scrollBarSettings
 ---@field showScrollbar? boolean
 ---@field padding? number
 ---@field paddingTop? number
@@ -35,6 +38,16 @@
 ---@field addCheckBox? fun(self: Glorp.Container, settings: Glorp.CheckBoxSettings): Glorp.Container
 ---@field addRadioButton? fun(self: Glorp.Container, settings: Glorp.RadioButtonSettings): Glorp.Container
 
+---@class Glorp.scrollBarSettings
+---@field bar? Glorp.barSettings
+
+---@class Glorp.barSettings
+---@field image? love.Image
+---@field w? number
+---@field h? number
+---@field color? Glorp.Color
+---@field showScrollBar? boolean
+
 ---@class Glorp.ButtonSettings
 ---@field id? any
 ---@field w? number
@@ -50,6 +63,17 @@
 ---@field w? number
 ---@field h? number
 ---@field fn? function
+---@field orientation? "horizontal"|"vertical"
+---@field knob_w? number
+---@field knob_h? number
+---@field startValue? number
+---@field groove_h? number
+---@field sliderRangeMin? number
+---@field sliderRangeMax? number
+---@field grooveColor? Glorp.Color
+---@field knobColor? Glorp.Color
+---@field knobBorderColor? Glorp.Color
+---@field onRelease? fun(value: number)
 
 ---@class Glorp.ButtonListSettings
 ---@field id? any
@@ -64,7 +88,7 @@
 ---@class Glorp.TextSettings
 ---@field w? number
 ---@field h? number
----@field color? table
+---@field color? Glorp.Color
 ---@field text? string
 ---@field align? "left"|"center"|"right"
 ---@field font? string
@@ -74,28 +98,64 @@
 ---@field image? love.Image
 ---@field w? number
 ---@field h? number
+---@field id? any
+---@field x? number
+---@field y? number
 
 ---@class Glorp.FormSettings
 ---@field label? string
 ---@field image? love.Image
+---@field x? number
+---@field y? number
 ---@field w? number
 ---@field h? number
+---@field id? any
+---@field fields? {name: string, label: string}
+---@field font? love.Font
+---@field color? Glorp.Color
+---@field limit? number
+---@field backgroundColor? Glorp.Color
+---@field borderColor? Glorp.Color
+---@field activeBorderColor? Glorp.Color
+---@field onSubmit? function
 
 ---@class Glorp.DropDownSettings
 ---@field w? number
 ---@field h? number
----@field bgColor? table
----@field hoverColor? table
----@field textColor? table
+---@field bgColor? Glorp.Color
+---@field hoverColor? Glorp.Color
+---@field textColor? Glorp.Color
 ---@field text? string
 ---@field align? "left"|"center"|"right"
 ---@field font? string
----@field options? table
+---@field id? any
+---@field x? number
+---@field y? number
+---@field selectedIndex? number
+---@field hoverOptionColor? Glorp.Color
+---@field onSelect? fun(index: number, value: any)
+---@field options? any[]
 
 ---@class Glorp.CheckBoxSettings
 ---@field w? number
 ---@field h? number
+---@field id? any
+---@field boxWidth? number
+---@field boxHeight? number
+---@field x? number
+---@field y? number
+---@field checkInset? number
+---@field checked? boolean
+---@field onRelease? fun(state: boolean)
 
 ---@class Glorp.RadioButtonSettings
 ---@field w? number
 ---@field h? number
+---@field id? any
+---@field label? string
+---@field font? love.Font
+---@field radius? number
+---@field spacing? number
+---@field checkInset? number
+---@field checked? boolean
+---@field onRelease? fun(state: boolean)

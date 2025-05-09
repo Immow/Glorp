@@ -3,6 +3,7 @@
 ---@alias Glorp.Color number[] # RGBA array: {r, g, b, a}
 
 ---@class Glorp.containerSettings
+---@field enabled? boolean
 ---@field id? string
 ---@field x? number
 ---@field y? number

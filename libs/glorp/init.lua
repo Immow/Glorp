@@ -19,6 +19,10 @@ function Glorp:purge()
 	self.elements = {}
 end
 
+function Glorp:setEnabled(container, value)
+	container.enabled = value
+end
+
 function Glorp.attach(element_id, target_ids, side)
 	local element = Glorp.elements[element_id]
 	if not element then
@@ -80,7 +84,7 @@ end
 
 function Glorp:wheelmoved(x, y)
 	for _, element in pairs(self.elements) do
-		if element.wheelmoved and not element.parent then
+		if element.wheelmoved and not element.parent and element.enabled then
 			element:wheelmoved(x, y)
 		end
 	end
@@ -88,7 +92,7 @@ end
 
 function Glorp:mousemoved(x, y, dx, dy)
 	for _, element in pairs(self.elements) do
-		if element.mousemoved and not element.parent then
+		if element.mousemoved and not element.parent and element.enabled then
 			element:mousemoved(x, y, dx, dy)
 		end
 	end
@@ -96,7 +100,7 @@ end
 
 function Glorp:mousereleased(x, y, button, isTouch)
 	for _, element in pairs(self.elements) do
-		if element.mousereleased and not element.parent then
+		if element.mousereleased and not element.parent and element.enabled then
 			element:mousereleased(x, y, button, isTouch)
 		end
 	end
@@ -106,7 +110,7 @@ function Glorp:mousepressed(x, y, button, isTouch)
 	local topmost = nil
 
 	for _, element in pairs(self.elements) do
-		if element.mousepressed and not element.parent then
+		if element.mousepressed and not element.parent and element.enabled then
 			topmost = element
 		end
 	end
@@ -118,7 +122,7 @@ end
 
 function Glorp:textinput(text)
 	for _, element in pairs(self.elements) do
-		if element.textinput and not element.parent then
+		if element.textinput and not element.parent and element.enabled then
 			element:textinput(text)
 		end
 	end
@@ -126,7 +130,7 @@ end
 
 function Glorp:keypressed(key, scancode, isrepeat)
 	for _, element in pairs(self.elements) do
-		if element.keypressed and not element.parent then
+		if element.keypressed and not element.parent and element.enabled then
 			element:keypressed(key, scancode, isrepeat)
 		end
 	end
@@ -134,7 +138,7 @@ end
 
 function Glorp:update(dt)
 	for _, element in pairs(self.elements) do
-		if element.update and not element.parent then
+		if element.update and not element.parent and element.enabled then
 			element:update(dt)
 		end
 	end
@@ -142,7 +146,7 @@ end
 
 function Glorp:draw()
 	for _, element in pairs(self.elements) do
-		if element.draw and not element.parent then
+		if element.draw and not element.parent and element.enabled then
 			element:draw()
 		end
 	end

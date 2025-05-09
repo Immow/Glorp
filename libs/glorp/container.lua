@@ -19,6 +19,7 @@ Container.__index = Container
 ---@return Glorp.Container
 function Container.new(settings)
 	local instance = setmetatable({}, Container)
+	instance.enabled = settings.enabled ~= false
 	instance.childIds = {}
 	instance.id = settings.id
 	instance.type = "container"

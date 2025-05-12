@@ -60,6 +60,7 @@
 ---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}
 ---@field font? string
 ---@field fn? function
+---@field enabled? boolean
 
 ---@class Glorp.SliderSettings
 ---@field id? string
@@ -69,7 +70,7 @@
 ---@field orientation? "horizontal"|"vertical"
 ---@field knob_w? number
 ---@field knob_h? number
----@field startValue? number
+---@field value? number
 ---@field groove_h? number
 ---@field sliderRangeMin? number
 ---@field sliderRangeMax? number
@@ -77,6 +78,7 @@
 ---@field knobColor? Glorp.Color
 ---@field knobBorderColor? Glorp.Color
 ---@field onRelease? fun(value: number)
+---@field enabled? boolean
 
 ---@class Glorp.ButtonListSettings
 ---@field id? string
@@ -96,6 +98,7 @@
 ---@field text? string
 ---@field align? "left"|"center"|"right"
 ---@field font? string
+---@field enabled? boolean
 
 ---@class Glorp.ImageSettings
 ---@field label? string
@@ -105,6 +108,8 @@
 ---@field id? string
 ---@field x? number
 ---@field y? number
+---@field color? Glorp.Color
+---@field enabled? boolean
 
 ---@class Glorp.FormSettings
 ---@field label? string
@@ -122,6 +127,7 @@
 ---@field borderColor? Glorp.Color
 ---@field activeBorderColor? Glorp.Color
 ---@field onSubmit? function
+---@field enabled? boolean
 
 ---@class Glorp.DropDownSettings
 ---@field w? number
@@ -139,6 +145,7 @@
 ---@field hoverOptionColor? Glorp.Color
 ---@field onSelect? fun(index: number, value: any)
 ---@field options? any[]
+---@field enabled? boolean
 
 ---@class Glorp.CheckBoxSettings
 ---@field w? number
@@ -151,6 +158,7 @@
 ---@field checkInset? number
 ---@field checked? boolean
 ---@field onRelease? fun(state: boolean)
+---@field enabled? boolean
 
 ---@class Glorp.RadioButtonSettings
 ---@field w? number
@@ -163,3 +171,4 @@
 ---@field checkInset? number
 ---@field checked? boolean
 ---@field onRelease? fun(state: boolean)
+---@field enabled? boolean

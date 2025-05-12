@@ -21,6 +21,7 @@ function Dropdown.new(settings)
 	instance.hoverColor       = settings.hoverColor or { 0.3, 0.3, 0.3, 1 }
 	instance.hoverOptionColor = settings.hoverOptionColor or { 0.2, 0.6, 1, 1 }
 	instance.textColor        = settings.textColor or { 1, 1, 1, 1 }
+	instance.enabled          = settings.enabled ~= false
 
 	return instance
 end

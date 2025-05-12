@@ -17,6 +17,7 @@ function Button.new(settings)
 	}
 	instance.font      = settings.font or love.graphics:getFont()
 	instance.fn        = settings.fn or function() print(instance.label) end
+	instance.enabled   = settings.enabled ~= false
 	return instance
 end
 

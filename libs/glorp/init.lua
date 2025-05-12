@@ -2,18 +2,45 @@ local folder_path = (...):match("(.-)[^%.]+$")
 require(folder_path .. "glorp.annotations")
 
 local Glorp = {
-	elements = {}
+	elements = {},
+	idMap = {}
 }
 
 Glorp.Container = require(folder_path .. "glorp.container")
 
-function Glorp.registerElement(element)
-	if element.id then
-		Glorp.elements[element.id] = element
-	else
-		error("no id specified in the arguments")
+function Glorp.registerElement(id, element)
+	if not id then error("no id specified in the arguments") end
+	if Glorp.idMap[id] then
+		error("Duplicate element ID: " .. id)
 	end
+	Glorp.idMap[id] = element
+	Glorp.elements[element.id] = element
 end
+
+function Glorp:getElementById(id)
+	-- Check if it's a registered container
+	if self.idMap[id] then
+		return self.idMap[id]
+	end
+
+	-- Search children of all top-level containers
+	for _, container in pairs(self.idMap) do
+		if container.getChildById then
+			local found = container:getChildById(id)
+			if found then return found end
+		end
+	end
+
+	return nil -- Not found
+end
+
+-- function Glorp.registerElement(element)
+-- 	if element.id then
+-- 		Glorp.elements[element.id] = element
+-- 	else
+-- 		error("no id specified in the arguments")
+-- 	end
+-- end
 
 function Glorp:purge()
 	self.elements = {}
@@ -78,7 +105,7 @@ end
 ---@return Glorp.Container
 function Glorp.newContainer(settings)
 	local instance = Glorp.Container.new(settings)
-	Glorp.registerElement(instance)
+	Glorp.registerElement(instance.id, instance)
 	return instance
 end
 

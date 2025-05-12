@@ -12,7 +12,7 @@ function Slider.new(settings)
 	instance.y               = settings.y or 0
 	instance.w               = settings.w or 100
 	instance.h               = settings.h or 40
-	instance.startValue      = math.max(0, math.min((settings.startValue or 0) / 100, 1))
+	instance.value           = math.max(0, math.min(settings.value or 0, 1))
 	instance.groove_h        = settings.groove_h or 8
 	instance.sliderRangeMax  = settings.sliderRangeMax or 1
 	instance.sliderRangeMin  = settings.sliderRangeMin or 0
@@ -24,6 +24,7 @@ function Slider.new(settings)
 
 	instance.start_x         = instance.x
 	instance.start_y         = instance.y
+	instance.enabled         = settings.enabled ~= false
 
 	return instance
 end
@@ -70,12 +71,12 @@ function Slider:mousemoved(x, y, dx, dy)
 			self.knob_x = math.max(self.x, math.min(self.x + self.w - self.knob_w, self.knob_x + dx))
 			-- Update startValue based on knob position
 			local valuePercent = (self.knob_x - self.x) / (self.w - self.knob_w)
-			self.startValue = self.sliderRangeMin + valuePercent * (self.sliderRangeMax - self.sliderRangeMin)
+			self.value = self.sliderRangeMin + valuePercent * (self.sliderRangeMax - self.sliderRangeMin)
 		else
 			self.knob_y = math.max(self.y, math.min(self.y + self.h - self.knob_h, self.knob_y + dy))
 			-- Update startValue based on knob position
 			local valuePercent = (self.knob_y - self.y) / (self.h - self.knob_h)
-			self.startValue = self.sliderRangeMin + valuePercent * (self.sliderRangeMax - self.sliderRangeMin)
+			self.value = self.sliderRangeMin + valuePercent * (self.sliderRangeMax - self.sliderRangeMin)
 		end
 	end
 end
@@ -88,14 +89,14 @@ function Slider:mousepressed(x, y, button)
 			self.knob_x = math.max(self.x, math.min(self.x + self.w - self.knob_w, x - self.knob_w / 2))
 			-- Update startValue based on knob position
 			local valuePercent = (self.knob_x - self.x) / (self.w - self.knob_w)
-			self.startValue = self.sliderRangeMin + valuePercent * (self.sliderRangeMax - self.sliderRangeMin)
+			self.value = self.sliderRangeMin + valuePercent * (self.sliderRangeMax - self.sliderRangeMin)
 		end
 	else
 		if self:containsPointGroove(x, y) and not self:containsPointKnob(x, y) then
 			self.knob_y = math.max(self.y, math.min(self.y + self.h - self.knob_h, y - self.knob_h / 2))
 			-- Update startValue based on knob position
 			local valuePercent = (self.knob_y - self.y) / (self.h - self.knob_h)
-			self.startValue = self.sliderRangeMin + valuePercent * (self.sliderRangeMax - self.sliderRangeMin)
+			self.value = self.sliderRangeMin + valuePercent * (self.sliderRangeMax - self.sliderRangeMin)
 		end
 	end
 end
@@ -104,8 +105,8 @@ function Slider:setPosition(x, y)
 	self.x = x
 	self.y = y
 
-	-- Recalculate knob position based on the current startValue
-	local valuePercent = (self.startValue - self.sliderRangeMin) / (self.sliderRangeMax - self.sliderRangeMin)
+	-- Recalculate knob position based on the current value
+	local valuePercent = (self.value - self.sliderRangeMin) / (self.sliderRangeMax - self.sliderRangeMin)
 
 	if self.orientation == "horizontal" then
 		self.knob_x = self.x + (self.w - self.knob_w) * valuePercent

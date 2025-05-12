@@ -137,8 +137,18 @@ function Container:addRadioButton(settings)
 end
 
 ---@param id string
-function Container:getChild(id)
-	return self.childIds[id]
+function Container:getChildById(id)
+	for _, child in ipairs(self.children or {}) do
+		if child.id == id then
+			return child
+		end
+		-- Recursively search nested containers
+		if child.getChildById then
+			local found = child:getChildById(id)
+			if found then return found end
+		end
+	end
+	return nil
 end
 
 -- function Container:addButtonList(settings)
@@ -285,7 +295,7 @@ function Container:wheelmoved(x, y)
 
 	local scrolled = false
 	for _, child in ipairs(self.children) do
-		if child.wheelmoved then
+		if child.enabled and child.wheelmoved then
 			scrolled = child:wheelmoved(x, y) or scrolled
 		end
 	end
@@ -308,14 +318,14 @@ end
 function Container:mousepressed(mx, my, button, isTouch)
 	-- if not self:isMouseInside(mx, my, self) then return end
 
-	if activeDropDown then
+	if activeDropDown and activeDropDown.enabled then
 		activeDropDown:mousepressed(mx, my, button, isTouch)
 		activeDropDown = nil
 		return
 	end
 
 	for _, child in ipairs(self.children) do
-		if child.mousepressed then
+		if child.enabled and child.mousepressed then
 			local handled = child:mousepressed(mx, my, button, isTouch)
 			if handled then
 				if child.type == "dropdown" then
@@ -351,7 +361,7 @@ end
 
 function Container:mousereleased(mx, my, button, isTouch)
 	for _, child in ipairs(self.children) do
-		if child.mousereleased then
+		if child.enabled and child.mousereleased then
 			child:mousereleased(mx, my, button, isTouch)
 		end
 	end
@@ -360,7 +370,7 @@ end
 
 function Container:mousemoved(x, y, dx, dy, istouch)
 	for _, child in ipairs(self.children) do
-		if child.mousemoved then
+		if child.enabled and child.mousemoved then
 			child:mousemoved(x, y, dx, dy, istouch)
 		end
 	end
@@ -382,7 +392,7 @@ end
 
 function Container:keypressed(key, scancode, isrepeat)
 	for _, child in ipairs(self.children) do
-		if child.keypressed then
+		if child.enabled and child.keypressed then
 			child:keypressed(key, scancode, isrepeat)
 		end
 	end
@@ -390,7 +400,7 @@ end
 
 function Container:textinput(text)
 	for _, child in ipairs(self.children) do
-		if child.textinput then
+		if child.enabled and child.textinput then
 			child:textinput(text)
 		end
 	end
@@ -400,7 +410,7 @@ function Container:update(dt)
 	if #self.children == 0 then return end
 
 	for _, child in ipairs(self.children) do
-		if child.update then
+		if child.enabled and child.update then
 			child:update(dt)
 		end
 	end
@@ -512,7 +522,9 @@ function Container:draw()
 	end
 
 	for _, child in ipairs(self.children) do
-		child:draw()
+		if child.enabled then
+			child:draw()
+		end
 	end
 
 	love.graphics.pop()

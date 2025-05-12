@@ -8,7 +8,7 @@ layoutTests[1] = Glorp.newContainer({
 		y = 100,
 		layout = "vertical",
 		alignment = { horizontal = "left", vertical = "center" },
-		padding = 10
+		padding = 10,
 	})
 	:addRadioButton({
 		label = "test",
@@ -25,7 +25,7 @@ layoutTests[1] = Glorp.newContainer({
 		id = "A",
 		w = 200,
 		h = 20,
-		startValue = 25,
+		value = 0.25,
 		orientation = "horizontal",
 		onRelease = function(val)
 			print(
@@ -67,9 +67,40 @@ layoutTests[2] = Glorp.newContainer({
 	})
 	:addRadioButton({
 		label = "test",
+		checked = true,
 		onRelease = function(isChecked)
-			if isChecked then print("enabled") else print("disabled") end
+			local child = Glorp:getElementById("glorp_alien")
+			if isChecked then child.enabled = true else child.enabled = false end
 		end
 	})
+
+local subContainer1 = Glorp.newContainer({
+		-- enabled = false,
+		id = "subContainer1",
+		layout = "vertical",
+		alignment = { horizontal = "left", vertical = "center" },
+		padding = 10
+	})
+	:addSlider({
+		value = 1,
+		onRelease = function(val)
+			local image = Glorp:getElementById("glorp_alien")
+			if image then
+				image.color[4] = val
+			end
+		end
+	})
+
+local subContainer2 = Glorp.newContainer({
+		-- enabled = false,
+		id = "subContainer2",
+		layout = "vertical",
+		alignment = { horizontal = "left", vertical = "center" },
+		padding = 10
+	})
+	:addImage({ image = glorp_alien, id = "glorp_alien" })
+
+layoutTests[2]:addContainer(subContainer1)
+layoutTests[2]:addContainer(subContainer2)
 
 return layoutTests

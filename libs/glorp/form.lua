@@ -26,6 +26,7 @@ function Form.new(settings)
 	instance.cursorTimer       = 0
 	instance.cursorDir         = 1
 	instance.cursorBlinkSpeed  = 1.5
+	instance.enabled           = settings.enabled ~= false
 
 	return instance
 end

@@ -12,6 +12,7 @@ function CheckBox.new(settings)
 	instance.checkInset = settings.checkInset or 3
 	instance.checked    = settings.checked or false
 	instance.onRelease  = settings.onRelease or nil
+	instance.enabled    = settings.enabled ~= false
 	return instance
 end
 
@@ -21,6 +22,7 @@ function CheckBox:containsPoint(mx, my)
 end
 
 function CheckBox:mousepressed(x, y, button, isTouch)
+	if not self.enabled then return end
 	if button == 1 and self:containsPoint(x, y) then
 		self.checked = not self.checked
 		if self.onRelease then
@@ -30,6 +32,7 @@ function CheckBox:mousepressed(x, y, button, isTouch)
 end
 
 function CheckBox:draw()
+	if not self.enabled then return end
 	love.graphics.setColor(1, 1, 1, 1)
 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 

@@ -14,6 +14,7 @@ function RadioButton.new(settings)
 	instance.checkInset = settings.checkInset or 3
 	instance.checked    = settings.checked or false
 	instance.onRelease  = settings.onRelease or nil
+	instance.enabled    = settings.enabled ~= false
 	return instance
 end
 

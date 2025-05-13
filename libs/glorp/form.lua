@@ -16,12 +16,13 @@ function Form.new(settings)
 	instance.w                 = settings.w or 250
 	instance.h                 = math.max(instance.fieldHeight, instance.fieldHeight * #instance.fields) +
 		(#instance.fields - 1) * instance.offset
-	instance.limit             = settings.limit or nil
+	instance.limit             = settings.limit or 15
 	instance.backgroundColor   = settings.backgroundColor or { 0, 0, 0, 0.2 }
 	instance.borderColor       = settings.borderColor or { 0.7, 0.7, 0.7, 1 }
 	instance.activeBorderColor = settings.activeBorderColor or { 1, 1, 1, 1 }
 	instance.onSubmit          = settings.onSubmit or nil
 	instance.activeFieldIndex  = 1
+	instance.labelWidth        = settings.labelWidth or 100
 
 	instance.cursorTimer       = 0
 	instance.cursorDir         = 1
@@ -58,10 +59,21 @@ function Form:keypressed(key)
 	elseif key == "return" or key == "kpenter" then
 		if self.onSubmit then
 			local result = {}
+			local allValid = true
+
 			for _, f in ipairs(self.fields) do
+				if not f.value or f.value == "" then
+					allValid = false
+					break
+				end
 				result[f.name] = f.value
 			end
-			self.onSubmit(result) -- TODO might add check so all fields have data before running onSubmit
+
+			if allValid then
+				self.onSubmit(result)
+			else
+				print("Form submission blocked: not all fields are filled.")
+			end
 		end
 	elseif key == "tab" then
 		self.activeFieldIndex = self.activeFieldIndex % #self.fields + 1
@@ -71,10 +83,11 @@ end
 function Form:mousepressed(mx, my, mouseButton)
 	if mouseButton ~= 1 then return false end
 
-	local fieldHeight = self.h
+	local fieldHeight = self.fieldHeight
 	for i, field in ipairs(self.fields) do
 		local y = self.y + (i - 1) * (fieldHeight + self.offset)
-		local inputX = self.x + 100
+		local inputX = self.x + self.labelWidth
+
 		if mx >= inputX and mx <= inputX + self.w - 100 and my >= y and my <= y + fieldHeight then
 			self.activeFieldIndex = i
 			return true
@@ -87,7 +100,7 @@ function Form:draw()
 	for i, field in ipairs(self.fields) do
 		field.value = field.value or ""
 		local y = self.y + (i - 1) * (self.fieldHeight + self.offset)
-		local inputX = self.x + 100
+		local inputX = self.x + self.labelWidth
 
 		love.graphics.setColor(1, 1, 1)
 		love.graphics.print(field.label, self.x, y)

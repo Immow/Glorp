@@ -75,7 +75,6 @@ layoutTests[2] = Glorp.newContainer({
 	})
 
 local subContainer1 = Glorp.newContainer({
-		-- enabled = false,
 		id = "subContainer1",
 		layout = "vertical",
 		alignment = { horizontal = "left", vertical = "center" },
@@ -85,14 +84,11 @@ local subContainer1 = Glorp.newContainer({
 		value = 1,
 		onRelease = function(val)
 			local image = Glorp:getElementById("glorp_alien")
-			if image then
-				image.color[4] = val
-			end
+			if image then image.color[4] = val end
 		end
 	})
 
 local subContainer2 = Glorp.newContainer({
-		-- enabled = false,
 		id = "subContainer2",
 		layout = "vertical",
 		alignment = { horizontal = "left", vertical = "center" },

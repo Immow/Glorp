@@ -128,6 +128,7 @@
 ---@field activeBorderColor? Glorp.Color
 ---@field onSubmit? function
 ---@field enabled? boolean
+---@field labelWidth? number
 
 ---@class Glorp.DropDownSettings
 ---@field w? number

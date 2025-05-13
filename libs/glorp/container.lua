@@ -318,7 +318,7 @@ end
 function Container:mousepressed(mx, my, button, isTouch)
 	-- if not self:isMouseInside(mx, my, self) then return end
 
-	if activeDropDown and activeDropDown.enabled then
+	if activeDropDown and activeDropDown.expanded then
 		activeDropDown:mousepressed(mx, my, button, isTouch)
 		activeDropDown = nil
 		return

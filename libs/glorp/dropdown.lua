@@ -19,6 +19,7 @@ function Dropdown.new(settings)
 	instance.font             = settings.font or love.graphics:getFont()
 	instance.bgColor          = settings.bgColor or { 0.2, 0.2, 0.2, 1 }
 	instance.hoverColor       = settings.hoverColor or { 0.3, 0.3, 0.3, 1 }
+	instance.expandedBgColor  = settings.hoverColor or { 0.1, 0.1, 0.1, 1 }
 	instance.hoverOptionColor = settings.hoverOptionColor or { 0.2, 0.6, 1, 1 }
 	instance.textColor        = settings.textColor or { 1, 1, 1, 1 }
 	instance.enabled          = settings.enabled ~= false
@@ -85,9 +86,11 @@ function Dropdown:draw()
 			local itemY = self.y + self.h * i
 
 			if i == self.hoveredIndex then
-				love.graphics.setColor(self.hoverOptionColor) -- highlight color
-				love.graphics.rectangle("fill", self.x, itemY, self.w, self.h)
+				love.graphics.setColor(self.hoverOptionColor)
+			else
+				love.graphics.setColor(self.expandedBgColor)
 			end
+			love.graphics.rectangle("fill", self.x, itemY, self.w, self.h)
 
 			love.graphics.setColor(1, 1, 1, 1)
 			love.graphics.printf(option.name, self.x + 5, itemY + 5, self.w - 10, "left")

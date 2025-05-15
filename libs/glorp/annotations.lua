@@ -59,14 +59,14 @@
 ---@field layout? "horizontal"|"vertical"
 ---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}
 ---@field font? string
----@field fn? function
+---@field onRelease? function
 ---@field enabled? boolean
 
 ---@class Glorp.SliderSettings
 ---@field id? string
 ---@field w? number
 ---@field h? number
----@field fn? function
+---@field onRelease? function
 ---@field orientation? "horizontal"|"vertical"
 ---@field knob_w? number
 ---@field knob_h? number
@@ -88,7 +88,7 @@
 ---@field layout? "horizontal"|"vertical"
 ---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}
 ---@field font? string
----@field fn? function
+---@field onRelease? function
 
 ---@class Glorp.TextSettings
 ---@field id? string

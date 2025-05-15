@@ -16,7 +16,7 @@ function Button.new(settings)
 		vertical = settings.alignment and settings.alignment.vertical or "center"
 	}
 	instance.font      = settings.font or love.graphics:getFont()
-	instance.fn        = settings.fn or function() print(instance.label) end
+	instance.onRelease = settings.onRelease or function() print(instance.label) end
 	instance.enabled   = settings.enabled ~= false
 	return instance
 end
@@ -30,7 +30,7 @@ function Button:mousepressed(mx, my, mouseButton)
 	if mouseButton ~= 1 then return end
 	local hovered = self:isMouseOnButton(mx, my)
 	if hovered then
-		self.fn()
+		self.onRelease()
 	end
 end
 

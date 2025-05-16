@@ -538,30 +538,15 @@ function Container:draw()
 		love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
 	end
 
-	if self.titleBar and self.titlebarHeight > 0 then
-		love.graphics.setColor(self.titlebarColor)
-		love.graphics.rectangle("fill", self.x, self.y, self.w, self.titlebarHeight)
-
-		love.graphics.setColor(1, 1, 1, 1)
-		love.graphics.print(self.titlebarText, self.x + 5, self.y + 4)
-	end
-
 	-- Draw vertical scrollbar
 	if self.scrollDirection == "vertical" and self.maxScrollY > 0 then
 		local trackX = self.x + self.w - self.bar.w
 		local trackY = self.y + self:getContentOffsetY()
 		self.track:draw(trackX, trackY, self.bar.w, self.h - self:getContentOffsetY())
 
-		-- Draw thumb
-		-- self.bar.y = self.y + (self.scrollY / self.maxScrollY) * ((self.h - self:getContentOffsetY()) - self.bar.h)
-		-- self.bar:draw(trackX, self.bar.y + self:getContentOffsetY())
-		-- love.graphics.rectangle("fill", trackX, self.bar.y, self.bar.w, self.bar.h)
-
 		if self.bar.y and self.bar.h and self.bar.w then
-			love.graphics.rectangle("fill", trackX, self.bar.y, self.bar.w, self.bar.h)
+			self.bar:draw(trackX, self.bar.y)
 		end
-
-
 
 		-- Draw horizontal scrollbar
 	elseif self.scrollDirection == "horizontal" and self.maxScrollX > 0 then
@@ -572,11 +557,6 @@ function Container:draw()
 		-- Draw thumb
 		self.bar.x = self.x + (self.scrollX / self.maxScrollX) * (self.w - self.bar.w)
 		self.bar:draw(self.bar.x, trackY)
-	end
-
-	if self.border then
-		love.graphics.setColor(self.borderColor)
-		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 	end
 
 	love.graphics.push("all")
@@ -597,14 +577,20 @@ function Container:draw()
 		end
 	end
 
+	if self.titleBar and self.titlebarHeight > 0 then
+		love.graphics.setColor(self.titlebarColor)
+		love.graphics.rectangle("fill", self.x, self.y, self.w, self.titlebarHeight)
+
+		love.graphics.setColor(1, 1, 1, 1)
+		love.graphics.print(self.titlebarText, self.x + 5, self.y + 4)
+	end
+
+	if self.border then
+		love.graphics.setColor(self.borderColor)
+		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	end
+
 	love.graphics.pop()
-
-	-- love.graphics.setColor(1, 1, 1, 1)
-	-- love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
-
-	-- if activeDropDown then
-	-- 	activeDropDown:draw()
-	-- end
 
 	love.graphics.setColor(1, 1, 1, 1)
 end

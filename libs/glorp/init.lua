@@ -3,28 +3,30 @@ require(folder_path .. "glorp.annotations")
 
 local Glorp = {
 	elements = {},
-	idMap = {}
+	elementsById = {},
+	activeDropDown = nil,
+	activeWindow = nil
 }
 
 Glorp.Container = require(folder_path .. "glorp.container")
 
 function Glorp.registerElement(id, element)
 	if not id then error("no id specified in the arguments") end
-	if Glorp.idMap[id] then
+	if Glorp.elementsById[id] then
 		error("Duplicate element ID: " .. id)
 	end
-	Glorp.idMap[id] = element
-	Glorp.elements[element.id] = element
+	Glorp.elementsById[id] = element
+	table.insert(Glorp.elements, element) -- sequential array for input/draw order
 end
 
 function Glorp:getElementById(id)
 	-- Check if it's a registered container
-	if self.idMap[id] then
-		return self.idMap[id]
+	if self.elementsById[id] then
+		return self.elementsById[id]
 	end
 
 	-- Search children of all top-level containers
-	for _, container in pairs(self.idMap) do
+	for _, container in pairs(self.elementsById) do
 		if container.getChildById then
 			local found = container:getChildById(id)
 			if found then return found end
@@ -34,13 +36,16 @@ function Glorp:getElementById(id)
 	return nil -- Not found
 end
 
--- function Glorp.registerElement(element)
--- 	if element.id then
--- 		Glorp.elements[element.id] = element
--- 	else
--- 		error("no id specified in the arguments")
--- 	end
--- end
+function Glorp:bringToFront(element)
+	for i, el in ipairs(self.elements) do
+		if el == element then
+			table.remove(self.elements, i)
+			table.insert(self.elements, el)
+			self.activeWindow = el
+			break
+		end
+	end
+end
 
 function Glorp:purge()
 	self.elements = {}
@@ -110,61 +115,62 @@ function Glorp.newContainer(settings)
 end
 
 function Glorp:wheelmoved(x, y)
-	for _, element in pairs(self.elements) do
-		if element.wheelmoved and not element.parent and element.enabled then
-			element:wheelmoved(x, y)
-		end
+	if self.activeWindow and self.activeWindow.wheelmoved then
+		self.activeWindow:wheelmoved(x, y)
 	end
 end
 
 function Glorp:mousemoved(x, y, dx, dy)
-	for _, element in pairs(self.elements) do
-		if element.mousemoved and not element.parent and element.enabled then
-			element:mousemoved(x, y, dx, dy)
-		end
+	if self.activeWindow and self.activeWindow.mousemoved then
+		self.activeWindow:mousemoved(x, y, dx, dy)
 	end
 end
 
 function Glorp:mousereleased(x, y, button, isTouch)
-	for _, element in pairs(self.elements) do
-		if element.mousereleased and not element.parent and element.enabled then
-			element:mousereleased(x, y, button, isTouch)
+	if self.activeWindow and self.activeWindow.mousereleased then
+		self.activeWindow:mousereleased(x, y, button, isTouch)
+
+		if not self.activeWindow:isMouseInside(x, y) then
+			self.activeWindow = nil
 		end
 	end
 end
 
 function Glorp:mousepressed(x, y, button, isTouch)
-	local topmost = nil
-
-	for _, element in pairs(self.elements) do
-		if element.mousepressed and not element.parent and element.enabled then
-			topmost = element
+	if self.activeDropDown and self.activeDropDown.expanded then
+		if self.activeDropDown.mousepressed then
+			self.activeDropDown:mousepressed(x, y, button, isTouch)
 		end
+		self.activeDropDown.expanded = false
+		self.activeDropDown = nil
+		return
 	end
 
-	if topmost then
-		topmost:mousepressed(x, y, button, isTouch)
+	for i = #self.elements, 1, -1 do
+		local element = self.elements[i]
+		if element.mousepressed and not element.parent and element.enabled then
+			if element:mousepressed(x, y, button, isTouch) then
+				self:bringToFront(element)
+				break
+			end
+		end
 	end
 end
 
-function Glorp:textinput(text)
-	for _, element in pairs(self.elements) do
-		if element.textinput and not element.parent and element.enabled then
-			element:textinput(text)
-		end
+function Glorp:textinput(t)
+	if self.activeWindow and self.activeWindow.textinput then
+		self.activeWindow:textinput(t)
 	end
 end
 
 function Glorp:keypressed(key, scancode, isrepeat)
-	for _, element in pairs(self.elements) do
-		if element.keypressed and not element.parent and element.enabled then
-			element:keypressed(key, scancode, isrepeat)
-		end
+	if self.activeWindow and self.activeWindow.keypressed then
+		self.activeWindow:keypressed(key, scancode, isrepeat)
 	end
 end
 
 function Glorp:update(dt)
-	for _, element in pairs(self.elements) do
+	for _, element in ipairs(self.elements) do
 		if element.update and not element.parent and element.enabled then
 			element:update(dt)
 		end
@@ -172,10 +178,15 @@ function Glorp:update(dt)
 end
 
 function Glorp:draw()
-	for _, element in pairs(self.elements) do
+	for _, element in ipairs(self.elements) do
 		if element.draw and not element.parent and element.enabled then
 			element:draw()
 		end
+	end
+
+	-- Draw dropdown last so it appears on top of everything
+	if self.activeDropDown and self.activeDropDown.draw then
+		self.activeDropDown:draw()
 	end
 end
 

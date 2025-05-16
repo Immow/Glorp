@@ -1,9 +1,9 @@
 local Dropdown = {}
 Dropdown.__index = Dropdown
 
-function Dropdown.new(settings)
+function Dropdown.new(settings, Glorp)
 	local instance            = setmetatable({}, Dropdown)
-
+	instance.glorpRef         = Glorp
 	instance.id               = settings.id or nil
 	instance.x                = settings.x or 0
 	instance.y                = settings.y or 0
@@ -48,22 +48,33 @@ end
 function Dropdown:mousepressed(mx, my, mouseButton)
 	if mouseButton ~= 1 then return end
 
-	if self:contains(mx, my) then
-		self.expanded = not self.expanded
-		return true
-	else
-		if self.expanded then
-			for i, option in ipairs(self.options) do
-				local itemY = self.y + self.h * i
-				if mx >= self.x and mx <= self.x + self.w and my >= itemY and my <= itemY + self.h then
-					self.selectedIndex = i
+	-- If expanded, check if an option was clicked
+	if self.expanded then
+		for i, option in ipairs(self.options) do
+			local itemY = self.y + self.h * i
+			if mx >= self.x and mx <= self.x + self.w and my >= itemY and my <= itemY + self.h then
+				self.selectedIndex = i
+				if self.onSelect then
 					self.onSelect(i, option)
-					self.expanded = false
-					return true
 				end
+				self.expanded = false
+				-- self.glorpRef.activeDropDown = nil
+				return true
 			end
 		end
+	end
+
+	-- If not on an option, check the main dropdown box
+	if self:contains(mx, my) then
+		self.expanded = not self.expanded
+		self.glorpRef.activeDropDown = self
+		return true
+	else
+		-- Clicked outside
 		self.expanded = false
+		-- if self.glorpRef.activeDropDown then
+		-- 	self.glorpRef.activeDropDown = nil
+		-- end
 	end
 
 	return false

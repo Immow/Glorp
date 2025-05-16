@@ -2,6 +2,10 @@
 
 ---@alias Glorp.Color number[] # RGBA array: {r, g, b, a}
 
+---@class Glorp.DropDown
+---@field expanded boolean
+---@field mousepressed fun(self: Glorp.DropDown, x: number, y: number, button: number, isTouch: boolean)
+
 ---@class Glorp.containerSettings
 ---@field enabled? boolean
 ---@field id? string
@@ -26,6 +30,11 @@
 ---@field paddingLeft? number
 ---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}
 ---@field bar?  { x: number, y: number, w: number ,h: number ,color: table }
+---@field draggable? boolean
+---@field titlebarHeight? number
+---@field titlebarColor? Glorp.Color
+---@field titlebarText? string
+---@field titleBar? boolean
 
 ---@class Glorp.Container
 ---@field addButton? fun(self: Glorp.Container, settings: Glorp.ButtonSettings): Glorp.Container

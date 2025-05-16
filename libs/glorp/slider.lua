@@ -90,6 +90,7 @@ function Slider:mousepressed(x, y, button)
 			-- Update startValue based on knob position
 			local valuePercent = (self.knob_x - self.x) / (self.w - self.knob_w)
 			self.value = self.sliderRangeMin + valuePercent * (self.sliderRangeMax - self.sliderRangeMin)
+			self.active = true
 		end
 	else
 		if self:containsPointGroove(x, y) and not self:containsPointKnob(x, y) then
@@ -97,6 +98,7 @@ function Slider:mousepressed(x, y, button)
 			-- Update startValue based on knob position
 			local valuePercent = (self.knob_y - self.y) / (self.h - self.knob_h)
 			self.value = self.sliderRangeMin + valuePercent * (self.sliderRangeMax - self.sliderRangeMin)
+			self.active = true
 		end
 	end
 end

@@ -31,7 +31,7 @@ function Container.new(settings)
 	instance.spacing = settings.spacing or 10
 	instance.label = "container"
 	instance.border = settings.border ~= false
-	instance.borderColor = settings.borderColor or { 0, 0, 0, 1 }
+	instance.borderColor = settings.borderColor or { 1, 1, 1, 1 }
 	instance.backgroundColor = settings.backgroundColor or { 0, 0, 0, 1 }
 	instance.scrollable = settings.scrollable or false
 	if instance.scrollable and (instance.w <= 0 or instance.h <= 0) then
@@ -56,6 +56,16 @@ function Container.new(settings)
 			settings.scrollDirection = "horizontal"
 		end
 	end
+
+	instance.titlebarHeight = settings.titlebarHeight or 24
+	instance.titlebarColor = settings.titlebarColor or { 0.2, 0.2, 0.2, 1 }
+	instance.titlebarText = settings.titlebarText or instance.label or instance.id or ""
+
+	instance.titleBar = settings.titleBar or false
+	instance.draggable = settings.draggable or false
+	instance.dragging = false
+	instance.dragOffsetX = 0
+	instance.dragOffsetY = 0
 
 	instance.padding = {
 		top = settings.paddingTop or settings.padding or 0,
@@ -109,7 +119,7 @@ end
 ---@param settings Glorp.DropDownSettings
 ---@return Glorp.Container
 function Container:addDropDown(settings)
-	local dropdown = DropDown.new(settings)
+	local dropdown = DropDown.new(settings, require("libs.glorp"))
 	self:addChildId(settings.id, dropdown)
 	table.insert(self.children, dropdown)
 	return self
@@ -192,6 +202,7 @@ function Container:positionChildren()
 	local childrenTotalWidth, childrenTotalHeight = self:calculateContentWidth(), self:calculateContentHeight()
 
 	local startX, startY
+
 	if self.alignment.horizontal == "center" and self.scrollDirection ~= "horizontal" then
 		startX = self.x + self.padding.left + (self.w - self.padding.left - self.padding.right - childrenTotalWidth) / 2
 	elseif self.alignment.horizontal == "right" and self.scrollDirection ~= "horizontal" then
@@ -214,6 +225,10 @@ function Container:positionChildren()
 		elseif self.scrollDirection == "horizontal" then
 			startX = startX - self.scrollX
 		end
+	end
+
+	if self.titleBar then
+		startY = startY + self.titlebarHeight
 	end
 
 	local offsetX, offsetY = startX, startY
@@ -279,6 +294,10 @@ function Container:calculateContentHeight()
 		for _, child in ipairs(self.children) do
 			maxHeight = math.max(maxHeight, child.h)
 		end
+
+		if self.titleBar then
+			maxHeight = maxHeight + self.titlebarHeight
+		end
 		return maxHeight + self.padding.top + self.padding.bottom
 	else
 		local totalHeight = 0
@@ -286,6 +305,9 @@ function Container:calculateContentHeight()
 			totalHeight = totalHeight + child.h
 		end
 		totalHeight = totalHeight + self.spacing * (#self.children - 1)
+		if self.titleBar then
+			totalHeight = totalHeight + self.titlebarHeight
+		end
 		return totalHeight + self.padding.top + self.padding.bottom
 	end
 end
@@ -302,7 +324,7 @@ function Container:wheelmoved(x, y)
 
 	if scrolled then return true end
 
-	if self.scrollable and self:isMouseInside(mx, my, self) then
+	if self.scrollable and self:isMouseInside(mx, my) then
 		self.scrollY = math.max(0, math.min(self.scrollY - y * 20, self.maxScrollY))
 		return true --previousScrollY ~= self.scrollY -- Allow scrolling if we can't scroll anymore in this element
 	end
@@ -310,13 +332,20 @@ function Container:wheelmoved(x, y)
 	return scrolled
 end
 
-function Container:isMouseInside(mx, my, target)
-	return mx >= target.x and mx <= target.x + target.w
-		and my >= target.y and my <= target.y + target.h
+function Container:isMouseInside(mx, my)
+	return mx >= self.x and mx <= self.x + self.w
+		and my >= self.y and my <= self.y + self.h
 end
 
 function Container:mousepressed(mx, my, button, isTouch)
 	-- if not self:isMouseInside(mx, my, self) then return end
+	if self.draggable and mx >= self.x and mx <= self.x + self.w
+		and my >= self.y and my <= self.y + self.titlebarHeight then
+		self.dragging = true
+		self.dragOffsetX = mx - self.x
+		self.dragOffsetY = my - self.y
+		return true
+	end
 
 	if activeDropDown and activeDropDown.expanded then
 		activeDropDown:mousepressed(mx, my, button, isTouch)
@@ -336,26 +365,30 @@ function Container:mousepressed(mx, my, button, isTouch)
 		end
 	end
 
-	if not self.scrollable then return end
+	if self.scrollable then
+		-- Vertical scrollbar
+		if self.scrollDirection == "vertical" and self.maxScrollY > 0 then
+			local barX = self.x + self.w - self.bar.w
+			if mx >= barX and mx <= barX + self.bar.w and my >= self.bar.y and my <= self.bar.y + self.bar.h then
+				self.draggingBar = true
+				self.barOffsetY = my - self.bar.y
+				return true
+			end
+		end
 
-	-- Vertical scrollbar
-	if self.scrollDirection == "vertical" and self.maxScrollY > 0 then
-		local barX = self.x + self.w - self.bar.w
-		if mx >= barX and mx <= barX + self.bar.w and my >= self.bar.y and my <= self.bar.y + self.bar.h then
-			self.draggingBar = true
-			self.barOffsetY = my - self.bar.y
-			return
+		-- Horizontal scrollbar
+		if self.scrollDirection == "horizontal" and self.maxScrollX > 0 then
+			local barY = self.y + self.h - self.bar.h
+			if my >= barY and my <= barY + self.bar.h and mx >= self.bar.x and mx <= self.bar.x + self.bar.w then
+				self.draggingBar = true
+				self.barOffsetX = mx - self.bar.x
+				return true
+			end
 		end
 	end
 
-	-- Horizontal scrollbar
-	if self.scrollDirection == "horizontal" and self.maxScrollX > 0 then
-		local barY = self.y + self.h - self.bar.h
-		if my >= barY and my <= barY + self.bar.h and mx >= self.bar.x and mx <= self.bar.x + self.bar.w then
-			self.draggingBar = true
-			self.barOffsetX = mx - self.bar.x
-			return
-		end
+	if self:isMouseInside(mx, my) then
+		return true
 	end
 end
 
@@ -366,9 +399,19 @@ function Container:mousereleased(mx, my, button, isTouch)
 		end
 	end
 	self.draggingBar = false
+	self.dragging = false
 end
 
 function Container:mousemoved(x, y, dx, dy, istouch)
+	if self.dragging then
+		self.x = x - self.dragOffsetX
+		self.y = y - self.dragOffsetY
+
+		if #self.children > 0 then
+			self:positionChildren()
+		end
+	end
+
 	for _, child in ipairs(self.children) do
 		if child.enabled and child.mousemoved then
 			child:mousemoved(x, y, dx, dy, istouch)
@@ -483,6 +526,14 @@ function Container:draw()
 		love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
 	end
 
+	if self.titleBar and self.titlebarHeight > 0 then
+		love.graphics.setColor(self.titlebarColor)
+		love.graphics.rectangle("fill", self.x, self.y, self.w, self.titlebarHeight)
+
+		love.graphics.setColor(1, 1, 1, 1)
+		love.graphics.print(self.titlebarText, self.x + 5, self.y + 4)
+	end
+
 	-- Draw vertical scrollbar
 	if self.scrollDirection == "vertical" and self.maxScrollY > 0 then
 		local trackX = self.x + self.w - self.bar.w
@@ -504,7 +555,7 @@ function Container:draw()
 		self.bar:draw(self.bar.x, trackY)
 	end
 
-	if self.border or self.borderColor then
+	if self.border then
 		love.graphics.setColor(self.borderColor)
 		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 	end
@@ -529,13 +580,12 @@ function Container:draw()
 
 	love.graphics.pop()
 
-	love.graphics.setColor(1, 1, 1, 1)
-	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	-- love.graphics.setColor(1, 1, 1, 1)
+	-- love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 
-	if activeDropDown then
-		activeDropDown:draw()
-		love.graphics.print("activeDropDown")
-	end
+	-- if activeDropDown then
+	-- 	activeDropDown:draw()
+	-- end
 
 	love.graphics.setColor(1, 1, 1, 1)
 end

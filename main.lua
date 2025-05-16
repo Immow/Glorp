@@ -5,50 +5,50 @@ require("tprint")
 DEBUG = false
 local currentTest = 1
 
-Glorp.newContainer({
-	id = "layoutTests11",
-	titlebarText = "layoutTests1",
-	x = 100,
-	y = 100,
-	w = 200,
-	layout = "vertical",
-	alignment = { horizontal = "left", vertical = "center" },
-	padding = 10,
-	titleBar = true,
-	draggable = true
-})
-	:addDropDown({
-		options = {
-			{ name = "Apple",  value = "apple" },
-			{ name = "Banana", value = "banana" },
-		},
-		onSelect = function(i, val)
-			print("Selected:", i, val.value)
-		end,
-		bgColor = { 0.8, 0.8, 0.8, 1 }
-	})
+-- Glorp.newContainer({
+-- 	id = "layoutTests11",
+-- 	titlebarText = "layoutTests1",
+-- 	x = 100,
+-- 	y = 100,
+-- 	w = 200,
+-- 	layout = "vertical",
+-- 	alignment = { horizontal = "left", vertical = "center" },
+-- 	padding = 10,
+-- 	titleBar = true,
+-- 	draggable = true
+-- })
+-- 	:addDropDown({
+-- 		options = {
+-- 			{ name = "Apple",  value = "apple" },
+-- 			{ name = "Banana", value = "banana" },
+-- 		},
+-- 		onSelect = function(i, val)
+-- 			print("Selected:", i, val.value)
+-- 		end,
+-- 		bgColor = { 0.8, 0.8, 0.8, 1 }
+-- 	})
 
-Glorp.newContainer({
-	id = "layoutTests12",
-	titlebarText = "layoutTests2",
-	x = 300,
-	y = 100,
-	w = 200,
-	layout = "vertical",
-	alignment = { horizontal = "left", vertical = "center" },
-	padding = 10,
-	titleBar = true,
-	draggable = true
-})
-	:addDropDown({
-		options = {
-			{ name = "Apple",  value = "apple" },
-			{ name = "Banana", value = "banana" },
-		},
-		onSelect = function(i, val)
-			print("Selected:", i, val.value)
-		end
-	})
+-- Glorp.newContainer({
+-- 	id = "layoutTests12",
+-- 	titlebarText = "layoutTests2",
+-- 	x = 300,
+-- 	y = 100,
+-- 	w = 200,
+-- 	layout = "vertical",
+-- 	alignment = { horizontal = "left", vertical = "center" },
+-- 	padding = 10,
+-- 	titleBar = true,
+-- 	draggable = true
+-- })
+-- 	:addDropDown({
+-- 		options = {
+-- 			{ name = "Apple",  value = "apple" },
+-- 			{ name = "Banana", value = "banana" },
+-- 		},
+-- 		onSelect = function(i, val)
+-- 			print("Selected:", i, val.value)
+-- 		end
+-- 	})
 
 function love.load()
 
@@ -67,6 +67,8 @@ function love.keypressed(key, scancode, isrepeat)
 		end
 
 		Glorp:setEnabled(tests[currentTest], true)
+	elseif key == "lctrl" then
+		DEBUG = not DEBUG
 	end
 end
 

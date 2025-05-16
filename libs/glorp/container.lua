@@ -198,6 +198,10 @@ function Container:addSlider(settings)
 	return self
 end
 
+function Container:getContentOffsetY()
+	return self.titleBar and self.titlebarHeight or 0
+end
+
 function Container:positionChildren()
 	local childrenTotalWidth, childrenTotalHeight = self:calculateContentWidth(), self:calculateContentHeight()
 
@@ -227,11 +231,7 @@ function Container:positionChildren()
 		end
 	end
 
-	if self.titleBar then
-		startY = startY + self.titlebarHeight
-	end
-
-	local offsetX, offsetY = startX, startY
+	local offsetX, offsetY = startX, startY + self:getContentOffsetY()
 	for _, child in ipairs(self.children) do
 		if self.layout == "horizontal" then
 			child.x = offsetX
@@ -295,20 +295,15 @@ function Container:calculateContentHeight()
 			maxHeight = math.max(maxHeight, child.h)
 		end
 
-		if self.titleBar then
-			maxHeight = maxHeight + self.titlebarHeight
-		end
-		return maxHeight + self.padding.top + self.padding.bottom
+		return maxHeight + self.padding.top + self.padding.bottom + self:getContentOffsetY()
 	else
 		local totalHeight = 0
 		for _, child in ipairs(self.children) do
 			totalHeight = totalHeight + child.h
 		end
 		totalHeight = totalHeight + self.spacing * (#self.children - 1)
-		if self.titleBar then
-			totalHeight = totalHeight + self.titlebarHeight
-		end
-		return totalHeight + self.padding.top + self.padding.bottom
+
+		return totalHeight + self.padding.top + self.padding.bottom + self:getContentOffsetY()
 	end
 end
 
@@ -420,15 +415,27 @@ function Container:mousemoved(x, y, dx, dy, istouch)
 
 	if self.draggingBar and self.scrollable then
 		if self.scrollDirection == "vertical" then
-			local trackHeight = self.h - self.bar.h
-			local newBarY = math.max(self.y, math.min(y - self.barOffsetY, self.y + trackHeight))
+			local trackTop = self.y + self:getContentOffsetY()
+			local trackHeight = self.h - self:getContentOffsetY() - self.bar.h
+
+			-- Clamp bar.y to stay inside the track
+			local newBarY = math.max(trackTop, math.min(y - self.barOffsetY, trackTop + trackHeight))
 			self.bar.y = newBarY
-			self.scrollY = ((self.bar.y - self.y) / trackHeight) * self.maxScrollY
+
+			-- Set scrollY proportionally
+			local scrollRatio = (self.bar.y - trackTop) / trackHeight
+			self.scrollY = scrollRatio * self.maxScrollY
 		elseif self.scrollDirection == "horizontal" then
+			local trackLeft = self.x
 			local trackWidth = self.w - self.bar.w
-			local newBarX = math.max(self.x, math.min(x - self.barOffsetX, self.x + trackWidth))
+
+			-- Clamp bar.x to stay inside the track
+			local newBarX = math.max(trackLeft, math.min(x - self.barOffsetX, trackLeft + trackWidth))
 			self.bar.x = newBarX
-			self.scrollX = ((self.bar.x - self.x) / trackWidth) * self.maxScrollX
+
+			-- Set scrollX proportionally
+			local scrollRatio = (self.bar.x - trackLeft) / trackWidth
+			self.scrollX = scrollRatio * self.maxScrollX
 		end
 	end
 end
@@ -463,6 +470,11 @@ function Container:update(dt)
 
 	self:positionChildren()
 
+	if self.scrollable and self.scrollDirection == "vertical" and self.maxScrollY > 0 then
+		local trackHeight = self.h - self:getContentOffsetY() - self.bar.h
+		self.bar.y = self.y + self:getContentOffsetY() + (self.scrollY / self.maxScrollY) * trackHeight
+	end
+
 	if self.scrollable then
 		if self.scrollDirection == "vertical" then
 			local contentHeight = 0
@@ -485,7 +497,7 @@ function Container:update(dt)
 				end
 			end
 
-			self.maxScrollY = math.max(0, contentHeight - self.h)
+			self.maxScrollY = math.max(0, contentHeight - (self.h - self:getContentOffsetY()))
 		elseif self.scrollDirection == "horizontal" then
 			local contentWidth = 0
 			local spacingCount = 0
@@ -537,12 +549,19 @@ function Container:draw()
 	-- Draw vertical scrollbar
 	if self.scrollDirection == "vertical" and self.maxScrollY > 0 then
 		local trackX = self.x + self.w - self.bar.w
-		local trackY = self.y
-		self.track:draw(trackX, trackY, self.bar.w, self.h)
+		local trackY = self.y + self:getContentOffsetY()
+		self.track:draw(trackX, trackY, self.bar.w, self.h - self:getContentOffsetY())
 
 		-- Draw thumb
-		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
-		self.bar:draw(trackX, self.bar.y)
+		-- self.bar.y = self.y + (self.scrollY / self.maxScrollY) * ((self.h - self:getContentOffsetY()) - self.bar.h)
+		-- self.bar:draw(trackX, self.bar.y + self:getContentOffsetY())
+		-- love.graphics.rectangle("fill", trackX, self.bar.y, self.bar.w, self.bar.h)
+
+		if self.bar.y and self.bar.h and self.bar.w then
+			love.graphics.rectangle("fill", trackX, self.bar.y, self.bar.w, self.bar.h)
+		end
+
+
 
 		-- Draw horizontal scrollbar
 	elseif self.scrollDirection == "horizontal" and self.maxScrollX > 0 then

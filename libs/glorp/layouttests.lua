@@ -110,8 +110,8 @@ layoutTests[3] = Glorp.newContainer({
 	y = 100,
 	w = 300,
 	h = 300,
-	layout = "horizontal",
-	scrollDirection = "horizontal",
+	layout = "vertical",
+	scrollDirection = "vertical",
 	scrollable = true,
 	alignment = { horizontal = "right", vertical = "top" },
 	padding = 0,
@@ -130,8 +130,8 @@ layoutTests[4] = Glorp.newContainer({
 	w = 400,
 	h = 200,
 	layout = "horizontal",
-	alignment = { horizontal = "right", vertical = "top" },
-	padding = 0,
+	alignment = { horizontal = "center", vertical = "top" },
+	padding = 10,
 	titleBar = true,
 	draggable = true,
 	scrollable = true,
@@ -157,22 +157,22 @@ end
 layoutTests[4]:addContainer(layoutTests4Sub1)
 layoutTests[4]:addContainer(layoutTests4Sub2)
 
--- layoutTests[5] = Glorp.newContainer({
--- 	enabled = false,
--- 	id = "layoutTests5",
--- 	x = 100,
--- 	y = 100,
--- 	w = 400,
--- 	h = 400,
--- 	layout = "horizontal",
--- 	alignment = { horizontal = "right", vertical = "top" },
--- 	padding = 10,
--- 	titleBar = true,
--- 	draggable = true,
--- 	-- scrollDirection = "vertical"
--- })
--- for i = 1, 3 do
--- 	layoutTests[5]:addButton({ label = "test " .. i })
--- end
+layoutTests[5] = Glorp.newContainer({
+	enabled = false,
+	id = "layoutTests5",
+	x = 100,
+	y = 100,
+	w = 250,
+	h = 200,
+	layout = "vertical",
+	alignment = { horizontal = "center", vertical = "center" },
+	padding = 10,
+	titleBar = true,
+	draggable = true,
+	scrollable = true
+})
+for i = 1, 10 do
+	layoutTests[5]:addButton({ label = "test " .. i })
+end
 
 return layoutTests

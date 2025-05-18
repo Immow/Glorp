@@ -58,7 +58,7 @@ function Container.new(settings)
 	end
 
 	instance.titlebarHeight = settings.titlebarHeight or 24
-	instance.titlebarColor = settings.titlebarColor or { 0.2, 0.2, 0.2, 1 }
+	instance.titlebarColor = settings.titlebarColor or { 0.2, 0.2, 0.2, 0.5 }
 	instance.titlebarText = settings.titlebarText or instance.label or instance.id or ""
 
 	instance.titleBar = settings.titleBar or false
@@ -518,6 +518,7 @@ function Container:update(dt)
 						child.h
 					contentHeight = math.max(contentHeight, h)
 				end
+				contentHeight = contentHeight + self.padding.top + self.padding.bottom
 			end
 
 			self.maxScrollY = math.max(0, contentHeight - (self.h - self:getContentOffsetY()))
@@ -564,11 +565,12 @@ function Container:draw()
 	-- Draw vertical scrollbar
 	if self.scrollDirection == "vertical" and self.maxScrollY > 0 then
 		local trackX = self.x + self.w - self.bar.w
-		local trackY = self.y
-		self.track:draw(trackX, trackY, self.bar.w, self.h)
+		local trackY = self.y + self:getContentOffsetY()
+		self.track:draw(trackX, trackY, self.bar.w, self.h - self:getContentOffsetY())
 
 		-- Draw thumb
-		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
+		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - (self.bar.h + self:getContentOffsetY())) +
+			self:getContentOffsetY()
 		self.bar:draw(trackX, self.bar.y)
 
 		-- Draw horizontal scrollbar

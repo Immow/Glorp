@@ -65,6 +65,7 @@ function love.keypressed(key, scancode, isrepeat)
 			currentTest = 1
 		end
 
+		print(currentTest)
 		Glorp:setEnabled(tests[currentTest], true)
 	elseif key == "left" then
 		Glorp:setEnabled(tests[currentTest], false)
@@ -74,6 +75,7 @@ function love.keypressed(key, scancode, isrepeat)
 			currentTest = #tests
 		end
 
+		print(currentTest)
 		Glorp:setEnabled(tests[currentTest], true)
 	elseif key == "lctrl" then
 		DEBUG = not DEBUG

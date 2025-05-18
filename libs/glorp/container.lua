@@ -58,7 +58,7 @@ function Container.new(settings)
 	end
 
 	instance.titlebarHeight = settings.titlebarHeight or 24
-	instance.titlebarColor = settings.titlebarColor or { 0.2, 0.2, 0.2, 0.5 }
+	instance.titlebarColor = settings.titlebarColor or { 0.2, 0.2, 0.2, 1 }
 	instance.titlebarText = settings.titlebarText or instance.label or instance.id or ""
 
 	instance.titleBar = settings.titleBar or false
@@ -203,14 +203,14 @@ function Container:getContentOffsetY()
 end
 
 function Container:getBarOffsetX()
-	if self.scrollDirection == "vertical" then
+	if self.scrollable and self.scrollDirection == "vertical" then
 		return self.bar and self.bar.w or 0
 	end
 	return 0
 end
 
 function Container:getBarOffsetY()
-	if self.scrollDirection == "horizontal" then
+	if self.scrollable and self.scrollDirection == "horizontal" then
 		return self.bar and self.bar.h or 0
 	end
 	return 0
@@ -249,18 +249,21 @@ function Container:positionChildren()
 	for _, child in ipairs(self.children) do
 		if self.layout == "horizontal" then
 			child.x = offsetX
-			child.y = offsetY
 
-			if self.alignment.vertical == "bottom" then
-				child.y = self.y + self.h - self.padding.bottom - child.h - self:getBarOffsetY()
-			elseif self.alignment.vertical == "center" then
-				child.y = self.y + self.padding.top + (self.h - self.padding.top - self.padding.bottom - child.h) / 2
+			if self.scrollable and self.scrollDirection == "vertical" then
+				-- Ignore vertical alignment, just stack normally
+				child.y = offsetY
 			else
-				child.y = self.y + self.padding.top + self:getContentOffsetY()
+				if self.alignment.vertical == "bottom" then
+					child.y = self.y + self.h - self.padding.bottom - child.h - self:getBarOffsetY()
+				elseif self.alignment.vertical == "center" then
+					child.y = self.y + self.padding.top + (self.h - self.padding.top - self.padding.bottom - child.h) / 2
+				else
+					child.y = self.y + self.padding.top + self:getContentOffsetY()
+				end
 			end
 
 			offsetX = offsetX + child.w + self.spacing
-			child.y = offsetY
 		else
 			child.x = offsetX
 			child.y = offsetY

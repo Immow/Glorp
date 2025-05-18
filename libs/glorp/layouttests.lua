@@ -78,8 +78,8 @@ layoutTests[2] = Glorp.newContainer({
 		end
 	})
 
-local subContainer1 = Glorp.newContainer({
-		id = "subContainer1",
+local layoutTests2Sub1 = Glorp.newContainer({
+		id = "layoutTests2sub1",
 		layout = "vertical",
 		alignment = { horizontal = "left", vertical = "center" },
 		padding = 10
@@ -92,53 +92,87 @@ local subContainer1 = Glorp.newContainer({
 		end
 	})
 
-local subContainer2 = Glorp.newContainer({
-		id = "subContainer2",
+local layoutTests2Sub2 = Glorp.newContainer({
+		id = "layoutTests2sub2",
 		layout = "vertical",
 		alignment = { horizontal = "left", vertical = "center" },
 		padding = 10
 	})
 	:addImage({ image = glorp_alien, id = "glorp_alien" })
 
-layoutTests[2]:addContainer(subContainer1)
-layoutTests[2]:addContainer(subContainer2)
+layoutTests[2]:addContainer(layoutTests2Sub1)
+layoutTests[2]:addContainer(layoutTests2Sub2)
 
 layoutTests[3] = Glorp.newContainer({
-		enabled = false,
-		id = "layoutTests3",
-		x = 100,
-		y = 100,
-		w = 300,
-		h = 300,
-		layout = "vertical",
-		scrollable = true,
-		alignment = { horizontal = "left", vertical = "center" },
-		padding = 10,
-		titleBar = true,
-		draggable = true
-	})
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
-	:addImage({ image = glorp_alien })
+	enabled = false,
+	id = "layoutTests3",
+	x = 100,
+	y = 100,
+	w = 300,
+	h = 300,
+	layout = "horizontal",
+	scrollDirection = "horizontal",
+	scrollable = true,
+	alignment = { horizontal = "right", vertical = "top" },
+	padding = 0,
+	titleBar = true,
+	draggable = true
+})
+for i = 1, 10 do
+	layoutTests[3]:addButton({ label = "test " .. i })
+end
+
+layoutTests[4] = Glorp.newContainer({
+	enabled = false,
+	id = "layoutTests4",
+	x = 100,
+	y = 100,
+	w = 400,
+	h = 200,
+	layout = "horizontal",
+	alignment = { horizontal = "right", vertical = "top" },
+	padding = 0,
+	titleBar = true,
+	draggable = true,
+	scrollable = true,
+	scrollDirection = "horizontal"
+})
+
+local layoutTests4Sub1 = Glorp.newContainer({
+	id = "layoutTests4Sub1",
+	layout = "horizontal",
+})
+for i = 1, 20 do
+	layoutTests4Sub1:addButton({ label = "test " .. i })
+end
+
+local layoutTests4Sub2 = Glorp.newContainer({
+	id = "layoutTests4Sub2",
+	layout = "horizontal",
+})
+for i = 1, 20 do
+	layoutTests4Sub2:addButton({ label = "test " .. i })
+end
+
+layoutTests[4]:addContainer(layoutTests4Sub1)
+layoutTests[4]:addContainer(layoutTests4Sub2)
+
+-- layoutTests[5] = Glorp.newContainer({
+-- 	enabled = false,
+-- 	id = "layoutTests5",
+-- 	x = 100,
+-- 	y = 100,
+-- 	w = 400,
+-- 	h = 400,
+-- 	layout = "horizontal",
+-- 	alignment = { horizontal = "right", vertical = "top" },
+-- 	padding = 10,
+-- 	titleBar = true,
+-- 	draggable = true,
+-- 	-- scrollDirection = "vertical"
+-- })
+-- for i = 1, 3 do
+-- 	layoutTests[5]:addButton({ label = "test " .. i })
+-- end
 
 return layoutTests

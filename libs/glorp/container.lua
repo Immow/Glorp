@@ -202,6 +202,20 @@ function Container:getContentOffsetY()
 	return self.titleBar and self.titlebarHeight or 0
 end
 
+function Container:getBarOffsetX()
+	if self.scrollDirection == "vertical" then
+		return self.bar and self.bar.w or 0
+	end
+	return 0
+end
+
+function Container:getBarOffsetY()
+	if self.scrollDirection == "horizontal" then
+		return self.bar and self.bar.h or 0
+	end
+	return 0
+end
+
 function Container:positionChildren()
 	local childrenTotalWidth, childrenTotalHeight = self:calculateContentWidth(), self:calculateContentHeight()
 
@@ -210,7 +224,7 @@ function Container:positionChildren()
 	if self.alignment.horizontal == "center" and self.scrollDirection ~= "horizontal" then
 		startX = self.x + self.padding.left + (self.w - self.padding.left - self.padding.right - childrenTotalWidth) / 2
 	elseif self.alignment.horizontal == "right" and self.scrollDirection ~= "horizontal" then
-		startX = self.x + self.w - self.padding.right - childrenTotalWidth
+		startX = self.x + self.w - self.padding.right - childrenTotalWidth - self:getBarOffsetX()
 	else
 		startX = self.x + self.padding.left
 	end
@@ -218,7 +232,7 @@ function Container:positionChildren()
 	if self.alignment.vertical == "center" and self.scrollDirection ~= "vertical" then
 		startY = self.y + self.padding.top + (self.h - self.padding.top - self.padding.bottom - childrenTotalHeight) / 2
 	elseif self.alignment.vertical == "bottom" and self.scrollDirection ~= "vertical" then
-		startY = self.y + self.h - self.padding.bottom - childrenTotalHeight
+		startY = self.y + self.h - self.padding.bottom - childrenTotalHeight - self:getBarOffsetY()
 	else
 		startY = self.y + self.padding.top
 	end
@@ -238,20 +252,21 @@ function Container:positionChildren()
 			child.y = offsetY
 
 			if self.alignment.vertical == "bottom" then
-				child.y = self.y + self.h - self.padding.bottom - child.h
+				child.y = self.y + self.h - self.padding.bottom - child.h - self:getBarOffsetY()
 			elseif self.alignment.vertical == "center" then
 				child.y = self.y + self.padding.top + (self.h - self.padding.top - self.padding.bottom - child.h) / 2
 			else
-				child.y = self.y + self.padding.top
+				child.y = self.y + self.padding.top + self:getContentOffsetY()
 			end
 
 			offsetX = offsetX + child.w + self.spacing
+			child.y = offsetY
 		else
 			child.x = offsetX
 			child.y = offsetY
 
 			if self.alignment.horizontal == "right" then
-				child.x = self.x + self.w - self.padding.right - child.w
+				child.x = self.x + self.w - self.padding.right - child.w - self:getBarOffsetX()
 			elseif self.alignment.horizontal == "center" then
 				child.x = self.x + self.padding.left + (self.w - self.padding.left - self.padding.right - child.w) / 2
 			else
@@ -276,13 +291,13 @@ function Container:calculateContentWidth()
 			totalWidth = totalWidth + child.w
 		end
 		totalWidth = totalWidth + self.spacing * (#self.children - 1)
-		return totalWidth + self.padding.left + self.padding.right
+		return totalWidth
 	else
 		local maxWidth = 0
 		for _, child in ipairs(self.children) do
 			maxWidth = math.max(maxWidth, child.w)
 		end
-		return maxWidth + self.padding.left + self.padding.right
+		return maxWidth
 	end
 end
 
@@ -295,7 +310,7 @@ function Container:calculateContentHeight()
 			maxHeight = math.max(maxHeight, child.h)
 		end
 
-		return maxHeight + self.padding.top + self.padding.bottom + self:getContentOffsetY()
+		return maxHeight + self:getContentOffsetY()
 	else
 		local totalHeight = 0
 		for _, child in ipairs(self.children) do
@@ -303,7 +318,7 @@ function Container:calculateContentHeight()
 		end
 		totalHeight = totalHeight + self.spacing * (#self.children - 1)
 
-		return totalHeight + self.padding.top + self.padding.bottom + self:getContentOffsetY()
+		return totalHeight + self:getContentOffsetY()
 	end
 end
 
@@ -456,6 +471,14 @@ function Container:textinput(text)
 	end
 end
 
+function Container:getRequiredHeight()
+	return self:calculateContentHeight() + self.padding.top + self.padding.bottom
+end
+
+function Container:getRequiredWidth()
+	return self:calculateContentWidth() + self.padding.left + self.padding.right
+end
+
 function Container:update(dt)
 	if #self.children == 0 then return end
 
@@ -465,15 +488,15 @@ function Container:update(dt)
 		end
 	end
 
-	self.w = (self.scrollable and self.w) or math.max(self.w, self:calculateContentWidth())
-	self.h = (self.scrollable and self.h) or math.max(self.h, self:calculateContentHeight())
+	self.w = (self.scrollable and self.w) or math.max(self.w, self:getRequiredWidth())
+	self.h = (self.scrollable and self.h) or math.max(self.h, self:getRequiredHeight())
 
 	self:positionChildren()
 
-	if self.scrollable and self.scrollDirection == "vertical" and self.maxScrollY > 0 then
-		local trackHeight = self.h - self:getContentOffsetY() - self.bar.h
-		self.bar.y = self.y + self:getContentOffsetY() + (self.scrollY / self.maxScrollY) * trackHeight
-	end
+	-- if self.scrollable and self.scrollDirection == "vertical" and self.maxScrollY > 0 then
+	-- 	local trackHeight = self.h - self:getContentOffsetY() - self.bar.h
+	-- 	self.bar.y = self.y + self:getContentOffsetY() + (self.scrollY / self.maxScrollY) * trackHeight
+	-- end
 
 	if self.scrollable then
 		if self.scrollDirection == "vertical" then
@@ -541,12 +564,12 @@ function Container:draw()
 	-- Draw vertical scrollbar
 	if self.scrollDirection == "vertical" and self.maxScrollY > 0 then
 		local trackX = self.x + self.w - self.bar.w
-		local trackY = self.y + self:getContentOffsetY()
-		self.track:draw(trackX, trackY, self.bar.w, self.h - self:getContentOffsetY())
+		local trackY = self.y
+		self.track:draw(trackX, trackY, self.bar.w, self.h)
 
-		if self.bar.y and self.bar.h and self.bar.w then
-			self.bar:draw(trackX, self.bar.y)
-		end
+		-- Draw thumb
+		self.bar.y = self.y + (self.scrollY / self.maxScrollY) * (self.h - self.bar.h)
+		self.bar:draw(trackX, self.bar.y)
 
 		-- Draw horizontal scrollbar
 	elseif self.scrollDirection == "horizontal" and self.maxScrollX > 0 then
@@ -557,6 +580,11 @@ function Container:draw()
 		-- Draw thumb
 		self.bar.x = self.x + (self.scrollX / self.maxScrollX) * (self.w - self.bar.w)
 		self.bar:draw(self.bar.x, trackY)
+	end
+
+	if self.border or self.borderColor then
+		love.graphics.setColor(self.borderColor)
+		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 	end
 
 	love.graphics.push("all")

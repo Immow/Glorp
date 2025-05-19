@@ -1,5 +1,5 @@
 local Glorp = require("libs.glorp")
-local glorp_alien = love.graphics.newImage("assets/glorp-alien.png")
+local glorp_alien = love.graphics.newImage("libs/glorp/assets/glorp-alien.png")
 local layoutTests = {}
 
 layoutTests[1] = Glorp.newContainer({

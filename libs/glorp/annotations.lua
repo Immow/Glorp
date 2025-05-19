@@ -1,5 +1,19 @@
 ---@meta
 
+---@class Window
+---@field wheelmoved fun(self: Window, x: number, y: number)
+---@field mousemoved fun(self: Window, x: number, y: number, dx: number, dy: number, istouch: boolean)
+---@field mousereleased fun(self: Window, x: number, y: number, button: integer, istouch: boolean, presses: integer)
+---@field textinput fun(self: Window, text: string)
+---@field keypressed fun(self: Window, key: string, scancode: string, isrepeat: boolean)
+---@field isMouseInside fun(self: Window, x: number, y: number): boolean
+
+---@class Glorp
+---@field activeWindow Window|nil
+---@field elements table[]
+---@field elementsById table<string, table>
+---@field activeDropDown table|nil
+
 ---@alias Glorp.Color number[] # RGBA array: {r, g, b, a}
 
 ---@class Glorp.DropDown

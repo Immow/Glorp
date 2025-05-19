@@ -1,6 +1,7 @@
 local folder_path = (...):match("(.-)[^%.]+$")
 require(folder_path .. "glorp.annotations")
 
+---@class Glorp
 local Glorp = {
 	elements = {},
 	elementsById = {},
@@ -120,15 +121,15 @@ function Glorp:wheelmoved(x, y)
 	end
 end
 
-function Glorp:mousemoved(x, y, dx, dy)
+function Glorp:mousemoved(x, y, dx, dy, istouch)
 	if self.activeWindow and self.activeWindow.mousemoved then
-		self.activeWindow:mousemoved(x, y, dx, dy)
+		self.activeWindow:mousemoved(x, y, dx, dy, istouch)
 	end
 end
 
-function Glorp:mousereleased(x, y, button, isTouch)
+function Glorp:mousereleased(x, y, button, isTouch, presses)
 	if self.activeWindow and self.activeWindow.mousereleased then
-		self.activeWindow:mousereleased(x, y, button, isTouch)
+		self.activeWindow:mousereleased(x, y, button, isTouch, presses)
 
 		if not self.activeWindow:isMouseInside(x, y) then
 			self.activeWindow = nil

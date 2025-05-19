@@ -227,4 +227,43 @@ end
 layoutTests[7]:addContainer(layoutTests7Sub1)
 layoutTests[7]:addContainer(layoutTests7Sub2)
 
+layoutTests[8] = Glorp.newContainer({
+	enabled = false,
+	id = "layoutTests8",
+	x = 100,
+	y = 100,
+	w = 400,
+	h = 200,
+	layout = "horizontal",
+	alignment = { horizontal = "center", vertical = "center" },
+	padding = 10,
+	titleBar = true,
+	draggable = true,
+	scrollable = true,
+	scrollDirection = "vertical"
+})
+
+local layoutTests8Sub1 = Glorp.newContainer({
+	id = "layoutTests8Sub1",
+	w = 150,
+	h = 100,
+	scrollable = true,
+	scrollDirection = "vertical",
+	layout = "vertical",
+})
+for i = 1, 20 do
+	layoutTests8Sub1:addButton({ label = "test " .. i })
+end
+
+local layoutTests8Sub2 = Glorp.newContainer({
+	id = "layoutTests8Sub2",
+	layout = "vertical",
+})
+for i = 1, 20 do
+	layoutTests8Sub2:addImage({ image = glorp_alien })
+end
+
+layoutTests[8]:addContainer(layoutTests8Sub1)
+layoutTests[8]:addContainer(layoutTests8Sub2)
+
 return layoutTests

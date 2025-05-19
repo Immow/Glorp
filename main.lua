@@ -90,16 +90,16 @@ function love.mousepressed(x, y, button, isTouch)
 	Glorp:mousepressed(x, y, button, isTouch)
 end
 
-function love.mousereleased(x, y, button, isTouch)
-	Glorp:mousereleased(x, y, button, isTouch)
+function love.mousereleased(x, y, button, isTouch, presses)
+	Glorp:mousereleased(x, y, button, isTouch, presses)
 end
 
 function love.wheelmoved(x, y)
 	Glorp:wheelmoved(x, y)
 end
 
-function love.mousemoved(x, y, dx, dy)
-	Glorp:mousemoved(x, y, dx, dy)
+function love.mousemoved(x, y, dx, dy, istouch)
+	Glorp:mousemoved(x, y, dx, dy, istouch)
 end
 
 function love.update(dt)

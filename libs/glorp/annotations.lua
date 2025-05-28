@@ -49,6 +49,7 @@
 ---@field titlebarColor? Glorp.Color
 ---@field titlebarText? string
 ---@field titleBar? boolean
+---@field cornerRadius? number
 
 ---@class Glorp.Container
 ---@field addButton? fun(self: Glorp.Container, settings: Glorp.ButtonSettings): Glorp.Container
@@ -61,6 +62,7 @@
 ---@field addSlider? fun(self: Glorp.Container, settings: Glorp.SliderSettings): Glorp.Container
 ---@field addCheckBox? fun(self: Glorp.Container, settings: Glorp.CheckBoxSettings): Glorp.Container
 ---@field addRadioButton? fun(self: Glorp.Container, settings: Glorp.RadioButtonSettings): Glorp.Container
+---@field addBlock? fun(self: Glorp.Container, settings: Glorp.BlockSettings): Glorp.Container
 ---@field getChild fun(self: Glorp.Container, id: string)
 
 ---@class Glorp.scrollBarSettings
@@ -73,6 +75,12 @@
 ---@field h? number
 ---@field color? Glorp.Color
 ---@field showScrollBar? boolean
+---@
+---@class Glorp.BlockSettings
+---@field id? string
+---@field w? number
+---@field h? number
+---@field color? Glorp.Color
 
 ---@class Glorp.ButtonSettings
 ---@field id? string

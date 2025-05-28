@@ -10,6 +10,7 @@ local Form = require(folder_path .. "form")
 local Slider = require(folder_path .. "slider")
 local CheckBox = require(folder_path .. "checkbox")
 local RadioButton = require(folder_path .. "radiobutton")
+local Block = require(folder_path .. "block")
 local activeDropDown
 
 local Container = {}
@@ -33,6 +34,7 @@ function Container.new(settings)
 	instance.border = settings.border ~= false
 	instance.borderColor = settings.borderColor or { 1, 1, 1, 1 }
 	instance.backgroundColor = settings.backgroundColor or { 0, 0, 0, 1 }
+	instance.cornerRadius = settings.cornerRadius or nil
 	instance.scrollable = settings.scrollable or false
 	if instance.scrollable and (instance.w <= 0 or instance.h <= 0) then
 		error("Scrollable containers must have both width and height greater than 0.")
@@ -143,6 +145,15 @@ function Container:addRadioButton(settings)
 	local rb = RadioButton.new(settings)
 	self:addChildId(settings.id, rb)
 	table.insert(self.children, rb)
+	return self
+end
+
+---@param settings Glorp.BlockSettings
+---@return Glorp.Container
+function Container:addBlock(settings)
+	local block = Block.new(settings)
+	self:addChildId(settings.id, block)
+	table.insert(self.children, block)
 	return self
 end
 
@@ -257,7 +268,8 @@ function Container:positionChildren()
 				if self.alignment.vertical == "bottom" then
 					child.y = self.y + self.h - self.padding.bottom - child.h - self:getBarOffsetY()
 				elseif self.alignment.vertical == "center" then
-					child.y = self.y + self.padding.top + (self.h - self.padding.top - self.padding.bottom - child.h) / 2
+					child.y = self.y + self:getContentOffsetY() + self.padding.top +
+						(self.h - self.padding.top - self.padding.bottom - child.h - self:getContentOffsetY()) / 2
 				else
 					child.y = self.y + self.padding.top + self:getContentOffsetY()
 				end
@@ -587,10 +599,10 @@ function Container:draw()
 		self.bar:draw(self.bar.x, trackY)
 	end
 
-	if self.border or self.borderColor then
-		love.graphics.setColor(self.borderColor)
-		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
-	end
+	-- if self.border or self.borderColor then
+	-- 	love.graphics.setColor(self.borderColor)
+	-- 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	-- end
 
 	love.graphics.push("all")
 
@@ -618,12 +630,36 @@ function Container:draw()
 		love.graphics.print(self.titlebarText, self.x + 5, self.y + 4)
 	end
 
-	if self.border then
+
+	love.graphics.pop()
+
+	if self.border and self.cornerRadius ~= nil and not self.parent then
+		local x = self.x
+		local y = self.y - self.cornerRadius
+		local w = self.w
+		local h = self.h + self.cornerRadius * 2
+		local rx = self.cornerRadius
+		local ry = self.cornerRadius
+		love.graphics.push("all")
+		love.graphics.setScissor(x, y, w, self.cornerRadius)
+		love.graphics.setColor(self.titlebarColor)
+		love.graphics.rectangle("fill", x, y, w, h, rx, ry)
+		love.graphics.setScissor()
+		love.graphics.pop()
+
+		love.graphics.push("all")
+		love.graphics.setScissor(x, y + self.h + self.cornerRadius, w, self.cornerRadius)
+		love.graphics.setColor(self.titlebarColor)
+		love.graphics.rectangle("fill", x, y, w, h, rx, ry)
+		love.graphics.setScissor()
+		love.graphics.pop()
+
+		love.graphics.setColor(self.borderColor)
+		love.graphics.rectangle("line", x, y, w, h, rx, ry)
+	elseif self.border and self.cornerRadius == nil then
 		love.graphics.setColor(self.borderColor)
 		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 	end
-
-	love.graphics.pop()
 
 	love.graphics.setColor(1, 1, 1, 1)
 end

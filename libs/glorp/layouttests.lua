@@ -12,6 +12,7 @@ layoutTests[1] = Glorp.newContainer({
 		titleBar = true,
 		draggable = true
 	})
+	:addBlock({ id = "cow1" })
 	:addRadioButton({
 		label = "test",
 		onRelease = function(isChecked)
@@ -265,5 +266,24 @@ end
 
 layoutTests[8]:addContainer(layoutTests8Sub1)
 layoutTests[8]:addContainer(layoutTests8Sub2)
+
+layoutTests[9] = Glorp.newContainer({
+		enabled = false,
+		id = "layoutTests9",
+		x = 100,
+		y = 100,
+		w = 200,
+		h = 200,
+		layout = "horizontal",
+		alignment = { horizontal = "center", vertical = "center" },
+		-- padding = 10,
+		titleBar = true,
+		-- draggable = true,
+		-- border = true,
+		cornerRadius = 20,
+		-- backgroundColor = { 1, 1, 1, 0.5 }
+	})
+	:addBlock({ w = 100, h = 100 })
+-- :addImage({ image = glorp_alien })
 
 return layoutTests

@@ -9,7 +9,7 @@ layoutTests[1] = Glorp.newContainer({
 		layout = "vertical",
 		alignment = { horizontal = "left", vertical = "center" },
 		padding = 10,
-		titleBar = { draw = true },
+		titleBar = { enabled = true },
 		draggable = true
 	})
 	:addBlock({ id = "cow1" })
@@ -67,7 +67,7 @@ layoutTests[2] = Glorp.newContainer({
 		layout = "vertical",
 		alignment = { horizontal = "left", vertical = "center" },
 		padding = 10,
-		titleBar = { draw = true },
+		titleBar = { enabled = true },
 		draggable = true
 	})
 	:addRadioButton({
@@ -116,7 +116,7 @@ layoutTests[3] = Glorp.newContainer({
 	scrollable = true,
 	alignment = { horizontal = "right", vertical = "top" },
 	padding = 0,
-	titleBar = { draw = true },
+	titleBar = { enabled = true },
 	draggable = true
 })
 for i = 1, 10 do
@@ -133,7 +133,7 @@ layoutTests[4] = Glorp.newContainer({
 	layout = "horizontal",
 	alignment = { horizontal = "center", vertical = "bottom" },
 	padding = 10,
-	titleBar = { draw = true },
+	titleBar = { enabled = true },
 	draggable = true,
 	scrollable = true,
 	scrollDirection = "horizontal"
@@ -168,7 +168,7 @@ layoutTests[5] = Glorp.newContainer({
 	layout = "vertical",
 	alignment = { horizontal = "center", vertical = "center" },
 	padding = 10,
-	titleBar = { draw = true },
+	titleBar = { enabled = true },
 	draggable = true,
 	scrollable = true
 })
@@ -186,7 +186,7 @@ layoutTests[6] = Glorp.newContainer({
 		layout = "horizontal",
 		alignment = { horizontal = "right", vertical = "bottom" },
 		padding = 10,
-		-- titleBar = { draw = true },
+		-- titleBar = { enabled = true },
 		-- draggable = true,
 		-- scrollable = true
 	})
@@ -203,7 +203,7 @@ layoutTests[7] = Glorp.newContainer({
 	layout = "horizontal",
 	alignment = { horizontal = "center", vertical = "center" },
 	padding = 10,
-	titleBar = { draw = true },
+	titleBar = { enabled = true },
 	draggable = true,
 	scrollable = true,
 	scrollDirection = "vertical"
@@ -238,7 +238,7 @@ layoutTests[8] = Glorp.newContainer({
 	layout = "horizontal",
 	alignment = { horizontal = "center", vertical = "center" },
 	padding = 10,
-	titleBar = { draw = true },
+	titleBar = { enabled = true },
 	draggable = true,
 	scrollable = true,
 	scrollDirection = "vertical"
@@ -277,10 +277,9 @@ layoutTests[9] = Glorp.newContainer({
 		layout = "horizontal",
 		alignment = { horizontal = "center", vertical = "center" },
 		-- padding = 10,
-		titleBar = { draw = true },
+		titleBar = { enabled = true },
 		-- draggable = true,
 		-- border = true,
-		cornerRadius = 20,
 		-- backgroundColor = { 1, 1, 1, 0.5 }
 	})
 	:addBlock({ w = 100, h = 100 })

@@ -11,6 +11,7 @@ local Slider = require(folder_path .. "slider")
 local CheckBox = require(folder_path .. "checkbox")
 local RadioButton = require(folder_path .. "radiobutton")
 local Block = require(folder_path .. "block")
+local TitleBar = require(folder_path .. "titlebar")
 local activeDropDown
 
 local Container = {}
@@ -58,13 +59,7 @@ function Container.new(settings)
 		end
 	end
 
-	instance.titleBar    = {
-		draw         = (settings.titleBar and settings.titleBar.draw) or false,
-		cornerRadius = (settings.titleBar and settings.titleBar.cornerRadius) or 24,
-		h            = (settings.titleBar and settings.titleBar.h) or 24,
-		color        = (settings.titleBar and settings.titleBar.color) or { 0.2, 0.2, 0.2, 1 },
-		text         = (settings.titleBar and settings.titleBar.text) or instance.label or instance.id or ""
-	}
+	instance.titleBar    = TitleBar.new(settings)
 
 	instance.draggable   = settings.draggable or false
 	instance.dragging    = false
@@ -212,7 +207,7 @@ function Container:addSlider(settings)
 end
 
 function Container:getContentOffsetY()
-	return (self.titleBar and self.titleBar.draw) and self.titleBar.h or 0
+	return (self.titleBar and self.titleBar.enabled) and self.titleBar.h or 0
 end
 
 function Container:getBarOffsetX()
@@ -365,9 +360,7 @@ function Container:isMouseInside(mx, my)
 end
 
 function Container:mousepressed(mx, my, button, isTouch)
-	-- if not self:isMouseInside(mx, my, self) then return end
-	if self.draggable and mx >= self.x and mx <= self.x + self.w
-		and my >= self.y and my <= self.y + self.titleBar.h then
+	if self.draggable and self.titleBar and self.titleBar:isMouseInside(mx, my) then
 		self.dragging = true
 		self.dragOffsetX = mx - self.x
 		self.dragOffsetY = my - self.y
@@ -497,6 +490,8 @@ function Container:getRequiredWidth()
 end
 
 function Container:update(dt)
+	self.titleBar:updateLayout(self.x, self.y, self.w)
+
 	if #self.children == 0 then return end
 
 	for _, child in ipairs(self.children) do
@@ -623,20 +618,15 @@ function Container:draw()
 			child:draw()
 		end
 	end
-
-	if self.titleBar.draw then
-		love.graphics.setColor(self.titleBar.color)
-		love.graphics.rectangle("fill", self.x, self.y, self.w, self.titleBar.h)
-
-		love.graphics.setColor(1, 1, 1, 1)
-		love.graphics.print(self.titleBar.text, self.x + 5, self.y + 4)
+	if not self.parent then
+		self.titleBar:draw(self.x, self.y, self.w)
 	end
 
 	love.graphics.pop()
 
 	if self.border then
 		love.graphics.setColor(self.borderColor)
-		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+		love.graphics.rectangle("line", self.x, self.y, self.w, self.h, self.titleBar.cornerRadius)
 	end
 
 	love.graphics.setColor(1, 1, 1, 1)

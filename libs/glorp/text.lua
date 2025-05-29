@@ -5,7 +5,7 @@ function Text.new(settings)
 	local instance   = setmetatable({}, Text)
 	instance.id      = settings.id or nil
 	instance.type    = "text"
-	instance.text    = settings.text or ""
+	instance.text    = settings.text or settings.label or settings.id or ""
 	instance.font    = settings.font or love.graphics:getFont()
 	instance.color   = settings.color or { 1, 1, 1, 1 }
 	instance.align   = settings.align or "left" -- left, center, right
@@ -16,6 +16,12 @@ function Text.new(settings)
 	instance.enabled = settings.enabled ~= false
 
 	return instance
+end
+
+function Text:updateLayout(x, y, w)
+	self.x = x
+	self.y = y
+	self.w = w
 end
 
 function Text:draw()

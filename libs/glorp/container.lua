@@ -619,7 +619,7 @@ function Container:draw()
 		end
 	end
 	if not self.parent then
-		self.titleBar:draw(self.x, self.y, self.w)
+		self.titleBar:draw()
 	end
 
 	love.graphics.pop()

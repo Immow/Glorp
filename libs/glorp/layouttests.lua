@@ -9,7 +9,7 @@ layoutTests[1] = Glorp.newContainer({
 		layout = "vertical",
 		alignment = { horizontal = "left", vertical = "center" },
 		padding = 10,
-		titleBar = { enabled = true },
+		titleBar = { enabled = true, cornerRadius = 10, text = { text = "Test" } },
 		draggable = true
 	})
 	:addBlock({ id = "cow1" })

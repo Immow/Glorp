@@ -45,10 +45,7 @@
 ---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}
 ---@field bar?  { x: number, y: number, w: number ,h: number ,color: table }
 ---@field draggable? boolean
----@field titlebarHeight? number
----@field titlebarColor? Glorp.Color
----@field titlebarText? string
----@field titleBar? boolean
+---@field titleBar? { draw: boolean, cornerRadius: number, h: number, color: Glorp.Color, text: string}
 ---@field cornerRadius? number
 
 ---@class Glorp.Container

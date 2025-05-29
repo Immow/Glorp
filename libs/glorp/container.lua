@@ -34,7 +34,6 @@ function Container.new(settings)
 	instance.border = settings.border ~= false
 	instance.borderColor = settings.borderColor or { 1, 1, 1, 1 }
 	instance.backgroundColor = settings.backgroundColor or { 0, 0, 0, 1 }
-	instance.cornerRadius = settings.cornerRadius or nil
 	instance.scrollable = settings.scrollable or false
 	if instance.scrollable and (instance.w <= 0 or instance.h <= 0) then
 		error("Scrollable containers must have both width and height greater than 0.")
@@ -59,27 +58,30 @@ function Container.new(settings)
 		end
 	end
 
-	instance.titlebarHeight = settings.titlebarHeight or 24
-	instance.titlebarColor = settings.titlebarColor or { 0.2, 0.2, 0.2, 1 }
-	instance.titlebarText = settings.titlebarText or instance.label or instance.id or ""
+	instance.titleBar    = {
+		draw         = (settings.titleBar and settings.titleBar.draw) or false,
+		cornerRadius = (settings.titleBar and settings.titleBar.cornerRadius) or 24,
+		h            = (settings.titleBar and settings.titleBar.h) or 24,
+		color        = (settings.titleBar and settings.titleBar.color) or { 0.2, 0.2, 0.2, 1 },
+		text         = (settings.titleBar and settings.titleBar.text) or instance.label or instance.id or ""
+	}
 
-	instance.titleBar = settings.titleBar or false
-	instance.draggable = settings.draggable or false
-	instance.dragging = false
+	instance.draggable   = settings.draggable or false
+	instance.dragging    = false
 	instance.dragOffsetX = 0
 	instance.dragOffsetY = 0
 
-	instance.padding = {
+	instance.padding     = {
 		top = settings.paddingTop or settings.padding or 0,
 		right = settings.paddingRight or settings.padding or 0,
 		bottom = settings.paddingBottom or settings.padding or 0,
 		left = settings.paddingLeft or settings.padding or 0,
 	}
 
-	instance.bar = Bar.new(settings)
-	instance.track = Track.new(settings)
+	instance.bar         = Bar.new(settings)
+	instance.track       = Track.new(settings)
 
-	instance.children = {}
+	instance.children    = {}
 	return instance
 end
 
@@ -210,7 +212,7 @@ function Container:addSlider(settings)
 end
 
 function Container:getContentOffsetY()
-	return self.titleBar and self.titlebarHeight or 0
+	return (self.titleBar and self.titleBar.draw) and self.titleBar.h or 0
 end
 
 function Container:getBarOffsetX()
@@ -365,7 +367,7 @@ end
 function Container:mousepressed(mx, my, button, isTouch)
 	-- if not self:isMouseInside(mx, my, self) then return end
 	if self.draggable and mx >= self.x and mx <= self.x + self.w
-		and my >= self.y and my <= self.y + self.titlebarHeight then
+		and my >= self.y and my <= self.y + self.titleBar.h then
 		self.dragging = true
 		self.dragOffsetX = mx - self.x
 		self.dragOffsetY = my - self.y
@@ -622,41 +624,17 @@ function Container:draw()
 		end
 	end
 
-	if self.titleBar and self.titlebarHeight > 0 then
-		love.graphics.setColor(self.titlebarColor)
-		love.graphics.rectangle("fill", self.x, self.y, self.w, self.titlebarHeight)
+	if self.titleBar.draw then
+		love.graphics.setColor(self.titleBar.color)
+		love.graphics.rectangle("fill", self.x, self.y, self.w, self.titleBar.h)
 
 		love.graphics.setColor(1, 1, 1, 1)
-		love.graphics.print(self.titlebarText, self.x + 5, self.y + 4)
+		love.graphics.print(self.titleBar.text, self.x + 5, self.y + 4)
 	end
-
 
 	love.graphics.pop()
 
-	if self.border and self.cornerRadius ~= nil and not self.parent then
-		local x = self.x
-		local y = self.y - self.cornerRadius
-		local w = self.w
-		local h = self.h + self.cornerRadius * 2
-		local rx = self.cornerRadius
-		local ry = self.cornerRadius
-		love.graphics.push("all")
-		love.graphics.setScissor(x, y, w, self.cornerRadius)
-		love.graphics.setColor(self.titlebarColor)
-		love.graphics.rectangle("fill", x, y, w, h, rx, ry)
-		love.graphics.setScissor()
-		love.graphics.pop()
-
-		love.graphics.push("all")
-		love.graphics.setScissor(x, y + self.h + self.cornerRadius, w, self.cornerRadius)
-		love.graphics.setColor(self.titlebarColor)
-		love.graphics.rectangle("fill", x, y, w, h, rx, ry)
-		love.graphics.setScissor()
-		love.graphics.pop()
-
-		love.graphics.setColor(self.borderColor)
-		love.graphics.rectangle("line", x, y, w, h, rx, ry)
-	elseif self.border and self.cornerRadius == nil then
+	if self.border then
 		love.graphics.setColor(self.borderColor)
 		love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 	end

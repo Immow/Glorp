@@ -11,10 +11,9 @@ function Text.new(settings)
 	instance.align   = settings.align or "left" -- left, center, right
 	instance.x       = settings.x or 0
 	instance.y       = settings.y or 0
-	instance.w       = settings.w or 200
-	instance.h       = settings.h or 200
+	instance.w       = settings.w or math.min(instance.font:getWidth(instance.text), love.graphics.getWidth())
+	instance.h       = instance.font:getHeight()
 	instance.enabled = settings.enabled ~= false
-
 	return instance
 end
 

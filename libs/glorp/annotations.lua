@@ -86,7 +86,7 @@
 ---@field label? string
 ---@field layout? "horizontal"|"vertical"
 ---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}
----@field font? string
+---@field font? love.Font
 ---@field onRelease? function
 ---@field enabled? boolean
 
@@ -115,7 +115,7 @@
 ---@field label? string
 ---@field layout? "horizontal"|"vertical"
 ---@field alignment? { horizontal: "left"|"center"|"right", vertical: "top"|"center"|"bottom"}
----@field font? string
+---@field font? love.Font
 ---@field onRelease? function
 
 ---@class Glorp.TextSettings
@@ -125,8 +125,9 @@
 ---@field color? Glorp.Color
 ---@field text? string
 ---@field align? "left"|"center"|"right"
----@field font? string
+---@field font? love.Font
 ---@field enabled? boolean
+---@field label? string
 
 ---@class Glorp.ImageSettings
 ---@field label? string
@@ -166,7 +167,7 @@
 ---@field textColor? Glorp.Color
 ---@field text? string
 ---@field align? "left"|"center"|"right"
----@field font? string
+---@field font? love.Font
 ---@field id? string
 ---@field x? number
 ---@field y? number

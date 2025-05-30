@@ -107,8 +107,14 @@ end
 ---@param settings Glorp.TextSettings
 ---@return Glorp.Container
 function Container:addText(settings)
-	local w = settings.w or self.w
-	settings.w = w
+	if (not settings.w) and self.w and self.w ~= 0 then
+		local availableWidth = self.w - self.padding.left - self.padding.right
+
+		local font = settings.font or love.graphics:getFont()
+		local text = settings.text or settings.label or settings.id or ""
+		settings.w = math.min(font:getWidth(text), availableWidth)
+	end
+
 	local text = Text.new(settings)
 	self:addChildId(settings.id, text)
 	table.insert(self.children, text)

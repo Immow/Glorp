@@ -10,6 +10,7 @@ function Button.new(settings)
 	instance.w         = settings.w or 100
 	instance.h         = settings.h or 30
 	instance.label     = settings.label or ""
+	instance.pressed   = false
 	instance.hovered   = false
 	instance.alignment = {
 		horizontal = settings.alignment and settings.alignment.horizontal or "center",
@@ -26,11 +27,18 @@ function Button:isMouseOnButton(mx, my)
 		and my >= self.y and my <= self.y + self.h
 end
 
-function Button:mousepressed(mx, my, mouseButton)
-	if mouseButton ~= 1 then return end
-	local hovered = self:isMouseOnButton(mx, my)
-	if hovered then
-		self.onRelease()
+function Button:mousepressed(mx, my, button)
+	if button == 1 and self:isMouseOnButton(mx, my) and self.enabled then
+		self.pressed = true
+	end
+end
+
+function Button:mousereleased(mx, my, button)
+	if button == 1 and self.pressed then
+		if self:isMouseOnButton(mx, my) and self.enabled then
+			self:onRelease()
+		end
+		self.pressed = false
 	end
 end
 

@@ -88,14 +88,18 @@ function Dropdown:draw()
 	love.graphics.setColor(self.bgColor)
 	love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
 
+	-- Draw selected item (collapsed view)
 	love.graphics.setColor(self.textColor)
 	local selected = self.options[self.selectedIndex]
-	love.graphics.printf(selected.name, self.x + 5, self.y + 5, self.w - 10, "left")
+	local fontHeight = self.font:getHeight()
+	local selectedTextY = self.y + (self.h - fontHeight) / 2
+	love.graphics.printf(selected.name, self.x + 5, selectedTextY, self.w - 10, "left")
 
 	if self.expanded then
 		for i, option in ipairs(self.options) do
 			local itemY = self.y + self.h * i
 
+			-- Background highlight
 			if i == self.hoveredIndex then
 				love.graphics.setColor(self.hoverOptionColor)
 			else
@@ -103,8 +107,10 @@ function Dropdown:draw()
 			end
 			love.graphics.rectangle("fill", self.x, itemY, self.w, self.h)
 
+			-- Text centered vertically in each item
+			local optionTextY = itemY + (self.h - fontHeight) / 2
 			love.graphics.setColor(1, 1, 1, 1)
-			love.graphics.printf(option.name, self.x + 5, itemY + 5, self.w - 10, "left")
+			love.graphics.printf(option.name, self.x + 5, optionTextY, self.w - 10, "left")
 		end
 	end
 end

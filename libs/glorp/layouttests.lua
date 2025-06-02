@@ -6,6 +6,7 @@ layoutTests[1] = Glorp.newContainer({
 		id = "layoutTests1",
 		x = 100,
 		y = 100,
+		w = 300,
 		layout = "vertical",
 		alignment = { horizontal = "left", vertical = "center" },
 		padding = 10,
@@ -48,10 +49,16 @@ layoutTests[1] = Glorp.newContainer({
 			end
 		end
 	})
+	:addText({
+		text =
+		"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+		align = "left"
+	})
 	:addDropDown({
 		options = {
 			{ name = "Apple",  value = "apple" },
 			{ name = "Banana", value = "banana" },
+			{ name = "Orange", value = "orange" },
 		},
 		onSelect = function(i, val)
 			print("Selected:", i, val.value)

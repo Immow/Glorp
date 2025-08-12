@@ -23,6 +23,7 @@ function Dropdown.new(settings, Glorp, parent)
 	instance.cornerRadius  = settings.cornerRadius or 4
 	instance.borderColor   = settings.borderColor or { 0, 0, 0, 1 }
 	instance.borderWidth   = settings.borderWidth or 1
+	instance.enabled       = settings.enabled ~= false
 
 	-- Keep Glorp reference for activeDropDown tracking
 	instance.glorpRef      = Glorp
@@ -93,6 +94,7 @@ function Dropdown:contains(mx, my)
 end
 
 function Dropdown:draw()
+	print("cow")
 	love.graphics.setColor(self.bgColor)
 	love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
 

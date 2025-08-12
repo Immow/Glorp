@@ -1,29 +1,36 @@
 local Dropdown = {}
 Dropdown.__index = Dropdown
 
-function Dropdown.new(settings, Glorp)
-	local instance            = setmetatable({}, Dropdown)
-	instance.glorpRef         = Glorp
-	instance.parent           = parent or nil
-	instance.id               = settings.id or nil
-	instance.x                = settings.x or 0
-	instance.y                = settings.y or 0
-	instance.w                = settings.w or 200
-	instance.h                = settings.h or 30
-	instance.type             = "dropdown"
-	instance.options          = settings.options or {}
-	instance.selectedIndex    = settings.selectedIndex or 1
-	instance.expanded         = false
+function Dropdown.new(settings, Glorp, parent)
+	local instance         = setmetatable({}, Dropdown)
+	instance.id            = settings.id or nil
+	instance.type          = "dropdown"
+	instance.x             = settings.x or 0
+	instance.y             = settings.y or 0
+	instance.w             = settings.w or 100
+	instance.h             = settings.h or 30
+	instance.options       = settings.options or {}
+	instance.selectedIndex = settings.selectedIndex or 1
+	instance.onSelect      = settings.onSelect
+	instance.font          = settings.font or love.graphics:getFont()
+	instance.color         = settings.color or { 1, 1, 1, 1 }
+	instance.bgColor       = settings.bgColor or { 0.2, 0.2, 0.2, 1 }
+	instance.hoverColor    = settings.hoverColor or { 0.3, 0.3, 0.3, 1 }
+	instance.selectedColor = settings.selectedColor or { 0.4, 0.4, 0.4, 1 }
+	instance.expanded      = false
+	instance.optionHeight  = settings.optionHeight or instance.h
+	instance.padding       = settings.padding or { left = 5, right = 5, top = 5, bottom = 5 }
+	instance.cornerRadius  = settings.cornerRadius or 4
+	instance.borderColor   = settings.borderColor or { 0, 0, 0, 1 }
+	instance.borderWidth   = settings.borderWidth or 1
 
-	instance.onSelect         = settings.onSelect or function(index, value) end
+	-- Keep Glorp reference for activeDropDown tracking
+	instance.glorpRef      = Glorp
+	-- Store parent container for potential parent-aware behavior later
+	instance.parent        = parent or nil
 
-	instance.font             = settings.font or love.graphics:getFont()
-	instance.bgColor          = settings.bgColor or { 0.2, 0.2, 0.2, 1 }
-	instance.hoverColor       = settings.hoverColor or { 0.3, 0.3, 0.3, 1 }
-	instance.expandedBgColor  = settings.hoverColor or { 0.1, 0.1, 0.1, 1 }
-	instance.hoverOptionColor = settings.hoverOptionColor or { 0.2, 0.6, 1, 1 }
-	instance.textColor        = settings.textColor or { 1, 1, 1, 1 }
-	instance.enabled          = settings.enabled ~= false
+	-- Precompute total height when expanded
+	instance.totalHeight   = instance.h + (#instance.options * instance.optionHeight)
 
 	return instance
 end

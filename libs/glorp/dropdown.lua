@@ -4,6 +4,7 @@ Dropdown.__index = Dropdown
 function Dropdown.new(settings, Glorp)
 	local instance            = setmetatable({}, Dropdown)
 	instance.glorpRef         = Glorp
+	instance.parent           = parent or nil
 	instance.id               = settings.id or nil
 	instance.x                = settings.x or 0
 	instance.y                = settings.y or 0

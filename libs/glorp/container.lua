@@ -1,16 +1,17 @@
 local folder_path = (...):match("(.-)[^%.]+$")
 require(folder_path .. "annotations")
-local Button = require(folder_path .. "button")
-local Image = require(folder_path .. "image")
+local ElementRegistry = require(folder_path .. "element_registry")
+-- local Button = require(folder_path .. "button")
+-- local Image = require(folder_path .. "image")
+-- local Text = require(folder_path .. "text")
+-- local DropDown = require(folder_path .. "dropdown")
+-- local Form = require(folder_path .. "form")
+-- local Slider = require(folder_path .. "slider")
+-- local CheckBox = require(folder_path .. "checkbox")
+-- local RadioButton = require(folder_path .. "radiobutton")
+-- local Block = require(folder_path .. "block")
 local Bar = require(folder_path .. "bar")
 local Track = require(folder_path .. "track")
-local Text = require(folder_path .. "text")
-local DropDown = require(folder_path .. "dropdown")
-local Form = require(folder_path .. "form")
-local Slider = require(folder_path .. "slider")
-local CheckBox = require(folder_path .. "checkbox")
-local RadioButton = require(folder_path .. "radiobutton")
-local Block = require(folder_path .. "block")
 local TitleBar = require(folder_path .. "titlebar")
 local activeDropDown
 
@@ -85,6 +86,26 @@ function Container:addContainer(container)
 	table.insert(self.children, container)
 end
 
+function Container:addElement(typeName, settings)
+	local class = ElementRegistry[typeName]
+	if not class then
+		error("Unknown element type: " .. tostring(typeName))
+	end
+	-- Some widgets (e.g. dropdown) require extra args; pass through existing addXers if present.
+	local element = nil
+	if class.new then
+		element = class.new(settings)
+	else
+		-- Fallback if class is a table with different constructor signature
+		element = class(settings)
+	end
+	if settings and settings.id then
+		self:addChildId(settings.id, element)
+	end
+	table.insert(self.children, element)
+	return self
+end
+
 function Container:addChildId(id, reference)
 	if not id then return end
 
@@ -95,70 +116,88 @@ function Container:addChildId(id, reference)
 	end
 end
 
----@param settings Glorp.ButtonSettings
----@return Glorp.Container
-function Container:addButton(settings)
-	local button = Button.new(settings)
-	self:addChildId(settings.id, button)
-	table.insert(self.children, button)
-	return self
-end
+-- ---@param settings Glorp.ButtonSettings
+-- ---@return Glorp.Container
+-- function Container:addButton(settings)
+-- 	local button = Button.new(settings)
+-- 	self:addChildId(settings.id, button)
+-- 	table.insert(self.children, button)
+-- 	return self
+-- end
 
----@param settings Glorp.TextSettings
----@return Glorp.Container
-function Container:addText(settings)
-	if (not settings.w) and self.w and self.w ~= 0 then
-		local availableWidth = self.w - self.padding.left - self.padding.right
+-- ---@param settings Glorp.TextSettings
+-- ---@return Glorp.Container
+-- function Container:addText(settings)
+-- 	if (not settings.w) and self.w and self.w ~= 0 then
+-- 		local availableWidth = self.w - self.padding.left - self.padding.right
 
-		local font = settings.font or love.graphics:getFont()
-		local text = settings.text or settings.label or settings.id or ""
-		settings.w = math.min(font:getWidth(text), availableWidth)
-	end
+-- 		local font = settings.font or love.graphics:getFont()
+-- 		local text = settings.text or settings.label or settings.id or ""
+-- 		settings.w = math.min(font:getWidth(text), availableWidth)
+-- 	end
 
-	local text = Text.new(settings)
-	self:addChildId(settings.id, text)
-	table.insert(self.children, text)
-	return self
-end
+-- 	local text = Text.new(settings)
+-- 	self:addChildId(settings.id, text)
+-- 	table.insert(self.children, text)
+-- 	return self
+-- end
 
----@param settings Glorp.DropDownSettings
----@return Glorp.Container
-function Container:addDropDown(settings)
-	local dropdown = DropDown.new(settings, require("libs.glorp"))
-	self:addChildId(settings.id, dropdown)
-	table.insert(self.children, dropdown)
-	return self
-end
+-- ---@param settings Glorp.DropDownSettings
+-- ---@return Glorp.Container
+-- function Container:addDropDown(settings)
+-- 	local dropdown = DropDown.new(settings, require("libs.glorp"))
+-- 	self:addChildId(settings.id, dropdown)
+-- 	table.insert(self.children, dropdown)
+-- 	return self
+-- end
 
-function Container:addForm(settings)
-	local form = Form.new(settings)
-	self:addChildId(settings.id, form)
-	table.insert(self.children, form)
-	return self
-end
+-- function Container:addForm(settings)
+-- 	local form = Form.new(settings)
+-- 	self:addChildId(settings.id, form)
+-- 	table.insert(self.children, form)
+-- 	return self
+-- end
 
-function Container:addCheckBox(settings)
-	local cb = CheckBox.new(settings)
-	self:addChildId(settings.id, cb)
-	table.insert(self.children, cb)
-	return self
-end
+-- function Container:addCheckBox(settings)
+-- 	local cb = CheckBox.new(settings)
+-- 	self:addChildId(settings.id, cb)
+-- 	table.insert(self.children, cb)
+-- 	return self
+-- end
 
-function Container:addRadioButton(settings)
-	local rb = RadioButton.new(settings)
-	self:addChildId(settings.id, rb)
-	table.insert(self.children, rb)
-	return self
-end
+-- function Container:addRadioButton(settings)
+-- 	local rb = RadioButton.new(settings)
+-- 	self:addChildId(settings.id, rb)
+-- 	table.insert(self.children, rb)
+-- 	return self
+-- end
 
----@param settings Glorp.BlockSettings
----@return Glorp.Container
-function Container:addBlock(settings)
-	local block = Block.new(settings)
-	self:addChildId(settings.id, block)
-	table.insert(self.children, block)
-	return self
-end
+-- ---@param settings Glorp.BlockSettings
+-- ---@return Glorp.Container
+-- function Container:addBlock(settings)
+-- 	local block = Block.new(settings)
+-- 	self:addChildId(settings.id, block)
+-- 	table.insert(self.children, block)
+-- 	return self
+-- end
+
+-- ---@param settings Glorp.ImageSettings
+-- ---@return Glorp.Container
+-- function Container:addImage(settings)
+-- 	local image = Image.new(settings)
+-- 	self:addChildId(settings.id, image)
+-- 	table.insert(self.children, image)
+-- 	return self
+-- end
+
+-- ---@param settings Glorp.SliderSettings
+-- ---@return Glorp.Container
+-- function Container:addSlider(settings)
+-- 	local slider = Slider.new(settings)
+-- 	self:addChildId(settings.id, slider)
+-- 	table.insert(self.children, slider)
+-- 	return self
+-- end
 
 ---@param id string
 function Container:getChildById(id)
@@ -173,43 +212,6 @@ function Container:getChildById(id)
 		end
 	end
 	return nil
-end
-
--- function Container:addButtonList(settings)
--- 	for i, label in ipairs(settings.list) do
--- 		local fn = function()
--- 			settings.target[settings.property] = i
--- 		end
-
--- 		local button = Button.new({
--- 			label = tostring(label),
--- 			w = settings.w,
--- 			h = settings.h,
--- 			fn = fn
--- 		})
-
--- 		table.insert(self.children, button)
--- 	end
-
--- 	return self
--- end
-
----@param settings Glorp.ImageSettings
----@return Glorp.Container
-function Container:addImage(settings)
-	local image = Image.new(settings)
-	self:addChildId(settings.id, image)
-	table.insert(self.children, image)
-	return self
-end
-
----@param settings Glorp.SliderSettings
----@return Glorp.Container
-function Container:addSlider(settings)
-	local slider = Slider.new(settings)
-	self:addChildId(settings.id, slider)
-	table.insert(self.children, slider)
-	return self
 end
 
 function Container:getContentOffsetY()
@@ -510,11 +512,6 @@ function Container:update(dt)
 	self.h = (self.scrollable and self.h) or math.max(self.h, self:getRequiredHeight())
 
 	self:positionChildren()
-
-	-- if self.scrollable and self.scrollDirection == "vertical" and self.maxScrollY > 0 then
-	-- 	local trackHeight = self.h - self:getContentOffsetY() - self.bar.h
-	-- 	self.bar.y = self.y + self:getContentOffsetY() + (self.scrollY / self.maxScrollY) * trackHeight
-	-- end
 
 	if self.scrollable then
 		if self.scrollDirection == "vertical" then

@@ -10,6 +10,7 @@ function Text.new(settings)
 	instance.color     = settings.color or { 1, 1, 1, 1 }
 	instance.align     = settings.align or "left" -- left, center, right
 	instance.x         = settings.x or 0
+	instance.parent    = parent or nil
 	instance.y         = settings.y or 0
 	instance.w         = settings.w or math.min(instance.font:getWidth(instance.text), 400)
 
